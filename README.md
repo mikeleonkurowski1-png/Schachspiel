@@ -5,7 +5,7 @@
 
 # Roadmap:
 
-- [ ] Projekt aufsetzen (Gradle + JavaFX, GitHub Repo)
+- [X] Projekt aufsetzen (Gradle + JavaFX, GitHub Repo)
 - [ ] Brett-GUI: 8x8-Raster mit Figuren in Startposition
 - [ ] Klick-Logik: Figur + Zielfeld auswählen, Figur bewegt sich (noch ohne Regeln)
 - [ ] Zugregeln pro Figurtyp (eine nach der anderen)
