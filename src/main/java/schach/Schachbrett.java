@@ -13,6 +13,9 @@ public class Schachbrett extends Application {
     }
 
     private static final int Tile_size = 80;
+    Text Figurenpeicher = null;
+    StackPane TileSpeicher = null;
+    private String[][] brettStatus = new String[8][8];
 
     @Override
     public void start(Stage primaryStage) throws Exception {
@@ -21,6 +24,7 @@ public class Schachbrett extends Application {
         for (int row = 0; row < 8; row++){
             for (int col = 0; col < 8; col++){
                 StackPane tile = new StackPane();
+                Text Figur = null;
 
                 if ((row + col) % 2 == 0 ){
                     tile.setStyle("-fx-background-color: #F5F5F5");
@@ -28,34 +32,46 @@ public class Schachbrett extends Application {
                     tile.setStyle("-fx-background-color: #708090");
                 }
 
-                Text Figur = null;
-
                 if (row == 0 && col == 0 || row == 0 && col == 7){
                     Figur = new Text("♜");
+                    brettStatus[row][col] = "bR";
                 }else if (row == 0 && col == 1 || row == 0 && col == 6){
                     Figur = new Text("♞");
+                    brettStatus[row][col] = "bK";
                 }else if (row == 0 && col == 2 || row == 0 && col == 5){
                     Figur = new Text("♝");
+                    brettStatus[row][col] = "bB";
                 }else if (row == 0 && col == 3){
                     Figur = new Text("♛");
+                    brettStatus[row][col] = "bQ";
                 }else if (row == 0 && col == 4){
                     Figur = new Text("♚");
+                    brettStatus[row][col] = "bK";
                 }else if (row == 1) {
                     Figur = new Text("♟");
+                    brettStatus[row][col] = "bP";
                 }
 
                 else if (row == 7 && col == 0 || row == 7 && col == 7){
                     Figur = new Text("♖");
+                    brettStatus[row][col] = "wR";
                 } else if (row == 7 && col == 1 || row == 7 && col == 6){
                     Figur = new Text("♘");
+                    brettStatus[row][col] = "wK";
                 }else if (row == 7 && col == 2 || row == 7 && col == 5){
                     Figur = new Text("♗");
+                    brettStatus[row][col] = "wB";
                 } else if (row == 7 && col == 3){
                     Figur = new Text("♕");
+                    brettStatus[row][col] = "wQ";
                 } else if (row == 7 && col == 4){
                     Figur = new Text("♔");
+                    brettStatus[row][col] = "wK";
                 }else if (row == 6){
                     Figur = new Text("♙");
+                    brettStatus[row][col] = "wP";
+                } else {
+                    Figur = null;
                 }
                 if (Figur != null){
                     Figur.setStyle("-fx-font-size: 50px;");
@@ -66,8 +82,29 @@ public class Schachbrett extends Application {
                 tile.setPrefSize(Tile_size, Tile_size);
 
                 Board.add(tile, col, row);
+
+
+                tile.setOnMouseClicked(e -> {
+                    if (tile.getChildren().isEmpty() == false && Figurenpeicher == null){
+                        Figurenpeicher = (Text) tile.getChildren().get(0);
+                        TileSpeicher = tile;
+                        //tile.setStyle("-fx-background-color: #add8e6");
+
+
+                    } else if (Figurenpeicher != null){
+
+                        TileSpeicher.getChildren().clear();
+
+                        tile.getChildren().add(Figurenpeicher);
+
+                        Figurenpeicher = null;
+                        TileSpeicher = null;
+                    }
+                });
             }
         }
+
+
 
         Scene scene = new Scene(Board, 8 * Tile_size, 8 * Tile_size);
 
