@@ -15,7 +15,12 @@ public class Schachbrett extends Application {
     private static final int Tile_size = 80;
     Text Figurenpeicher = null;
     StackPane TileSpeicher = null;
-    private String[][] brettStatus = new String[8][8];
+    public static String[][] brettStatus = new String[8][8];
+    int startRow = 0;
+    int startCol = 0;
+    int zielRow = 0;
+    int zielCol = 0;
+    String originalTileFarbe = null;
 
     @Override
     public void start(Stage primaryStage) throws Exception {
@@ -37,7 +42,7 @@ public class Schachbrett extends Application {
                     brettStatus[row][col] = "bR";
                 }else if (row == 0 && col == 1 || row == 0 && col == 6){
                     Figur = new Text("♞");
-                    brettStatus[row][col] = "bK";
+                    brettStatus[row][col] = "bN";
                 }else if (row == 0 && col == 2 || row == 0 && col == 5){
                     Figur = new Text("♝");
                     brettStatus[row][col] = "bB";
@@ -57,7 +62,7 @@ public class Schachbrett extends Application {
                     brettStatus[row][col] = "wR";
                 } else if (row == 7 && col == 1 || row == 7 && col == 6){
                     Figur = new Text("♘");
-                    brettStatus[row][col] = "wK";
+                    brettStatus[row][col] = "wN";
                 }else if (row == 7 && col == 2 || row == 7 && col == 5){
                     Figur = new Text("♗");
                     brettStatus[row][col] = "wB";
@@ -85,21 +90,35 @@ public class Schachbrett extends Application {
 
 
                 tile.setOnMouseClicked(e -> {
+                    StackPane clicked =  (StackPane) e.getSource();
                     if (tile.getChildren().isEmpty() == false && Figurenpeicher == null){
                         Figurenpeicher = (Text) tile.getChildren().get(0);
                         TileSpeicher = tile;
-                        //tile.setStyle("-fx-background-color: #add8e6");
+                        originalTileFarbe = tile.getStyle().toString();
+                        startCol = GridPane.getColumnIndex((clicked));
+                        startRow = GridPane.getRowIndex((clicked));
+                        tile.setStyle("-fx-background-color: #add8e6");
 
 
-                    } else if (Figurenpeicher != null){
+                    } else if (Figurenpeicher != null) {
 
                         TileSpeicher.getChildren().clear();
 
                         tile.getChildren().add(Figurenpeicher);
 
+                        if (originalTileFarbe.equals("-fx-background-color: #F5F5F5")) {
+                            TileSpeicher.setStyle("-fx-background-color: #F5F5F5");
+                        } else
+                            TileSpeicher.setStyle("-fx-background-color: #708090");
+
+
                         Figurenpeicher = null;
                         TileSpeicher = null;
+                        zielCol = GridPane.getColumnIndex((clicked));
+                        zielRow = GridPane.getRowIndex((clicked));
+
                     }
+
                 });
             }
         }
