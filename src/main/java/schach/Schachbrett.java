@@ -109,11 +109,11 @@ public class Schachbrett extends Application {
                     //Event zum bewegen einer bereits angeklickten Figur
                     } else if (Figurenpeicher != null) {
 
-                        FigurenLogik logik =  new FigurenLogik();
+                        FigurenLogik logik = new FigurenLogik();
                         zielRow = GridPane.getRowIndex((clicked));
                         zielCol = GridPane.getColumnIndex((clicked));
 
-                        if (logik.ZugErlaubnis(startRow, startCol,  zielRow, zielCol)) {
+                        if (logik.ZugErlaubnis(startRow, startCol, zielRow, zielCol)) {
                             TileSpeicher.getChildren().clear();
 
                             tile.getChildren().add(Figurenpeicher);
@@ -123,14 +123,22 @@ public class Schachbrett extends Application {
 
                             if (originalTileFarbe.equals("-fx-background-color: #F5F5F5")) {
                                 TileSpeicher.setStyle("-fx-background-color: #F5F5F5");
-                            } else
+                            } else {
                                 TileSpeicher.setStyle("-fx-background-color: #708090");
 
+                            }
+
+                        } else {
+                            if (originalTileFarbe.equals("-fx-background-color: #F5F5F5")) {
+                                TileSpeicher.setStyle("-fx-background-color: #F5F5F5");
+                            } else {
+                                TileSpeicher.setStyle("-fx-background-color: #708090");
+
+                            }
                         }
                         Figurenpeicher = null;
                         TileSpeicher = null;
                     }
-
                 });
             }
         }
