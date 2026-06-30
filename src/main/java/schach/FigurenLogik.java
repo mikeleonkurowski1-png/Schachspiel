@@ -1,8 +1,8 @@
 package schach;
 
 
-public class FIgurenLogik {
-    private boolean ZugErlaubnis(int sRow,int sCol, int zRow, int zCol) {
+public class FigurenLogik {
+    public boolean ZugErlaubnis(int sRow,int sCol, int zRow, int zCol) {
         String Figur = Schachbrett.brettStatus[sRow][sCol];
 
         if (Figur == null) {
@@ -11,6 +11,11 @@ public class FIgurenLogik {
 
         switch (Figur) {
             case "wR":
+                if (sRow == zRow && sCol != zCol || sRow != zRow && sCol == zCol) {
+                    return true;
+                } else {
+                    return false;
+                }
             case "wN":
             case "wB":
             case "wQ":

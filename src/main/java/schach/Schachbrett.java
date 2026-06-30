@@ -15,7 +15,7 @@ public class Schachbrett extends Application {
     private static final int Tile_size = 80;
     Text Figurenpeicher = null;
     StackPane TileSpeicher = null;
-    public static String[][] brettStatus = new String[8][8];
+    public static String[][] brettStatus = new String[8][8]; //Dient der Logik im Hintergrund [Speichert Figuren-Position)
     int startRow = 0;
     int startCol = 0;
     int zielRow = 0;
@@ -25,6 +25,9 @@ public class Schachbrett extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
         GridPane Board = new GridPane();
+
+
+        // Schleife zum Erstellen des Schachbretts und der Startaufstellung
 
         for (int row = 0; row < 8; row++){
             for (int col = 0; col < 8; col++){
@@ -89,8 +92,12 @@ public class Schachbrett extends Application {
                 Board.add(tile, col, row);
 
 
+                // Maus-Klick Event
+
                 tile.setOnMouseClicked(e -> {
                     StackPane clicked =  (StackPane) e.getSource();
+
+                    //Event zum auswählen der Figur, die bewegt werden soll
                     if (tile.getChildren().isEmpty() == false && Figurenpeicher == null){
                         Figurenpeicher = (Text) tile.getChildren().get(0);
                         TileSpeicher = tile;
@@ -99,24 +106,29 @@ public class Schachbrett extends Application {
                         startRow = GridPane.getRowIndex((clicked));
                         tile.setStyle("-fx-background-color: #add8e6");
 
-
+                    //Event zum bewegen einer bereits angeklickten Figur
                     } else if (Figurenpeicher != null) {
 
-                        TileSpeicher.getChildren().clear();
+                        FigurenLogik logik =  new FigurenLogik();
+                        zielRow = GridPane.getRowIndex((clicked));
+                        zielCol = GridPane.getColumnIndex((clicked));
 
-                        tile.getChildren().add(Figurenpeicher);
+                        if (logik.ZugErlaubnis(startRow, startCol,  zielRow, zielCol)) {
+                            TileSpeicher.getChildren().clear();
 
-                        if (originalTileFarbe.equals("-fx-background-color: #F5F5F5")) {
-                            TileSpeicher.setStyle("-fx-background-color: #F5F5F5");
-                        } else
-                            TileSpeicher.setStyle("-fx-background-color: #708090");
+                            tile.getChildren().add(Figurenpeicher);
 
+                            brettStatus[zielRow][zielCol] = brettStatus[startRow][startCol];
+                            brettStatus[startRow][startCol] = null;
 
+                            if (originalTileFarbe.equals("-fx-background-color: #F5F5F5")) {
+                                TileSpeicher.setStyle("-fx-background-color: #F5F5F5");
+                            } else
+                                TileSpeicher.setStyle("-fx-background-color: #708090");
+
+                        }
                         Figurenpeicher = null;
                         TileSpeicher = null;
-                        zielCol = GridPane.getColumnIndex((clicked));
-                        zielRow = GridPane.getRowIndex((clicked));
-
                     }
 
                 });
@@ -124,7 +136,7 @@ public class Schachbrett extends Application {
         }
 
 
-
+        //Erstellen der Szene (Brett)
         Scene scene = new Scene(Board, 8 * Tile_size, 8 * Tile_size);
 
         primaryStage.setTitle("Schachspiel");
