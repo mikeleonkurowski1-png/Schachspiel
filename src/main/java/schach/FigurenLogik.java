@@ -10,23 +10,29 @@ public class FigurenLogik {
         }
 
         switch (Figur) {
-            case "wR":
+            case "wR", "bR":
                 if (sRow == zRow && sCol != zCol || sRow != zRow && sCol == zCol) {
                     return true;
                 } else {
                     return false;
                 }
-            case "wN":
-            case "wB":
-            case "wQ":
-            case "wK":
-            case "wP":
-            case "bR":
-            case "bN":
-            case "bQ":
-            case "bK":
+            case "wN", "bN":
+            case "wB", "bB":
+            case "wQ", "bQ":
+            case "wK", "bK":
             case "bP":
-            case "bB":
+                if (zRow == sRow + 1 && sCol == zCol){
+                    return true;
+                } else  {
+                    return false;
+                }
+            case "wP":
+                if (zRow == sRow - 1 && sCol == zCol){
+                    return true;
+                } else  {
+                    return false;
+                }
+
         }
         return false;
     }
