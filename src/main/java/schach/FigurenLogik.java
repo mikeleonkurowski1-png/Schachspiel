@@ -17,6 +17,11 @@ public class FigurenLogik {
                     return false;
                 }
             case "wN", "bN":
+                if (zRow == sRow + 2 && zCol == sCol + 1 || zRow == sRow + 2 && zCol == sCol - 1 || zRow == sRow - 2 && zCol == sCol + 1 || zRow == sRow - 2 && zCol == sCol - 1 || zRow == sRow + 1 &&  zCol == sCol + 2 || zRow == sRow - 1 && zCol == sCol + 2 || zRow == sRow + 1 && zCol == sCol - 2 || zRow == sRow - 1 && zCol == sCol - 2) {
+                    return true;
+                } else {
+                    return false;
+                }
             case "wB", "bB":
             case "wQ", "bQ":
 
