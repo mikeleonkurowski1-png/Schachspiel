@@ -23,6 +23,11 @@ public class FigurenLogik {
                     return false;
                 }
             case "wB", "bB":
+                if (zRow == sRow + 1 &&  zCol == sCol + 1 || zRow == sRow + 2 && zCol == sCol + 2 || zRow == sRow + 3 && zCol == sCol + 3 || zRow == sRow + 4 && zCol == sCol + 4 || zRow == sRow + 5 && zCol == sCol + 5 || zRow == sRow + 6 && zCol == sCol + 6 || zRow == sRow + 7 && zCol == sCol + 7 || zRow == sRow - 1 && zCol == sCol - 1 || zRow == sRow - 2 && zCol == sCol - 2 || zRow == sRow - 3 && zCol == sCol - 3 || zRow == sRow - 4 && zCol == sCol - 4 || zRow == sRow - 5 && zCol == sCol - 5 || zRow == sRow - 6 && zCol == sCol - 6 || zRow == sRow - 7 && zCol == sCol - 7 || zRow == sRow + 1 &&  zCol == sCol - 1 || zRow == sRow + 2 && zCol == sCol - 2 || zRow == sRow + 3 && zCol == sCol - 3 || zRow == sRow + 4 && zCol == sCol - 4 || zRow == sRow + 5 && zCol == sCol - 5 || zRow == sRow + 6 && zCol == sCol - 6 || zRow == sRow + 7 && zCol == sCol - 7 || zRow == sRow - 1 && zCol == sCol + 1 || zRow == sRow - 2 && zCol == sCol + 2 || zRow == sRow - 3 && zCol == sCol + 3 || zRow == sRow - 4 && zCol == sCol + 4 || zRow == sRow - 5 && zCol == sCol + 5 || zRow == sRow - 6 && zCol == sCol + 6 || zRow == sRow - 7 && zCol == sCol + 7) {
+                    return true;
+                } else {
+                    return false;
+                }
             case "wQ", "bQ":
 
 
