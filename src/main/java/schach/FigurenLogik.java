@@ -19,15 +19,27 @@ public class FigurenLogik {
             case "wN", "bN":
             case "wB", "bB":
             case "wQ", "bQ":
+
+
             case "wK", "bK":
+
+                    if (zRow == sRow + 1 && zCol == sCol || zRow == sRow - 1 && zCol == sCol || zCol == sCol + 1 && zRow == sRow || zCol == sCol - 1 && zRow == sRow || zRow == sRow + 1 && zCol == sCol - 1 || zRow == sRow + 1 && zCol == sCol + 1 ||  zRow == sRow - 1 && zCol == sCol - 1 || zRow == sRow - 1 && zCol == sCol + 1) {
+                    return true;
+                } else {
+                    return false;
+                }
+
             case "bP":
-                if (zRow == sRow + 1 && sCol == zCol){
+
+                    if (zRow == sRow + 1 && sCol == zCol){
                     return true;
                 } else  {
                     return false;
                 }
+
             case "wP":
-                if (zRow == sRow - 1 && sCol == zCol){
+
+                        if (zRow == sRow - 1 && sCol == zCol){
                     return true;
                 } else  {
                     return false;
@@ -37,3 +49,4 @@ public class FigurenLogik {
         return false;
     }
 }
+
