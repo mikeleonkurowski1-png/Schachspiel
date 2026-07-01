@@ -115,7 +115,7 @@ public class Schachbrett extends Application {
 
                         if (logik.ZugErlaubnis(startRow, startCol, zielRow, zielCol)) {
                             TileSpeicher.getChildren().clear();
-
+                            tile.getChildren().clear();
                             tile.getChildren().add(Figurenpeicher);
 
                             brettStatus[zielRow][zielCol] = brettStatus[startRow][startCol];
