@@ -48,19 +48,36 @@ public class FigurenLogik {
                 }
 
             case "bP":
+                    if (sRow == 1){ //Checken ob der Bauer noch nicht gezogen ist, falls nicht 2 Felder laufen ermöglichen
 
-                    if (zRow == sRow + 1 && sCol == zCol){
-                    return true;
-                } else  {
-                    return false;
-                }
+                        if (zRow == sRow + 1 && sCol == zCol || zRow == sRow + 2 && sCol == zCol) {
+                            return true;
+                        } else {
+                            return false;
+                        }
+
+                    } else {
+
+                        if (zRow == sRow + 1 && sCol == zCol) {
+                            return true;
+                        } else {
+                            return false;
+                        }
+                    }
 
             case "wP":
-
-                        if (zRow == sRow - 1 && sCol == zCol){
-                    return true;
-                } else  {
-                    return false;
+                if (sRow == 6){ //Checken ob der Bauer noch nicht gezogen ist, falls nicht 2 Felder laufen ermöglichen
+                    if (zRow == sRow - 1 && sCol == zCol || zRow == sRow - 2 && sCol == zCol) {
+                        return true;
+                    } else {
+                        return false;
+                    }
+                } else {
+                    if (zRow == sRow - 1 && sCol == zCol) {
+                        return true;
+                    } else {
+                        return false;
+                    }
                 }
 
         }
