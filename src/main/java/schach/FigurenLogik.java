@@ -23,7 +23,40 @@ public class FigurenLogik {
                 }
 
                 if (sRow == zRow && sCol != zCol || sRow != zRow && sCol == zCol) {
-                    return true;
+
+                    //Prüft ob etwas bei einer Bewegung nach rechts im Weg ist
+                    if (sRow == zRow && zCol > sCol){
+                        for (int i = sCol + 1; i < zCol; i++) {
+                            if (Schachbrett.brettStatus[sRow][i] != null) {
+                                return false;
+                            }
+                        } return true;
+                    }
+                    //Prüft ob etwas bei einer Bewegung nach links im Weg ist
+                    else if (sRow == zRow && zCol < sCol) {
+                        for (int i = sCol - 1; i > zCol; i--) {
+                            if (Schachbrett.brettStatus[sRow][i] != null) {
+                                return false;
+                            }
+                        } return true;
+                    }
+                    // Prüft ob etwas bei einer Bewegung nach oben im Weg ist
+                    else if (sCol == zCol && sRow > zRow) {
+                        for (int i = sRow - 1; i > zRow; i--) {
+                            if (Schachbrett.brettStatus[i][sCol] != null) {
+                                return false;
+                            }
+
+                        } return true;
+                    }
+                    //Prüft ob etwas bei einer Bewegung nach unten im Weg ist
+                    else if (sCol == zCol && sRow < zRow) {
+                        for (int i = sRow + 1; i < zRow; i++) {
+                            if (Schachbrett.brettStatus[i][sCol] != null) {
+                                return false;
+                            }
+                        } return true;
+                    }
                 } else {
                     return false;
                 }
