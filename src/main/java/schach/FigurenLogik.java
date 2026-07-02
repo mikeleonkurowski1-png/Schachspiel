@@ -9,18 +9,18 @@ public class FigurenLogik {
         if (Figur == null) {
             return false;
         }
+        //Dieser if-Block überprüft, ob man versucht eine eigene Figur zu schlagen.
+        if (ZielFigur != null) {
+            char zielFarbe = ZielFigur.charAt(0);
+            char startFarbe = Figur.charAt(0);
+            if (zielFarbe == startFarbe) {
+                return false;
+            }
+        }
 
         switch (Figur) {
 
             case "wR", "bR":
-                //Dieser if-Block überprüft, ob man versucht eine eigene Figur zu schlagen. (Temporäre, unelegante Lösung. Eigentlich in eigene FUnktion schreiben statt für jede Figur zu wiederholen)
-                if (ZielFigur != null) {
-                char zielFarbe = ZielFigur.charAt(0);
-                char startFarbe = Figur.charAt(0);
-                if (zielFarbe == startFarbe) {
-                return false;
-                    }
-                }
 
                 if (TurmKollision(sRow, sCol, zRow, zCol)) {
                     return true;
@@ -30,14 +30,6 @@ public class FigurenLogik {
 
             case "wN", "bN":
 
-                if (ZielFigur != null) {
-                    char zielFarbe = ZielFigur.charAt(0);
-                    char startFarbe = Figur.charAt(0);
-                    if (zielFarbe == startFarbe) {
-                        return false;
-                    }
-                }
-
                 if (zRow == sRow + 2 && zCol == sCol + 1 || zRow == sRow + 2 && zCol == sCol - 1 || zRow == sRow - 2 && zCol == sCol + 1 || zRow == sRow - 2 && zCol == sCol - 1 || zRow == sRow + 1 &&  zCol == sCol + 2 || zRow == sRow - 1 && zCol == sCol + 2 || zRow == sRow + 1 && zCol == sCol - 2 || zRow == sRow - 1 && zCol == sCol - 2) {
                     return true;
                 } else {
@@ -45,14 +37,6 @@ public class FigurenLogik {
                 }
 
             case "wB", "bB":
-
-                if (ZielFigur != null) {
-                    char zielFarbe = ZielFigur.charAt(0);
-                    char startFarbe = Figur.charAt(0);
-                    if (zielFarbe == startFarbe) {
-                        return false;
-                    }
-                }
 
                 if (LäuferKollision(sRow, sCol, zRow, zCol)) {
                     return true;
@@ -62,14 +46,6 @@ public class FigurenLogik {
 
             case "wQ", "bQ":
 
-                if (ZielFigur != null) {
-                    char zielFarbe = ZielFigur.charAt(0);
-                    char startFarbe = Figur.charAt(0);
-                    if (zielFarbe == startFarbe) {
-                        return false;
-                    }
-                }
-
                 if (TurmKollision(sRow, sCol, zRow, zCol) || LäuferKollision(sRow, sCol, zRow, zCol)) {
                     return true;
                 } else {
@@ -78,29 +54,13 @@ public class FigurenLogik {
 
             case "wK", "bK":
 
-                if (ZielFigur != null) {
-                    char zielFarbe = ZielFigur.charAt(0);
-                    char startFarbe = Figur.charAt(0);
-                    if (zielFarbe == startFarbe) {
-                        return false;
-                    }
-                }
-
-                    if (zRow == sRow + 1 && zCol == sCol || zRow == sRow - 1 && zCol == sCol || zCol == sCol + 1 && zRow == sRow || zCol == sCol - 1 && zRow == sRow || zRow == sRow + 1 && zCol == sCol - 1 || zRow == sRow + 1 && zCol == sCol + 1 ||  zRow == sRow - 1 && zCol == sCol - 1 || zRow == sRow - 1 && zCol == sCol + 1) {
+                if (zRow == sRow + 1 && zCol == sCol || zRow == sRow - 1 && zCol == sCol || zCol == sCol + 1 && zRow == sRow || zCol == sCol - 1 && zRow == sRow || zRow == sRow + 1 && zCol == sCol - 1 || zRow == sRow + 1 && zCol == sCol + 1 ||  zRow == sRow - 1 && zCol == sCol - 1 || zRow == sRow - 1 && zCol == sCol + 1) {
                     return true;
                 } else {
                     return false;
                 }
 
             case "bP":
-
-                if (ZielFigur != null) {
-                    char zielFarbe = ZielFigur.charAt(0);
-                    char startFarbe = Figur.charAt(0);
-                    if (zielFarbe == startFarbe) {
-                        return false;
-                    }
-                }
 
                     if (sRow == 1){ //Checken ob der Bauer noch nicht gezogen ist, falls nicht 2 Felder laufen ermöglichen
 
@@ -120,14 +80,6 @@ public class FigurenLogik {
                     }
 
             case "wP":
-
-                if (ZielFigur != null) {
-                    char zielFarbe = ZielFigur.charAt(0);
-                    char startFarbe = Figur.charAt(0);
-                    if (zielFarbe == startFarbe) {
-                        return false;
-                    }
-                }
 
                 if (sRow == 6){ //Checken ob der Bauer noch nicht gezogen ist, falls nicht 2 Felder laufen ermöglichen
                     if (zRow == sRow - 1 && sCol == zCol || zRow == sRow - 2 && sCol == zCol) {
