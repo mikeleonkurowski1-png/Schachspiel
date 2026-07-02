@@ -88,7 +88,64 @@ public class FigurenLogik {
                 }
 
                 if (zRow == sRow + 1 &&  zCol == sCol + 1 || zRow == sRow + 2 && zCol == sCol + 2 || zRow == sRow + 3 && zCol == sCol + 3 || zRow == sRow + 4 && zCol == sCol + 4 || zRow == sRow + 5 && zCol == sCol + 5 || zRow == sRow + 6 && zCol == sCol + 6 || zRow == sRow + 7 && zCol == sCol + 7 || zRow == sRow - 1 && zCol == sCol - 1 || zRow == sRow - 2 && zCol == sCol - 2 || zRow == sRow - 3 && zCol == sCol - 3 || zRow == sRow - 4 && zCol == sCol - 4 || zRow == sRow - 5 && zCol == sCol - 5 || zRow == sRow - 6 && zCol == sCol - 6 || zRow == sRow - 7 && zCol == sCol - 7 || zRow == sRow + 1 &&  zCol == sCol - 1 || zRow == sRow + 2 && zCol == sCol - 2 || zRow == sRow + 3 && zCol == sCol - 3 || zRow == sRow + 4 && zCol == sCol - 4 || zRow == sRow + 5 && zCol == sCol - 5 || zRow == sRow + 6 && zCol == sCol - 6 || zRow == sRow + 7 && zCol == sCol - 7 || zRow == sRow - 1 && zCol == sCol + 1 || zRow == sRow - 2 && zCol == sCol + 2 || zRow == sRow - 3 && zCol == sCol + 3 || zRow == sRow - 4 && zCol == sCol + 4 || zRow == sRow - 5 && zCol == sCol + 5 || zRow == sRow - 6 && zCol == sCol + 6 || zRow == sRow - 7 && zCol == sCol + 7) {
-                    return true;
+                    //Überprüft KOllision bei rechts unten Bewegung
+                    if (zRow > sRow && zCol > sCol) {
+                        int r = sRow + 1;
+                        int c = sCol + 1;
+
+                        while (c < zCol && r < zRow){
+                            if (Schachbrett.brettStatus[r][c] != null) {
+                                return false;
+                            }
+                            r++;
+                            c++;
+                        }
+                        return true;
+                    }
+
+                    //Überprüft KOllision bei rechts oben Bewegung
+                    if (zRow < sRow && zCol > sCol) {
+                        int r = sRow - 1;
+                        int c = sCol + 1;
+
+                        while (c < zCol && r > zRow){
+                            if (Schachbrett.brettStatus[r][c] != null) {
+                                return false;
+                            }
+                            r--;
+                            c++;
+                        }
+                        return true;
+                    }
+                    //Überprüft KOllision bei links unten Bewegung
+                    if (zRow > sRow && zCol < sCol) {
+                        int r = sRow + 1;
+                        int c = sCol - 1;
+
+                        while (c > zCol && r < zRow){
+                            if (Schachbrett.brettStatus[r][c] != null) {
+                                return false;
+                            }
+                            r++;
+                            c--;
+                        }
+                        return true;
+                    }
+                    //Überprüft KOllision bei links oben Bewegung
+                    if (zRow < sRow && zCol < sCol) {
+                        int r = sRow - 1;
+                        int c = sCol - 1;
+
+                        while (c > zCol && r > zRow){
+                            if (Schachbrett.brettStatus[r][c] != null) {
+                                return false;
+                            }
+                            r--;
+                            c--;
+                        }
+                        return true;
+                    }
+
                 } else {
                     return false;
                 }
