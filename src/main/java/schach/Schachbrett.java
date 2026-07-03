@@ -21,6 +21,8 @@ public class Schachbrett extends Application {
     int zielRow = 0;
     int zielCol = 0;
     String originalTileFarbe = null;
+    boolean weißamZug = true;
+    char figurFarbe;
 
     @Override
     public void start(Stage primaryStage) throws Exception {
@@ -96,49 +98,62 @@ public class Schachbrett extends Application {
 
                 tile.setOnMouseClicked(e -> {
                     StackPane clicked =  (StackPane) e.getSource();
+                    int aktuelleRow = GridPane.getRowIndex(tile);
+                    int aktuelleCol = GridPane.getColumnIndex(tile);
 
                     //Event zum auswählen der Figur, die bewegt werden soll
                     if (tile.getChildren().isEmpty() == false && Figurenpeicher == null){
-                        Figurenpeicher = (Text) tile.getChildren().get(0);
-                        TileSpeicher = tile;
-                        originalTileFarbe = tile.getStyle().toString();
-                        startCol = GridPane.getColumnIndex((clicked));
-                        startRow = GridPane.getRowIndex((clicked));
-                        tile.setStyle("-fx-background-color: #add8e6");
+
+                        String FigurName = brettStatus[aktuelleRow][aktuelleCol];
+                        //Dieser Block stellt sicher, dass man nur eine Figur der Farbe auswählen kann, die dran ist
+                        if (FigurName != null){
+                            if ((weißamZug == true && FigurName.startsWith("b")) || (weißamZug == false && FigurName.startsWith("w"))) {
+                                return;
+                            }
+                        }
+                            Figurenpeicher = (Text) tile.getChildren().get(0);
+                            TileSpeicher = tile;
+                            originalTileFarbe = tile.getStyle().toString();
+                            startCol = GridPane.getColumnIndex((clicked));
+                            startRow = GridPane.getRowIndex((clicked));
+                            tile.setStyle("-fx-background-color: #add8e6");
+
 
                     //Event zum bewegen einer bereits angeklickten Figur
                     } else if (Figurenpeicher != null) {
 
-                        FigurenLogik logik = new FigurenLogik();
-                        zielRow = GridPane.getRowIndex((clicked));
-                        zielCol = GridPane.getColumnIndex((clicked));
+                            FigurenLogik logik = new FigurenLogik();
+                            zielRow = GridPane.getRowIndex((clicked));
+                            zielCol = GridPane.getColumnIndex((clicked));
 
-                        if (logik.ZugErlaubnis(startRow, startCol, zielRow, zielCol)) {
-                            TileSpeicher.getChildren().clear();
-                            tile.getChildren().clear();
-                            tile.getChildren().add(Figurenpeicher);
+                            if (logik.ZugErlaubnis(startRow, startCol, zielRow, zielCol)) {
+                                TileSpeicher.getChildren().clear();
+                                tile.getChildren().clear();
+                                tile.getChildren().add(Figurenpeicher);
 
-                            brettStatus[zielRow][zielCol] = brettStatus[startRow][startCol];
-                            brettStatus[startRow][startCol] = null;
+                                brettStatus[zielRow][zielCol] = brettStatus[startRow][startCol];
+                                brettStatus[startRow][startCol] = null;
 
-                            if (originalTileFarbe.equals("-fx-background-color: #F5F5F5")) {
-                                TileSpeicher.setStyle("-fx-background-color: #F5F5F5");
+                                if (originalTileFarbe.equals("-fx-background-color: #F5F5F5")) {
+                                    TileSpeicher.setStyle("-fx-background-color: #F5F5F5");
+                                } else {
+                                    TileSpeicher.setStyle("-fx-background-color: #708090");
+
+                                }
+                                weißamZug = !weißamZug;
+
                             } else {
-                                TileSpeicher.setStyle("-fx-background-color: #708090");
+                                if (originalTileFarbe.equals("-fx-background-color: #F5F5F5")) {
+                                    TileSpeicher.setStyle("-fx-background-color: #F5F5F5");
+                                } else {
+                                    TileSpeicher.setStyle("-fx-background-color: #708090");
 
+                                }
                             }
-
-                        } else {
-                            if (originalTileFarbe.equals("-fx-background-color: #F5F5F5")) {
-                                TileSpeicher.setStyle("-fx-background-color: #F5F5F5");
-                            } else {
-                                TileSpeicher.setStyle("-fx-background-color: #708090");
-
-                            }
+                            Figurenpeicher = null;
+                            TileSpeicher = null;
                         }
-                        Figurenpeicher = null;
-                        TileSpeicher = null;
-                    }
+
                 });
             }
         }
