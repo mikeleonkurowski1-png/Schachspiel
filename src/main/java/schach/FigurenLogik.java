@@ -62,9 +62,13 @@ public class FigurenLogik {
 
             case "bP":
 
+                    if ((zRow == sRow + 1 && (zCol == sCol - 1 || zCol == sCol + 1)) && Schachbrett.brettStatus[zRow][zCol] != null) {
+                        return true;
+                    }
+
                     if (sRow == 1){ //Checken ob der Bauer noch nicht gezogen ist, falls nicht 2 Felder laufen ermöglichen
 
-                        if (zRow == sRow + 1 && sCol == zCol || zRow == sRow + 2 && sCol == zCol) {
+                        if (zRow == sRow + 1 && sCol == zCol && Schachbrett.brettStatus[zRow][zCol] == null || zRow == sRow + 2 && sCol == zCol && Schachbrett.brettStatus[zRow][zCol] == null) {
                             return true;
                         } else {
                             return false;
@@ -72,7 +76,7 @@ public class FigurenLogik {
 
                     } else {
 
-                        if (zRow == sRow + 1 && sCol == zCol) {
+                        if (zRow == sRow + 1 && sCol == zCol && Schachbrett.brettStatus[zRow][zCol] == null) {
                             return true;
                         } else {
                             return false;
@@ -81,6 +85,9 @@ public class FigurenLogik {
 
             case "wP":
 
+                if ((zRow == sRow - 1 && (zCol == sCol - 1 || zCol == sCol + 1)) && Schachbrett.brettStatus[zRow][zCol] != null) {
+                    return true;
+                }
                 if (sRow == 6){ //Checken ob der Bauer noch nicht gezogen ist, falls nicht 2 Felder laufen ermöglichen
                     if (zRow == sRow - 1 && sCol == zCol || zRow == sRow - 2 && sCol == zCol) {
                         return true;
