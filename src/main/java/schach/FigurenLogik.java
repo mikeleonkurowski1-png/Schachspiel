@@ -89,13 +89,13 @@ public class FigurenLogik {
                     return true;
                 }
                 if (sRow == 6){ //Checken ob der Bauer noch nicht gezogen ist, falls nicht 2 Felder laufen ermöglichen
-                    if (zRow == sRow - 1 && sCol == zCol || zRow == sRow - 2 && sCol == zCol) {
+                    if (zRow == sRow - 1 && sCol == zCol && Schachbrett.brettStatus[zRow][zCol] == null || zRow == sRow - 2 && sCol == zCol && Schachbrett.brettStatus[zRow][zCol] == null) {
                         return true;
                     } else {
                         return false;
                     }
                 } else {
-                    if (zRow == sRow - 1 && sCol == zCol) {
+                    if (zRow == sRow - 1 && sCol == zCol && Schachbrett.brettStatus[zRow][zCol] == null) {
                         return true;
                     } else {
                         return false;
