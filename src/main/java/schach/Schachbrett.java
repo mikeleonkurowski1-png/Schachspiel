@@ -1,11 +1,15 @@
 package schach;
 
 import javafx.application.Application;
+import javafx.geometry.Insets;
 import javafx.scene.Scene;
+import javafx.scene.effect.BlurType;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
+import javafx.scene.effect.DropShadow;
+import javafx.scene.paint.Color;
 
 public class Schachbrett extends Application {
     public static void main(String[] args) {
@@ -142,6 +146,15 @@ public class Schachbrett extends Application {
                                 }
                                 weißamZug = !weißamZug;
 
+                                DropShadow Anzeige = (DropShadow) Board.getEffect(); //Dropshadow ändern, je nachdem wer am Zug ist
+                                if (Anzeige != null) {
+                                    if (weißamZug == true) {
+                                        Anzeige.setColor(Color.WHITE);
+                                    } else {
+                                        Anzeige.setColor(Color.BLACK);
+                                    }
+                                }
+
                             } else {
                                 if (originalTileFarbe.equals("-fx-background-color: #F5F5F5")) {
                                     TileSpeicher.setStyle("-fx-background-color: #F5F5F5");
@@ -157,11 +170,18 @@ public class Schachbrett extends Application {
                 });
             }
         }
-
+        //Dropshadow (quasi underglow fürs Brett) um anzuzeigen, welcher Spieler am Zug ist
+        DropShadow dropShadow = new DropShadow();
+        dropShadow.setRadius(30);
+        dropShadow.setSpread(0.6);
+        dropShadow.setColor(Color.WHITE);
 
         //Erstellen der Szene (Brett)
         Scene scene = new Scene(Board, 8 * Tile_size, 8 * Tile_size);
+        scene.setFill(Color.GRAY);
 
+        Board.setEffect(dropShadow);
+        Board.setPadding(new Insets(40));
         primaryStage.setTitle("Schachspiel");
         primaryStage.setScene(scene);
         primaryStage.setResizable(false);

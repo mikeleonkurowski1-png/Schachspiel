@@ -10,7 +10,7 @@
 - [X] Klick-Logik: Figur + Zielfeld auswählen, Figur bewegt sich (noch ohne Regeln)
 - [X] Grundlegende Zugregeln pro Figurentyp
 - [X] Schlagen von Figuren
-- [ ] Spielerwechsel + Anzeige
+- [X] Spielerwechsel + Anzeige
 - [ ] Schach-Erkennung
 - [ ] Schachmatt-Erkennung + Spielende
 - [ ] Später: Spezialzüge, Notation
