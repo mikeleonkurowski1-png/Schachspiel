@@ -25,8 +25,11 @@ public class Schachbrett extends Application {
     int zielRow = 0;
     int zielCol = 0;
     String originalTileFarbe = null;
-    boolean weißamZug = true;
-    char figurFarbe;
+    public static boolean weißamZug = true;
+    public static int WKönigRow = 7;
+    public static int WKönigCol = 4;
+    public static int BKönigRow = 0;
+    public static int BKönigCol = 4;
 
     @Override
     public void start(Stage primaryStage) throws Exception {
@@ -126,51 +129,108 @@ public class Schachbrett extends Application {
                     //Event zum bewegen einer bereits angeklickten Figur
                     } else if (Figurenpeicher != null) {
 
-                            FigurenLogik logik = new FigurenLogik();
-                            zielRow = GridPane.getRowIndex((clicked));
-                            zielCol = GridPane.getColumnIndex((clicked));
+                        FigurenLogik logik = new FigurenLogik();
+                        zielRow = GridPane.getRowIndex((clicked));
+                        zielCol = GridPane.getColumnIndex((clicked));
 
-                            if (logik.ZugErlaubnis(startRow, startCol, zielRow, zielCol)) {
-                                TileSpeicher.getChildren().clear();
-                                tile.getChildren().clear();
-                                tile.getChildren().add(Figurenpeicher);
+                        if (logik.ZugErlaubnis(startRow, startCol, zielRow, zielCol)) { //Überprüft, ob der Zug legal ist
+                            TileSpeicher.getChildren().clear();
+                            tile.getChildren().clear();
+                            tile.getChildren().add(Figurenpeicher);
 
-                                brettStatus[zielRow][zielCol] = brettStatus[startRow][startCol];
-                                brettStatus[startRow][startCol] = null;
+                            brettStatus[zielRow][zielCol] = brettStatus[startRow][startCol];
+                            brettStatus[startRow][startCol] = null;
 
-                                if (originalTileFarbe.equals("-fx-background-color: #F5F5F5")) {
-                                    TileSpeicher.setStyle("-fx-background-color: #F5F5F5");
-                                } else {
-                                    TileSpeicher.setStyle("-fx-background-color: #708090");
+                            if ((startRow + startCol) % 2 == 0) {
+                                TileSpeicher.setStyle("-fx-background-color: #F5F5F5");
+                            } else {
+                                TileSpeicher.setStyle("-fx-background-color: #708090");
+                            }
+                            if (brettStatus[zielRow][zielCol].equals("wK")) { //Tracked die Königsposition
+                                WKönigCol = zielCol;
+                                WKönigRow = zielRow;
+                            }
+                            if (brettStatus[zielRow][zielCol].equals("bK")) { //Tracked die Königsposition
+                                BKönigCol = zielCol;
+                                BKönigRow = zielRow;
+                            }
 
-                                }
-                                weißamZug = !weißamZug;
+                            Schacherkennung erkennung = new Schacherkennung();
+                            boolean Schach = erkennung.StehtimSchach();
 
-                                DropShadow Anzeige = (DropShadow) Board.getEffect(); //Dropshadow ändern, je nachdem wer am Zug ist
-                                if (Anzeige != null) {
-                                    if (weißamZug == true) {
-                                        Anzeige.setColor(Color.WHITE);
-                                    } else {
-                                        Anzeige.setColor(Color.BLACK);
+                            if (Schach) { //Falls einer der Könige im Schach steht überprüft das Programm hier welcher und färbt dessen Tile rot
+                                if (weißamZug == true) {
+                                    for (javafx.scene.Node node : Board.getChildren()) {
+
+                                        int rowcheck = GridPane.getRowIndex(node);
+                                        int colcheck = GridPane.getColumnIndex(node);
+
+                                        if (rowcheck == BKönigRow && colcheck == BKönigCol) {
+
+                                            StackPane BKönigsTile = (StackPane) node;
+
+                                            BKönigsTile.setStyle("-fx-background-color: #FF6347;");
+
+                                            break;
+                                        }
+                                    }
+                                } else if (weißamZug != true) {
+                                    for (javafx.scene.Node node : Board.getChildren()) {
+
+                                        int rowcheck = GridPane.getRowIndex(node);
+                                        int colcheck = GridPane.getColumnIndex(node);
+
+                                        if (rowcheck == WKönigRow && colcheck == WKönigCol) {
+
+                                            StackPane WKönigsTile = (StackPane) node;
+
+                                            WKönigsTile.setStyle("-fx-background-color: #FF6347;");
+
+                                            break;
+                                        }
                                     }
                                 }
+                            } else { //Steht kein König nicht (mehr) im Schach werden die Felder wieder zurückgefärbt
+                                for (javafx.scene.Node node : Board.getChildren()) {
+                                    int rowcheck = GridPane.getRowIndex(node);
+                                    int colcheck = GridPane.getColumnIndex(node);
 
-                            } else {
-                                if (originalTileFarbe.equals("-fx-background-color: #F5F5F5")) {
-                                    TileSpeicher.setStyle("-fx-background-color: #F5F5F5");
-                                } else {
-                                    TileSpeicher.setStyle("-fx-background-color: #708090");
-
+                                    if ((rowcheck == WKönigRow && colcheck == WKönigCol) || (rowcheck == BKönigRow && colcheck == BKönigCol)){
+                                        StackPane königsTile = (StackPane) node;
+                                        if ((rowcheck + colcheck) % 2 == 0) {
+                                            königsTile.setStyle("-fx-background-color: #F5F5F5");
+                                        } else if ((rowcheck + colcheck) % 2 != 0){
+                                            königsTile.setStyle("-fx-background-color: #708090");
+                                        }
+                                    }
                                 }
                             }
-                            Figurenpeicher = null;
-                            TileSpeicher = null;
-                        }
+                            weißamZug = !weißamZug; //Spielerwechsel
 
+                            DropShadow Anzeige = (DropShadow) Board.getEffect(); //Dropshadow ändern, je nachdem wer am Zug ist
+                            if (Anzeige != null) {
+                                if (weißamZug == true) {
+                                    Anzeige.setColor(Color.WHITE);
+                                } else {
+                                    Anzeige.setColor(Color.BLACK);
+                                }
+                            }
+
+                        } else {
+                            if ((startRow + startCol) % 2 == 0) {
+                                TileSpeicher.setStyle("-fx-background-color: #F5F5F5");
+                            } else {
+                                TileSpeicher.setStyle("-fx-background-color: #708090");
+
+                            }
+                        }
+                        Figurenpeicher = null;
+                        TileSpeicher = null;
+                    }
                 });
             }
         }
-        //Dropshadow (quasi underglow fürs Brett) um anzuzeigen, welcher Spieler am Zug ist
+        //Dropshadow (Underglow fürs Brett) um anzuzeigen, welcher Spieler am Zug ist
         DropShadow dropShadow = new DropShadow();
         dropShadow.setRadius(30);
         dropShadow.setSpread(0.6);
