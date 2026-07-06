@@ -5,6 +5,7 @@ public class FigurenLogik {
     public boolean ZugErlaubnis(int sRow,int sCol, int zRow, int zCol) {
         String Figur = Schachbrett.brettStatus[sRow][sCol];
         String ZielFigur = Schachbrett.brettStatus[zRow][zCol];
+        Schacherkennung erkennung = new Schacherkennung();
 
         if (Figur == null) {
             return false;
@@ -18,55 +19,55 @@ public class FigurenLogik {
             }
         }
 
-        switch (Figur) {
+            switch (Figur) {
 
-            case "wR", "bR":
+                case "wR", "bR":
 
-                if (TurmKollision(sRow, sCol, zRow, zCol)) {
-                    return true;
-                } else {
-                    return false;
-                }
+                    if (TurmKollision(sRow, sCol, zRow, zCol)) {
+                        return true;
+                    } else {
+                        return false;
+                    }
 
-            case "wN", "bN":
+                case "wN", "bN":
 
-                if (zRow == sRow + 2 && zCol == sCol + 1 || zRow == sRow + 2 && zCol == sCol - 1 || zRow == sRow - 2 && zCol == sCol + 1 || zRow == sRow - 2 && zCol == sCol - 1 || zRow == sRow + 1 &&  zCol == sCol + 2 || zRow == sRow - 1 && zCol == sCol + 2 || zRow == sRow + 1 && zCol == sCol - 2 || zRow == sRow - 1 && zCol == sCol - 2) {
-                    return true;
-                } else {
-                    return false;
-                }
+                    if (zRow == sRow + 2 && zCol == sCol + 1 || zRow == sRow + 2 && zCol == sCol - 1 || zRow == sRow - 2 && zCol == sCol + 1 || zRow == sRow - 2 && zCol == sCol - 1 || zRow == sRow + 1 && zCol == sCol + 2 || zRow == sRow - 1 && zCol == sCol + 2 || zRow == sRow + 1 && zCol == sCol - 2 || zRow == sRow - 1 && zCol == sCol - 2) {
+                        return true;
+                    } else {
+                        return false;
+                    }
 
-            case "wB", "bB":
+                case "wB", "bB":
 
-                if (LäuferKollision(sRow, sCol, zRow, zCol)) {
-                    return true;
-                } else {
-                    return false;
-                }
+                    if (LäuferKollision(sRow, sCol, zRow, zCol)) {
+                        return true;
+                    } else {
+                        return false;
+                    }
 
-            case "wQ", "bQ":
+                case "wQ", "bQ":
 
-                if (TurmKollision(sRow, sCol, zRow, zCol) || LäuferKollision(sRow, sCol, zRow, zCol)) {
-                    return true;
-                } else {
-                    return false;
-                }
+                    if (TurmKollision(sRow, sCol, zRow, zCol) || LäuferKollision(sRow, sCol, zRow, zCol)) {
+                        return true;
+                    } else {
+                        return false;
+                    }
 
-            case "wK", "bK":
+                case "wK", "bK":
 
-                if (zRow == sRow + 1 && zCol == sCol || zRow == sRow - 1 && zCol == sCol || zCol == sCol + 1 && zRow == sRow || zCol == sCol - 1 && zRow == sRow || zRow == sRow + 1 && zCol == sCol - 1 || zRow == sRow + 1 && zCol == sCol + 1 ||  zRow == sRow - 1 && zCol == sCol - 1 || zRow == sRow - 1 && zCol == sCol + 1) {
-                    return true;
-                } else {
-                    return false;
-                }
+                    if (zRow == sRow + 1 && zCol == sCol || zRow == sRow - 1 && zCol == sCol || zCol == sCol + 1 && zRow == sRow || zCol == sCol - 1 && zRow == sRow || zRow == sRow + 1 && zCol == sCol - 1 || zRow == sRow + 1 && zCol == sCol + 1 || zRow == sRow - 1 && zCol == sCol - 1 || zRow == sRow - 1 && zCol == sCol + 1) {
+                            return true;
+                    } else {
+                        return false;
+                    }
 
-            case "bP":
+                case "bP":
 
                     if ((zRow == sRow + 1 && (zCol == sCol - 1 || zCol == sCol + 1)) && Schachbrett.brettStatus[zRow][zCol] != null) {
                         return true;
                     }
 
-                    if (sRow == 1){ //Checken ob der Bauer noch nicht gezogen ist, falls nicht 2 Felder laufen ermöglichen
+                    if (sRow == 1) { //Checken ob der Bauer noch nicht gezogen ist, falls nicht 2 Felder laufen ermöglichen
 
                         if (zRow == sRow + 1 && sCol == zCol && Schachbrett.brettStatus[zRow][zCol] == null || zRow == sRow + 2 && sCol == zCol && Schachbrett.brettStatus[zRow][zCol] == null) {
                             return true;
@@ -83,26 +84,27 @@ public class FigurenLogik {
                         }
                     }
 
-            case "wP":
+                case "wP":
 
-                if ((zRow == sRow - 1 && (zCol == sCol - 1 || zCol == sCol + 1)) && Schachbrett.brettStatus[zRow][zCol] != null) {
-                    return true;
-                }
-                if (sRow == 6){ //Checken ob der Bauer noch nicht gezogen ist, falls nicht 2 Felder laufen ermöglichen
-                    if (zRow == sRow - 1 && sCol == zCol && Schachbrett.brettStatus[zRow][zCol] == null || zRow == sRow - 2 && sCol == zCol && Schachbrett.brettStatus[zRow][zCol] == null) {
+                    if ((zRow == sRow - 1 && (zCol == sCol - 1 || zCol == sCol + 1)) && Schachbrett.brettStatus[zRow][zCol] != null) {
                         return true;
-                    } else {
-                        return false;
                     }
-                } else {
-                    if (zRow == sRow - 1 && sCol == zCol && Schachbrett.brettStatus[zRow][zCol] == null) {
-                        return true;
+                    if (sRow == 6) { //Checken ob der Bauer noch nicht gezogen ist, falls nicht 2 Felder laufen ermöglichen
+                        if (zRow == sRow - 1 && sCol == zCol && Schachbrett.brettStatus[zRow][zCol] == null || zRow == sRow - 2 && sCol == zCol && Schachbrett.brettStatus[zRow][zCol] == null) {
+                            return true;
+                        } else {
+                            return false;
+                        }
                     } else {
-                        return false;
+                        if (zRow == sRow - 1 && sCol == zCol && Schachbrett.brettStatus[zRow][zCol] == null) {
+                            return true;
+                        } else {
+                            return false;
+                        }
                     }
-                }
 
-        }
+            }
+
         return false;
     }
 

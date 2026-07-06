@@ -3,7 +3,6 @@ package schach;
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
-import javafx.scene.effect.BlurType;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.scene.layout.GridPane;
@@ -134,14 +133,58 @@ public class Schachbrett extends Application {
                         zielCol = GridPane.getColumnIndex((clicked));
 
                         if (logik.ZugErlaubnis(startRow, startCol, zielRow, zielCol)) { //Überprüft, ob der Zug legal ist
+
+
+                          //Dieser ganze Block überprüft, ob man nach seinem Zug (immer noch) im Schach steht, indem er den Zug ausführt und falls ja wieder zurücksetzt.
+                            String alteZielFigur = brettStatus[zielRow][zielCol];
+                        brettStatus[zielRow][zielCol] = brettStatus[startRow][startCol];
+                        brettStatus[startRow][startCol] = null;
+
+                        int altWKönigRow = WKönigRow;
+                        int altWKönigCol = WKönigCol;
+                        int altBKönigRow = BKönigRow;
+                        int altBKönigCol = BKönigCol;
+
+                        if (brettStatus[zielRow][zielCol].equals("bK")) {
+                            BKönigRow = zielRow;
+                            BKönigCol = zielCol;
+                        } else if (brettStatus[zielRow][zielCol].equals("wK")) {
+                            WKönigRow =  zielRow;
+                            WKönigCol =  zielCol;
+                        }
+                        Schacherkennung erkennung = new Schacherkennung();
+
+                        weißamZug = !weißamZug;
+                        boolean inSchachZiehen = erkennung.StehtimSchach();
+                        weißamZug = !weißamZug;
+
+                        if (inSchachZiehen) {
+                            brettStatus[startRow][startCol] = brettStatus[zielRow][zielCol];
+                            brettStatus[zielRow][zielCol] = alteZielFigur;
+                            WKönigRow = altWKönigRow;
+                            WKönigCol = altWKönigCol;
+                            BKönigCol = altBKönigCol;
+                            BKönigRow = altBKönigRow;
+
+                            if ((startRow + startCol) % 2 == 0){
+                                TileSpeicher.setStyle("-fx-background-color: #F5F5F5");
+                            } else {
+                                TileSpeicher.setStyle("-fx-background-color: #708090");
+                            }
+
+                            TileSpeicher = null;
+                            Figurenpeicher = null;
+                            return;
+                        }
+
+
+
+                        //Ab hier wird der Zug ausgeführt, falls er legal ist
                             TileSpeicher.getChildren().clear();
                             tile.getChildren().clear();
                             tile.getChildren().add(Figurenpeicher);
 
-                            brettStatus[zielRow][zielCol] = brettStatus[startRow][startCol];
-                            brettStatus[startRow][startCol] = null;
-
-                            if ((startRow + startCol) % 2 == 0) {
+                            if ((startRow + startCol) % 2 == 0) { //Zurückfärben des angeklickten Felds
                                 TileSpeicher.setStyle("-fx-background-color: #F5F5F5");
                             } else {
                                 TileSpeicher.setStyle("-fx-background-color: #708090");
@@ -155,8 +198,8 @@ public class Schachbrett extends Application {
                                 BKönigRow = zielRow;
                             }
 
-                            Schacherkennung erkennung = new Schacherkennung();
-                            boolean Schach = erkennung.StehtimSchach();
+                            Schacherkennung erkennung2 = new Schacherkennung();
+                            boolean Schach = erkennung2.StehtimSchach();
 
                             if (Schach) { //Falls einer der Könige im Schach steht überprüft das Programm hier welcher und färbt dessen Tile rot
                                 if (weißamZug == true) {
