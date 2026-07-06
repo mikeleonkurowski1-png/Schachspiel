@@ -30,6 +30,9 @@ public class Schachbrett extends Application {
     public static int BKönigRow = 0;
     public static int BKönigCol = 4;
 
+    //Dropshadow (Underglow fürs Brett) um anzuzeigen, welcher Spieler am Zug ist
+        DropShadow dropShadow = new DropShadow();
+
     @Override
     public void start(Stage primaryStage) throws Exception {
         GridPane Board = new GridPane();
@@ -132,54 +135,50 @@ public class Schachbrett extends Application {
                         zielRow = GridPane.getRowIndex((clicked));
                         zielCol = GridPane.getColumnIndex((clicked));
 
+                        boolean Schach = false;
                         if (logik.ZugErlaubnis(startRow, startCol, zielRow, zielCol)) { //Überprüft, ob der Zug legal ist
 
 
-                          //Dieser ganze Block überprüft, ob man nach seinem Zug (immer noch) im Schach steht, indem er den Zug ausführt und falls ja wieder zurücksetzt.
+                            //Dieser ganze Block überprüft, ob man nach seinem Zug (immer noch) im Schach steht, indem er den Zug ausführt und falls ja wieder zurücksetzt.
                             String alteZielFigur = brettStatus[zielRow][zielCol];
-                        brettStatus[zielRow][zielCol] = brettStatus[startRow][startCol];
-                        brettStatus[startRow][startCol] = null;
+                            brettStatus[zielRow][zielCol] = brettStatus[startRow][startCol];
+                            brettStatus[startRow][startCol] = null;
 
-                        int altWKönigRow = WKönigRow;
-                        int altWKönigCol = WKönigCol;
-                        int altBKönigRow = BKönigRow;
-                        int altBKönigCol = BKönigCol;
+                            int altWKönigRow = WKönigRow;
+                            int altWKönigCol = WKönigCol;
+                            int altBKönigRow = BKönigRow;
+                            int altBKönigCol = BKönigCol;
 
-                        if (brettStatus[zielRow][zielCol].equals("bK")) {
-                            BKönigRow = zielRow;
-                            BKönigCol = zielCol;
-                        } else if (brettStatus[zielRow][zielCol].equals("wK")) {
-                            WKönigRow =  zielRow;
-                            WKönigCol =  zielCol;
-                        }
-                        Schacherkennung erkennung = new Schacherkennung();
+                            if (brettStatus[zielRow][zielCol].equals("bK")) {
+                                BKönigRow = zielRow;
+                                BKönigCol = zielCol;
+                            } else if (brettStatus[zielRow][zielCol].equals("wK")) {
+                                WKönigRow = zielRow;
+                                WKönigCol = zielCol;
+                            }
+                            Schacherkennung erkennung = new Schacherkennung();
 
-                        weißamZug = !weißamZug;
-                        boolean inSchachZiehen = erkennung.StehtimSchach();
-                        weißamZug = !weißamZug;
+                            weißamZug = !weißamZug;
+                            boolean inSchachZiehen = erkennung.StehtimSchach();
+                            weißamZug = !weißamZug;
 
-                        if (inSchachZiehen) {
-                            brettStatus[startRow][startCol] = brettStatus[zielRow][zielCol];
-                            brettStatus[zielRow][zielCol] = alteZielFigur;
-                            WKönigRow = altWKönigRow;
-                            WKönigCol = altWKönigCol;
-                            BKönigCol = altBKönigCol;
-                            BKönigRow = altBKönigRow;
+                            if (inSchachZiehen) {
+                                brettStatus[startRow][startCol] = brettStatus[zielRow][zielCol];
+                                brettStatus[zielRow][zielCol] = alteZielFigur;
+                                WKönigRow = altWKönigRow;
+                                WKönigCol = altWKönigCol;
+                                BKönigCol = altBKönigCol;
+                                BKönigRow = altBKönigRow;
 
-                            if ((startRow + startCol) % 2 == 0){
-                                TileSpeicher.setStyle("-fx-background-color: #F5F5F5");
-                            } else {
-                                TileSpeicher.setStyle("-fx-background-color: #708090");
+                                TileSpeicher.setStyle(originalTileFarbe);
+
+                                TileSpeicher = null;
+                                Figurenpeicher = null;
+                                return;
                             }
 
-                            TileSpeicher = null;
-                            Figurenpeicher = null;
-                            return;
-                        }
 
-
-
-                        //Ab hier wird der Zug ausgeführt, falls er legal ist
+                            //Ab hier wird der Zug ausgeführt, falls er legal ist
                             TileSpeicher.getChildren().clear();
                             tile.getChildren().clear();
                             tile.getChildren().add(Figurenpeicher);
@@ -199,7 +198,7 @@ public class Schachbrett extends Application {
                             }
 
                             Schacherkennung erkennung2 = new Schacherkennung();
-                            boolean Schach = erkennung2.StehtimSchach();
+                            Schach = erkennung2.StehtimSchach();
 
                             if (Schach) { //Falls einer der Könige im Schach steht überprüft das Programm hier welcher und färbt dessen Tile rot
                                 if (weißamZug == true) {
@@ -212,7 +211,9 @@ public class Schachbrett extends Application {
 
                                             StackPane BKönigsTile = (StackPane) node;
 
-                                            BKönigsTile.setStyle("-fx-background-color: #FF6347;");
+                                            BKönigsTile.setStyle("-fx-background-color: #FF0000;");
+                                            dropShadow.setColor(Color.RED);
+
 
                                             break;
                                         }
@@ -227,7 +228,8 @@ public class Schachbrett extends Application {
 
                                             StackPane WKönigsTile = (StackPane) node;
 
-                                            WKönigsTile.setStyle("-fx-background-color: #FF6347;");
+                                            WKönigsTile.setStyle("-fx-background-color: #FF0000;");
+                                            dropShadow.setColor(Color.RED);
 
                                             break;
                                         }
@@ -238,11 +240,11 @@ public class Schachbrett extends Application {
                                     int rowcheck = GridPane.getRowIndex(node);
                                     int colcheck = GridPane.getColumnIndex(node);
 
-                                    if ((rowcheck == WKönigRow && colcheck == WKönigCol) || (rowcheck == BKönigRow && colcheck == BKönigCol)){
+                                    if ((rowcheck == WKönigRow && colcheck == WKönigCol) || (rowcheck == BKönigRow && colcheck == BKönigCol)) {
                                         StackPane königsTile = (StackPane) node;
-                                        if ((rowcheck + colcheck) % 2 == 0) {
+                                        if ((rowcheck + colcheck) % 2 == 0 && !Schach) {
                                             königsTile.setStyle("-fx-background-color: #F5F5F5");
-                                        } else if ((rowcheck + colcheck) % 2 != 0){
+                                        } else if ((rowcheck + colcheck) % 2 != 0 && !Schach) {
                                             königsTile.setStyle("-fx-background-color: #708090");
                                         }
                                     }
@@ -250,22 +252,19 @@ public class Schachbrett extends Application {
                             }
                             weißamZug = !weißamZug; //Spielerwechsel
 
-                            DropShadow Anzeige = (DropShadow) Board.getEffect(); //Dropshadow ändern, je nachdem wer am Zug ist
-                            if (Anzeige != null) {
-                                if (weißamZug == true) {
-                                    Anzeige.setColor(Color.WHITE);
-                                } else {
-                                    Anzeige.setColor(Color.BLACK);
+                            if (!Schach) {
+                                DropShadow Anzeige = (DropShadow) Board.getEffect(); //Dropshadow ändern, je nachdem wer am Zug ist
+                                if (Anzeige != null) {
+                                    if (weißamZug == true) {
+                                        Anzeige.setColor(Color.WHITE);
+                                    } else {
+                                        Anzeige.setColor(Color.BLACK);
+                                    }
                                 }
                             }
 
                         } else {
-                            if ((startRow + startCol) % 2 == 0) {
-                                TileSpeicher.setStyle("-fx-background-color: #F5F5F5");
-                            } else {
-                                TileSpeicher.setStyle("-fx-background-color: #708090");
-
-                            }
+                            TileSpeicher.setStyle(originalTileFarbe);
                         }
                         Figurenpeicher = null;
                         TileSpeicher = null;
@@ -273,15 +272,14 @@ public class Schachbrett extends Application {
                 });
             }
         }
-        //Dropshadow (Underglow fürs Brett) um anzuzeigen, welcher Spieler am Zug ist
-        DropShadow dropShadow = new DropShadow();
-        dropShadow.setRadius(30);
-        dropShadow.setSpread(0.6);
-        dropShadow.setColor(Color.WHITE);
 
         //Erstellen der Szene (Brett)
         Scene scene = new Scene(Board, 8 * Tile_size, 8 * Tile_size);
         scene.setFill(Color.GRAY);
+        dropShadow.setRadius(30);
+        dropShadow.setSpread(0.6);
+        dropShadow.setColor(Color.WHITE);
+
 
         Board.setEffect(dropShadow);
         Board.setPadding(new Insets(40));
