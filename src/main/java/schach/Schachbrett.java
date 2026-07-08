@@ -106,6 +106,7 @@ public class Schachbrett extends Application {
                 // Maus-Klick Event
 
                 tile.setOnMouseClicked(e -> {
+
                     StackPane clicked =  (StackPane) e.getSource();
                     int aktuelleRow = GridPane.getRowIndex(tile);
                     int aktuelleCol = GridPane.getColumnIndex(tile);
@@ -251,6 +252,21 @@ public class Schachbrett extends Application {
                                 }
                             }
                             weißamZug = !weißamZug; //Spielerwechsel
+
+                            Schacherkennung erkennung3 = new Schacherkennung();
+                            if (erkennung3.hatlegaleZügen() == false) {
+
+                                weißamZug = !weißamZug;
+                                boolean Schachcheck = erkennung3.StehtimSchach();
+                                weißamZug = !weißamZug;
+
+                                if (Schachcheck == true){
+                                System.out.println("Spiel ist vorbei...SCHACHMATT!!");
+                            } else {
+                                    System.out.println("Spiel ist vorbei...PATT!!");
+                                }
+                            }
+
 
                             if (!Schach) {
                                 DropShadow Anzeige = (DropShadow) Board.getEffect(); //Dropshadow ändern, je nachdem wer am Zug ist

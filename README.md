@@ -11,8 +11,8 @@
 - [X] Grundlegende Zugregeln pro Figurentyp
 - [X] Schlagen von Figuren
 - [X] Spielerwechsel + Anzeige
-- [ ] Schach-Erkennung
-- [ ] Schachmatt-Erkennung + Spielende
+- [X] Schach-Erkennung
+- [X] Schachmatt-Erkennung + Spielende
 - [ ] Später: Spezialzüge, Notation
 - [ ] Optional: Laden von Spielen aus dem PGN-Format, eigener Schach-Bot, Remote Multiplayer
 
