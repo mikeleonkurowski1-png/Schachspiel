@@ -304,5 +304,13 @@ public class Schachbrett extends Application {
         primaryStage.setResizable(false);
         primaryStage.show();
     }
-
+    //Kleine Hilfsmethode zum Neustarten des Spiels
+    public void appNeustart(Stage primaryStage) {
+        primaryStage.close();
+        try{
+            new Schachbrett().start(new Stage());
+        } catch(Exception e){
+            e.printStackTrace();
+        }
+    }
 }

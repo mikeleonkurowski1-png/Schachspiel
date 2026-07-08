@@ -13,7 +13,7 @@
 - [X] Spielerwechsel + Anzeige
 - [X] Schach-Erkennung
 - [X] Schachmatt-Erkennung + Spielende
-- [ ] Später: Spezialzüge, Notation
+- [ ] Später: Spezialzüge, Promotion
 - [ ] Optional: Laden von Spielen aus dem PGN-Format, eigener Schach-Bot, Remote Multiplayer
 
 
