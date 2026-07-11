@@ -76,6 +76,7 @@ public class Schacherkennung {
                                     Schachbrett.BKönigRow = altBKönigRow;
 
                                     if (immernochSchach == false) {
+
                                         return bool = true;
                                     }
                                 }
@@ -123,6 +124,12 @@ public class Schacherkennung {
                                     Schachbrett.BKönigRow = altBKönigRow;
 
                                     if (immernochSchach == false) {
+
+                                        System.out.println(
+                                                "Angeblich legal: " + Figur
+                                                        + " von " + r + "," + c
+                                                        + " nach " + j + "," + h
+                                        );
                                         return bool = true;
                                     }
                                 }

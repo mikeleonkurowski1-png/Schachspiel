@@ -285,11 +285,7 @@ public class Schachbrett extends Application {
                             Schacherkennung erkennung3 = new Schacherkennung();
                             if (erkennung3.hatlegaleZügen() == false) {
 
-                                weißamZug = !weißamZug;
-                                boolean Schachcheck = erkennung3.StehtimSchach();
-                                weißamZug = !weißamZug;
-
-                                if (Schachcheck == true) {
+                                if (Schach) {
                                     boolean schwarzHatGewonnen = weißamZug;
                                     String Sieger = schwarzHatGewonnen ? "Schwarz" : "Weiß";
 
@@ -306,21 +302,37 @@ public class Schachbrett extends Application {
                                     }
                                     oben.getChildren().add(Siegerlabel);
 
-                                    Button resetButton = new Button("Reset");
-                                    resetButton.setStyle("-fx-background-color: dark-gray;");
-                                    resetButton.setText("Reset");
-                                    resetButton.setStyle("-fx-text-fill: light-gray;");
-                                    resetButton.setPrefSize(200, 35);
-                                    resetButton.setFont(new Font(30));
-                                    unten.getChildren().add(resetButton);
-                                    resetButton.setOnMouseClicked(event -> {
+                                    Button MattresetButton = new Button("Reset");
+                                    MattresetButton.setStyle("-fx-background-color: dark-gray;");
+                                    MattresetButton.setText("Reset");
+                                    MattresetButton.setStyle("-fx-text-fill: light-gray;");
+                                    MattresetButton.setPrefSize(200, 35);
+                                    MattresetButton.setFont(new Font(30));
+                                    unten.getChildren().add(MattresetButton);
+                                    MattresetButton.setOnMouseClicked(event -> {
                                         appNeustart(primaryStage);
                                     });
 
-                                    return;
                                 } else {
                                     System.out.println("Spiel ist vorbei...PATT!!");
+                                    Label PattLabel = new Label("Patt! (Unentschieden)");
+                                    PattLabel.setFont(new Font(30));
+                                    oben.getChildren().add(PattLabel);
+
+                                    Button PattresetButton = new Button("Reset");
+                                    PattresetButton.setStyle("-fx-background-color: dark-gray;");
+                                    PattresetButton.setText("Reset");
+                                    PattresetButton.setStyle("-fx-text-fill: light-gray;");
+                                    PattresetButton.setPrefSize(200, 35);
+                                    PattresetButton.setFont(new Font(30));
+                                    unten.getChildren().add(PattresetButton);
+                                    PattresetButton.setOnMouseClicked(event -> {
+                                        appNeustart(primaryStage);
+                                    });
+
                                 }
+                                Board.setDisable(true);
+                                return;
                             }
 
 
