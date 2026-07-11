@@ -4,9 +4,11 @@ import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.scene.layout.GridPane;
@@ -57,11 +59,13 @@ public class Schachbrett extends Application {
         mitte.setAlignment(Pos.CENTER);
 
         BorderPane root = new BorderPane();
+        root.setStyle("-fx-background-color: gray;");
         root.setTop(oben);
         root.setCenter(mitte);
         root.setBottom(unten);
 
         Scene scene = new Scene(root, 800, 920);
+
 
         // Schleife zum Erstellen des Schachbretts und der Startaufstellung
 
@@ -290,6 +294,8 @@ public class Schachbrett extends Application {
                                     String Sieger = schwarzHatGewonnen ? "Schwarz" : "Weiß";
 
                                     Label Siegerlabel = new Label("Schachmatt! Der Sieger ist: " + Sieger);
+                                    final double Schriftgröße = 30.0;
+                                    Siegerlabel.setFont(new Font(Schriftgröße));
 
                                     if (schwarzHatGewonnen) {
                                         root.setStyle("-fx-background-color: black;");
@@ -298,8 +304,18 @@ public class Schachbrett extends Application {
                                         root.setStyle("-fx-background-color: white;");
                                         Siegerlabel.setStyle("-fx-text-fill: black;");
                                     }
-
                                     oben.getChildren().add(Siegerlabel);
+
+                                    Button resetButton = new Button("Reset");
+                                    resetButton.setStyle("-fx-background-color: dark-gray;");
+                                    resetButton.setText("Reset");
+                                    resetButton.setStyle("-fx-text-fill: light-gray;");
+                                    resetButton.setPrefSize(200, 35);
+                                    resetButton.setFont(new Font(30));
+                                    unten.getChildren().add(resetButton);
+                                    resetButton.setOnMouseClicked(event -> {
+                                        appNeustart(primaryStage);
+                                    });
 
                                     return;
                                 } else {
@@ -340,16 +356,28 @@ public class Schachbrett extends Application {
         Board.setPadding(new Insets(40));
         primaryStage.setTitle("Schachspiel");
         primaryStage.setScene(scene);
-        primaryStage.setResizable(true);
+        primaryStage.setResizable(false);
         primaryStage.setMinWidth(800);
         primaryStage.setMinHeight(920);
         primaryStage.show();
     }
     //Kleine Hilfsmethode zum Neustarten des Spiels
     public void appNeustart(Stage primaryStage) {
-        primaryStage.close();
+        brettStatus = new String[8][8];
+        weißamZug = true;
+
+        WKönigCol = 4;
+        WKönigRow = 7;
+        BKönigRow = 0;
+        BKönigCol = 4;
+
+        Figurenpeicher = null;
+        TileSpeicher = null;
+        originalTileFarbe = null;
+
         try{
-            new Schachbrett().start(new Stage());
+           start(primaryStage);
+
         } catch(Exception e){
             e.printStackTrace();
         }
