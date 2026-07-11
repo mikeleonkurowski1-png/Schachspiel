@@ -13,7 +13,8 @@
 - [X] Spielerwechsel + Anzeige
 - [X] Schach-Erkennung
 - [X] Schachmatt- und Patt- Erkennung + Spielende
-- [ ] Später: Spezialzüge, Promotion
+- [X] Rochade implementieren
+- [ ] Später: Promotion
 - [ ] Optional: Laden von Spielen aus dem PGN-Format, eigener Schach-Bot, Remote Multiplayer
 
 

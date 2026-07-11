@@ -2,10 +2,17 @@ package schach;
 
 
 public class FigurenLogik {
+    public static boolean WKbewegt = false;
+    public static boolean BKbewegt = false;
+
+    public static boolean WRbewegt = false;
+    public static boolean BRbewegt = false;
+
     public boolean ZugErlaubnis(int sRow,int sCol, int zRow, int zCol) {
         String Figur = Schachbrett.brettStatus[sRow][sCol];
         String ZielFigur = Schachbrett.brettStatus[zRow][zCol];
         Schacherkennung erkennung = new Schacherkennung();
+
 
         if (Figur == null) {
             return false;
@@ -56,10 +63,74 @@ public class FigurenLogik {
                 case "wK", "bK":
 
                     if (zRow == sRow + 1 && zCol == sCol || zRow == sRow - 1 && zCol == sCol || zCol == sCol + 1 && zRow == sRow || zCol == sCol - 1 && zRow == sRow || zRow == sRow + 1 && zCol == sCol - 1 || zRow == sRow + 1 && zCol == sCol + 1 || zRow == sRow - 1 && zCol == sCol - 1 || zRow == sRow - 1 && zCol == sCol + 1) {
+
+                        return true;
+
+                        //Zug-Validierung zum Rochieren
+                    } else if (zRow == sRow && zCol == sCol + 2 && ((Figur.equals("wK") && WKbewegt == false && WRbewegt == false) || (Figur.equals("bK") && BKbewegt == false && BRbewegt == false)) ) {
+
+                        if (Schachbrett.brettStatus[zRow][sCol + 1] == null && Schachbrett.brettStatus[zRow][sCol + 2] == null) {
+                            Schacherkennung Logik = new Schacherkennung();
+
+                            String King = Schachbrett.brettStatus[zRow][sCol];
+                            Schachbrett.brettStatus[zRow][sCol + 1] = Schachbrett.brettStatus[sRow][sCol];
+                            Schachbrett.brettStatus[zRow][sCol] = null;
+                            boolean Schach = Logik.StehtimSchach();
+
+                            if (Schach) {
+                                Schachbrett.brettStatus[zRow][sCol] = King;
+                                Schachbrett.brettStatus[zRow][sCol + 1] = null;
+                                return false;
+                            }
+                            Schachbrett.brettStatus[sRow][sCol + 2] = King;
+                            Schachbrett.brettStatus[sRow][sCol + 1] = null;
+
+                            Schach = Logik.StehtimSchach();
+
+                            if (Schach) {
+                                Schachbrett.brettStatus[sRow][sCol] = King;
+                                Schachbrett.brettStatus[sRow][sCol + 2] = null;
+                                return false;
+                            }
+                            Schachbrett.brettStatus[sRow][sCol] = King;
+                            Schachbrett.brettStatus[sRow][sCol + 2] = null;
+
+
                             return true;
-                    } else {
+                        }
                         return false;
-                    }
+                    } else if (zRow == sRow && zCol == sCol - 2 && ((Figur.equals("wK") && WKbewegt == false && WRbewegt == false) || (Figur.equals("bK") && BKbewegt == false && BRbewegt == false)) ) {
+
+                        if (Schachbrett.brettStatus[zRow][sCol - 1] == null && Schachbrett.brettStatus[zRow][sCol - 2] == null && Schachbrett.brettStatus[sRow][sCol - 3] == null) {
+                            Schacherkennung Logik = new Schacherkennung();
+
+                            String King = Schachbrett.brettStatus[zRow][sCol];
+                            Schachbrett.brettStatus[zRow][sCol - 1] = Schachbrett.brettStatus[sRow][sCol];
+                            Schachbrett.brettStatus[zRow][sCol] = null;
+                            boolean Schach = Logik.StehtimSchach();
+
+                            if (Schach) {
+                                Schachbrett.brettStatus[zRow][sCol] = King;
+                                Schachbrett.brettStatus[zRow][sCol - 1] = null;
+                                return false;
+                            }
+                            Schachbrett.brettStatus[sRow][sCol - 2] = King;
+                            Schachbrett.brettStatus[sRow][sCol - 1] = null;
+
+                            Schach = Logik.StehtimSchach();
+
+                            if (Schach) {
+                                Schachbrett.brettStatus[zRow][sCol] = King;
+                                Schachbrett.brettStatus[zRow][sCol - 2] = null;
+                                return false;
+                            }
+                            Schachbrett.brettStatus[sRow][sCol] = King;
+                            Schachbrett.brettStatus[sRow][sCol - 2] = null;
+
+                            return true;
+                        }
+                        return false;
+                    } else return false;
 
                 case "bP":
 

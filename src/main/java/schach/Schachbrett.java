@@ -23,7 +23,7 @@ public class Schachbrett extends Application {
     }
 
     private static final int Tile_size = 80;
-    Text Figurenpeicher = null;
+    Text Figurenspeicher = null;
     StackPane TileSpeicher = null;
     public static String[][] brettStatus = new String[8][8]; //Dient der Logik im Hintergrund [Speichert Figuren-Position)
     int startRow = 0;
@@ -141,7 +141,7 @@ public class Schachbrett extends Application {
                     int aktuelleCol = GridPane.getColumnIndex(tile);
 
                     //Event zum auswählen der Figur, die bewegt werden soll
-                    if (tile.getChildren().isEmpty() == false && Figurenpeicher == null) {
+                    if (tile.getChildren().isEmpty() == false && Figurenspeicher == null) {
 
                         String FigurName = brettStatus[aktuelleRow][aktuelleCol];
                         //Dieser Block stellt sicher, dass man nur eine Figur der Farbe auswählen kann, die dran ist
@@ -150,7 +150,7 @@ public class Schachbrett extends Application {
                                 return;
                             }
                         }
-                        Figurenpeicher = (Text) tile.getChildren().get(0);
+                        Figurenspeicher = (Text) tile.getChildren().get(0);
                         TileSpeicher = tile;
                         originalTileFarbe = tile.getStyle().toString();
                         startCol = GridPane.getColumnIndex((clicked));
@@ -159,13 +159,14 @@ public class Schachbrett extends Application {
 
 
                         //Event zum bewegen einer bereits angeklickten Figur
-                    } else if (Figurenpeicher != null) {
+                    } else if (Figurenspeicher != null) {
 
                         FigurenLogik logik = new FigurenLogik();
                         zielRow = GridPane.getRowIndex((clicked));
                         zielCol = GridPane.getColumnIndex((clicked));
 
                         boolean Schach = false;
+
                         if (logik.ZugErlaubnis(startRow, startCol, zielRow, zielCol)) { //Überprüft, ob der Zug legal ist
 
 
@@ -203,15 +204,89 @@ public class Schachbrett extends Application {
                                 TileSpeicher.setStyle(originalTileFarbe);
 
                                 TileSpeicher = null;
-                                Figurenpeicher = null;
+                                Figurenspeicher = null;
                                 return;
+                            }
+
+                            String gezogeneFigur = brettStatus[zielRow][zielCol];
+
+                            if (gezogeneFigur.equals("wK")) {
+                                FigurenLogik.WKbewegt = true;
+                            }
+
+                            if (gezogeneFigur.equals("bK")) {
+                                FigurenLogik.BKbewegt = true;
+                            }
+
+                            if (gezogeneFigur.equals("wR")) {
+                                FigurenLogik.WRbewegt = true;
+                            }
+
+                            if (gezogeneFigur.equals("bR")) {
+                                FigurenLogik.BRbewegt = true;
                             }
 
 
                             //Ab hier wird der Zug ausgeführt, falls er legal ist
                             TileSpeicher.getChildren().clear();
                             tile.getChildren().clear();
-                            tile.getChildren().add(Figurenpeicher);
+                            tile.getChildren().add(Figurenspeicher);
+
+                            //Automatisches hinterherziehen des Turms beim kurzen rochieren
+                            if ((gezogeneFigur.equals("wK") || gezogeneFigur.equals("bK"))
+                                    && zielCol == startCol + 2) {
+
+                                StackPane TurmStart = null;
+                                StackPane TurmZiel = null;
+
+                                for (javafx.scene.Node node : Board.getChildren()) {
+                                    int row2 = GridPane.getRowIndex(node);
+                                    int col2 = GridPane.getColumnIndex(node);
+
+                                    if (row2 == startRow && col2 == 7) {
+                                        TurmStart = (StackPane) node;
+                                    }
+
+                                    if (row2 == startRow && col2 == 5) {
+                                        TurmZiel = (StackPane) node;
+                                    }
+                                }
+
+                                Text Turm = (Text) TurmStart.getChildren().get(0);
+                                TurmStart.getChildren().clear();
+                                TurmZiel.getChildren().add(Turm);
+
+                                brettStatus[startRow][5] = brettStatus[startRow][7];
+                                brettStatus[startRow][7] = null;
+                            }
+
+                            //Automatisches hinterherziehen des Turms beim langen rochieren
+                            if ((gezogeneFigur.equals("wK") || gezogeneFigur.equals("bK"))
+                                    && zielCol == startCol - 2) {
+
+                                StackPane TurmStart = null;
+                                StackPane TurmZiel = null;
+
+                                for (javafx.scene.Node node : Board.getChildren()) {
+                                    int row2 = GridPane.getRowIndex(node);
+                                    int col2 = GridPane.getColumnIndex(node);
+
+                                    if (row2 == startRow && col2 == 0) {
+                                        TurmStart = (StackPane) node;
+                                    }
+
+                                    if (row2 == startRow && col2 == 3) {
+                                        TurmZiel = (StackPane) node;
+                                    }
+                                }
+
+                                Text Turm = (Text) TurmStart.getChildren().get(0);
+                                TurmStart.getChildren().clear();
+                                TurmZiel.getChildren().add(Turm);
+
+                                brettStatus[startRow][3] = brettStatus[startRow][0];
+                                brettStatus[startRow][0] = null;
+                            }
 
                             if ((startRow + startCol) % 2 == 0) { //Zurückfärben des angeklickten Felds
                                 TileSpeicher.setStyle("-fx-background-color: #F5F5F5");
@@ -350,7 +425,7 @@ public class Schachbrett extends Application {
                         } else {
                             TileSpeicher.setStyle(originalTileFarbe);
                         }
-                        Figurenpeicher = null;
+                        Figurenspeicher = null;
                         TileSpeicher = null;
                     }
                 });
@@ -378,12 +453,17 @@ public class Schachbrett extends Application {
         brettStatus = new String[8][8];
         weißamZug = true;
 
+        FigurenLogik.WKbewegt = false;
+        FigurenLogik.BKbewegt = false;
+        FigurenLogik.WRbewegt = false;
+        FigurenLogik.BRbewegt = false;
+
         WKönigCol = 4;
         WKönigRow = 7;
         BKönigRow = 0;
         BKönigCol = 4;
 
-        Figurenpeicher = null;
+        Figurenspeicher = null;
         TileSpeicher = null;
         originalTileFarbe = null;
 

@@ -125,11 +125,6 @@ public class Schacherkennung {
 
                                     if (immernochSchach == false) {
 
-                                        System.out.println(
-                                                "Angeblich legal: " + Figur
-                                                        + " von " + r + "," + c
-                                                        + " nach " + j + "," + h
-                                        );
                                         return bool = true;
                                     }
                                 }
