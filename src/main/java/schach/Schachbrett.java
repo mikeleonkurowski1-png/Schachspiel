@@ -4,6 +4,7 @@ import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.control.Label;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
@@ -59,6 +60,8 @@ public class Schachbrett extends Application {
         root.setTop(oben);
         root.setCenter(mitte);
         root.setBottom(unten);
+
+        Scene scene = new Scene(root, 800, 920);
 
         // Schleife zum Erstellen des Schachbretts und der Startaufstellung
 
@@ -283,8 +286,20 @@ public class Schachbrett extends Application {
                                 weißamZug = !weißamZug;
 
                                 if (Schachcheck == true) {
-                                    String Sieger = weißamZug ? "Schwarz" : "Weiß";
-                                    System.out.println("Spiel ist vorbei...SCHACHMATT!!");
+                                    boolean schwarzHatGewonnen = weißamZug;
+                                    String Sieger = schwarzHatGewonnen ? "Schwarz" : "Weiß";
+
+                                    Label Siegerlabel = new Label("Schachmatt! Der Sieger ist: " + Sieger);
+
+                                    if (schwarzHatGewonnen) {
+                                        root.setStyle("-fx-background-color: black;");
+                                        Siegerlabel.setStyle("-fx-text-fill: white;");
+                                    } else {
+                                        root.setStyle("-fx-background-color: white;");
+                                        Siegerlabel.setStyle("-fx-text-fill: black;");
+                                    }
+
+                                    oben.getChildren().add(Siegerlabel);
 
                                     return;
                                 } else {
@@ -294,7 +309,7 @@ public class Schachbrett extends Application {
 
 
                             if (!Schach) {
-                                DropShadow Anzeige = (DropShadow) Board.getEffect(); //Dropshadow ändern, je nachdem wer am Zug ist
+                              DropShadow Anzeige = (DropShadow) Board.getEffect(); //Dropshadow ändern, je nachdem wer am Zug ist
                                 if (Anzeige != null) {
                                     if (weißamZug == true) {
                                         Anzeige.setColor(Color.WHITE);
@@ -315,7 +330,6 @@ public class Schachbrett extends Application {
         }
 
         //Erstellen der Szene (Brett)
-        Scene scene = new Scene(root, 800, 920);
         scene.setFill(Color.GRAY);
         dropShadow.setRadius(30);
         dropShadow.setSpread(0.6);
