@@ -12,7 +12,7 @@
 - [X] Schlagen von Figuren
 - [X] Spielerwechsel + Anzeige
 - [X] Schach-Erkennung
-- [X] Schachmatt-Erkennung + Spielende
+- [X] Schachmatt- und Patt- Erkennung + Spielende
 - [ ] Später: Spezialzüge, Promotion
 - [ ] Optional: Laden von Spielen aus dem PGN-Format, eigener Schach-Bot, Remote Multiplayer
 

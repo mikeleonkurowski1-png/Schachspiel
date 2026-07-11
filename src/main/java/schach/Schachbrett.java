@@ -2,13 +2,17 @@ package schach;
 
 import javafx.application.Application;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.paint.Color;
+
 
 public class Schachbrett extends Application {
     public static void main(String[] args) {
@@ -36,63 +40,80 @@ public class Schachbrett extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
         GridPane Board = new GridPane();
+        Board.setAlignment(Pos.CENTER);
 
+        VBox oben = new VBox();
+        oben.setPrefHeight(100);
+        oben.setMinHeight(100);
+        oben.setAlignment(Pos.CENTER);
+
+        VBox unten = new VBox();
+        unten.setPrefHeight(100);
+        unten.setMinHeight(100);
+        unten.setAlignment(Pos.CENTER);
+
+        StackPane mitte = new StackPane(Board);
+        mitte.setAlignment(Pos.CENTER);
+
+        BorderPane root = new BorderPane();
+        root.setTop(oben);
+        root.setCenter(mitte);
+        root.setBottom(unten);
 
         // Schleife zum Erstellen des Schachbretts und der Startaufstellung
 
-        for (int row = 0; row < 8; row++){
-            for (int col = 0; col < 8; col++){
+
+        for (int row = 0; row < 8; row++) {
+            for (int col = 0; col < 8; col++) {
                 StackPane tile = new StackPane();
                 Text Figur = null;
 
-                if ((row + col) % 2 == 0 ){
+                if ((row + col) % 2 == 0) {
                     tile.setStyle("-fx-background-color: #F5F5F5");
                 } else {
                     tile.setStyle("-fx-background-color: #708090");
                 }
 
-                if (row == 0 && col == 0 || row == 0 && col == 7){
+                if (row == 0 && col == 0 || row == 0 && col == 7) {
                     Figur = new Text("♜");
                     brettStatus[row][col] = "bR";
-                }else if (row == 0 && col == 1 || row == 0 && col == 6){
+                } else if (row == 0 && col == 1 || row == 0 && col == 6) {
                     Figur = new Text("♞");
                     brettStatus[row][col] = "bN";
-                }else if (row == 0 && col == 2 || row == 0 && col == 5){
+                } else if (row == 0 && col == 2 || row == 0 && col == 5) {
                     Figur = new Text("♝");
                     brettStatus[row][col] = "bB";
-                }else if (row == 0 && col == 3){
+                } else if (row == 0 && col == 3) {
                     Figur = new Text("♛");
                     brettStatus[row][col] = "bQ";
-                }else if (row == 0 && col == 4){
+                } else if (row == 0 && col == 4) {
                     Figur = new Text("♚");
                     brettStatus[row][col] = "bK";
-                }else if (row == 1) {
+                } else if (row == 1) {
                     Figur = new Text("♟");
                     brettStatus[row][col] = "bP";
-                }
-
-                else if (row == 7 && col == 0 || row == 7 && col == 7){
+                } else if (row == 7 && col == 0 || row == 7 && col == 7) {
                     Figur = new Text("♖");
                     brettStatus[row][col] = "wR";
-                } else if (row == 7 && col == 1 || row == 7 && col == 6){
+                } else if (row == 7 && col == 1 || row == 7 && col == 6) {
                     Figur = new Text("♘");
                     brettStatus[row][col] = "wN";
-                }else if (row == 7 && col == 2 || row == 7 && col == 5){
+                } else if (row == 7 && col == 2 || row == 7 && col == 5) {
                     Figur = new Text("♗");
                     brettStatus[row][col] = "wB";
-                } else if (row == 7 && col == 3){
+                } else if (row == 7 && col == 3) {
                     Figur = new Text("♕");
                     brettStatus[row][col] = "wQ";
-                } else if (row == 7 && col == 4){
+                } else if (row == 7 && col == 4) {
                     Figur = new Text("♔");
                     brettStatus[row][col] = "wK";
-                }else if (row == 6){
+                } else if (row == 6) {
                     Figur = new Text("♙");
                     brettStatus[row][col] = "wP";
                 } else {
                     Figur = null;
                 }
-                if (Figur != null){
+                if (Figur != null) {
                     Figur.setStyle("-fx-font-size: 50px;");
                     tile.getChildren().add(Figur);
                 }
@@ -103,33 +124,34 @@ public class Schachbrett extends Application {
                 Board.add(tile, col, row);
 
 
+
                 // Maus-Klick Event
 
                 tile.setOnMouseClicked(e -> {
 
-                    StackPane clicked =  (StackPane) e.getSource();
+                    StackPane clicked = (StackPane) e.getSource();
                     int aktuelleRow = GridPane.getRowIndex(tile);
                     int aktuelleCol = GridPane.getColumnIndex(tile);
 
                     //Event zum auswählen der Figur, die bewegt werden soll
-                    if (tile.getChildren().isEmpty() == false && Figurenpeicher == null){
+                    if (tile.getChildren().isEmpty() == false && Figurenpeicher == null) {
 
                         String FigurName = brettStatus[aktuelleRow][aktuelleCol];
                         //Dieser Block stellt sicher, dass man nur eine Figur der Farbe auswählen kann, die dran ist
-                        if (FigurName != null){
+                        if (FigurName != null) {
                             if ((weißamZug == true && FigurName.startsWith("b")) || (weißamZug == false && FigurName.startsWith("w"))) {
                                 return;
                             }
                         }
-                            Figurenpeicher = (Text) tile.getChildren().get(0);
-                            TileSpeicher = tile;
-                            originalTileFarbe = tile.getStyle().toString();
-                            startCol = GridPane.getColumnIndex((clicked));
-                            startRow = GridPane.getRowIndex((clicked));
-                            tile.setStyle("-fx-background-color: #add8e6");
+                        Figurenpeicher = (Text) tile.getChildren().get(0);
+                        TileSpeicher = tile;
+                        originalTileFarbe = tile.getStyle().toString();
+                        startCol = GridPane.getColumnIndex((clicked));
+                        startRow = GridPane.getRowIndex((clicked));
+                        tile.setStyle("-fx-background-color: #add8e6");
 
 
-                    //Event zum bewegen einer bereits angeklickten Figur
+                        //Event zum bewegen einer bereits angeklickten Figur
                     } else if (Figurenpeicher != null) {
 
                         FigurenLogik logik = new FigurenLogik();
@@ -260,9 +282,12 @@ public class Schachbrett extends Application {
                                 boolean Schachcheck = erkennung3.StehtimSchach();
                                 weißamZug = !weißamZug;
 
-                                if (Schachcheck == true){
-                                System.out.println("Spiel ist vorbei...SCHACHMATT!!");
-                            } else {
+                                if (Schachcheck == true) {
+                                    String Sieger = weißamZug ? "Schwarz" : "Weiß";
+                                    System.out.println("Spiel ist vorbei...SCHACHMATT!!");
+
+                                    return;
+                                } else {
                                     System.out.println("Spiel ist vorbei...PATT!!");
                                 }
                             }
@@ -290,7 +315,7 @@ public class Schachbrett extends Application {
         }
 
         //Erstellen der Szene (Brett)
-        Scene scene = new Scene(Board, 8 * Tile_size, 8 * Tile_size);
+        Scene scene = new Scene(root, 800, 920);
         scene.setFill(Color.GRAY);
         dropShadow.setRadius(30);
         dropShadow.setSpread(0.6);
@@ -301,7 +326,9 @@ public class Schachbrett extends Application {
         Board.setPadding(new Insets(40));
         primaryStage.setTitle("Schachspiel");
         primaryStage.setScene(scene);
-        primaryStage.setResizable(false);
+        primaryStage.setResizable(true);
+        primaryStage.setMinWidth(800);
+        primaryStage.setMinHeight(920);
         primaryStage.show();
     }
     //Kleine Hilfsmethode zum Neustarten des Spiels
