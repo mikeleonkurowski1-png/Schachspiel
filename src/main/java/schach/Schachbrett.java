@@ -339,6 +339,16 @@ public class Schachbrett extends Application {
                                     unten.getChildren().clear();
                                 });
 
+                                RPromotion.setOnMouseClicked(event -> {
+                                    StackPane clickedP = (StackPane) e.getSource();
+                                    brettStatus[zielRow][zielCol] = "wR";
+                                    Text Figurneu = new Text("♖");
+                                    Figurneu.setStyle("-fx-font-size: 50px;");
+                                    clickedP.getChildren().clear();
+                                    clickedP.getChildren().add(Figurneu);
+                                    oben.getChildren().clear();
+                                    unten.getChildren().clear();
+                                });
 
                             }
 
