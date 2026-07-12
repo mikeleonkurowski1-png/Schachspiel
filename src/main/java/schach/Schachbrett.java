@@ -37,6 +37,9 @@ public class Schachbrett extends Application {
     public static int BKönigRow = 0;
     public static int BKönigCol = 4;
 
+    public static int enPassantRow = -1;
+    public static int enPassantCol = -1;
+
     //Dropshadow (Underglow fürs Brett) um anzuzeigen, welcher Spieler am Zug ist
         DropShadow dropShadow = new DropShadow();
 
@@ -181,10 +184,21 @@ public class Schachbrett extends Application {
                         if (logik.ZugErlaubnis(startRow, startCol, zielRow, zielCol)) { //Überprüft, ob der Zug legal ist
 
 
+
+                            String geschlageneEnPassantFigur = null;
+
+                            boolean enPassant = (brettStatus[startRow][startCol].equals("wP") || brettStatus[startRow][startCol].equals("bP")) && Math.abs(zielCol - startCol) == 1 && brettStatus[zielRow][zielCol] == null && enPassantRow == startRow && enPassantCol == zielCol;
+
+
                             //Dieser ganze Block überprüft, ob man nach seinem Zug (immer noch) im Schach steht, indem er den Zug ausführt und falls ja wieder zurücksetzt.
                             String alteZielFigur = brettStatus[zielRow][zielCol];
                             brettStatus[zielRow][zielCol] = brettStatus[startRow][startCol];
                             brettStatus[startRow][startCol] = null;
+
+                            if (enPassant) {
+                                geschlageneEnPassantFigur = brettStatus[startRow][zielCol];
+                                brettStatus[startRow][zielCol] = null;
+                            }
 
                             int altWKönigRow = WKönigRow;
                             int altWKönigCol = WKönigCol;
@@ -212,6 +226,10 @@ public class Schachbrett extends Application {
                                 BKönigCol = altBKönigCol;
                                 BKönigRow = altBKönigRow;
 
+                                if (enPassant) {
+                                    brettStatus[startRow][zielCol] = geschlageneEnPassantFigur;
+                                }
+
                                 TileSpeicher.setStyle(originalTileFarbe);
 
                                 TileSpeicher = null;
@@ -220,6 +238,15 @@ public class Schachbrett extends Application {
                             }
 
                             String gezogeneFigur = brettStatus[zielRow][zielCol];
+
+                            enPassantRow = -1;
+                            enPassantCol = -1;
+
+                            if ((gezogeneFigur.equals("wP") || gezogeneFigur.equals("bP")) && Math.abs(zielRow - startRow) == 2) {
+
+                                enPassantRow = zielRow;
+                                enPassantCol = zielCol;
+                            }
 
                             if (gezogeneFigur.equals("wK")) {
                                 FigurenLogik.WKbewegt = true;
@@ -242,6 +269,16 @@ public class Schachbrett extends Application {
                             TileSpeicher.getChildren().clear();
                             tile.getChildren().clear();
                             tile.getChildren().add(Figurenspeicher);
+
+                            if (enPassant) {
+                                for (Node node : Board.getChildren()) {
+                                    if (GridPane.getRowIndex(node) == startRow
+                                            && GridPane.getColumnIndex(node) == zielCol) {
+
+                                        ((StackPane) node).getChildren().clear();
+                                    }
+                                }
+                            }
 
                             //Automatisches hinterherziehen des Turms beim kurzen rochieren
                             if ((gezogeneFigur.equals("wK") || gezogeneFigur.equals("bK")) && zielCol == startCol + 2) {
@@ -653,6 +690,9 @@ public class Schachbrett extends Application {
         WKönigRow = 7;
         BKönigRow = 0;
         BKönigCol = 4;
+
+        enPassantRow = -1;
+        enPassantCol = -1;
 
         Figurenspeicher = null;
         TileSpeicher = null;

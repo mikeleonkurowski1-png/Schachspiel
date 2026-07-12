@@ -134,6 +134,13 @@ public class FigurenLogik {
 
                 case "bP":
 
+
+                    //En-Passant
+                    if (zRow == sRow + 1 && (zCol == sCol - 1 || zCol == sCol + 1) && ZielFigur == null && Schachbrett.enPassantCol == zCol && Schachbrett.enPassantRow == sRow && Schachbrett.brettStatus[sRow][zCol].equals("wP")) {
+                        return true;
+                    }
+
+                    //Normaler Zug
                     if ((zRow == sRow + 1 && (zCol == sCol - 1 || zCol == sCol + 1)) && Schachbrett.brettStatus[zRow][zCol] != null) {
                         return true;
                     }
@@ -157,6 +164,12 @@ public class FigurenLogik {
 
                 case "wP":
 
+                    //En-Passant
+                    if (zRow == sRow - 1 && (zCol == sCol - 1 || zCol == sCol + 1) && ZielFigur == null && Schachbrett.enPassantCol == zCol && Schachbrett.enPassantRow == sRow && Schachbrett.brettStatus[sRow][zCol].equals("bP")) {
+                    return true;
+                    }
+
+                    //Normaler Zug
                     if ((zRow == sRow - 1 && (zCol == sCol - 1 || zCol == sCol + 1)) && Schachbrett.brettStatus[zRow][zCol] != null) {
                         return true;
                     }

@@ -3,6 +3,12 @@
 - Lokales 2-Spieler-Schachspiel mit grafischer Oberfläche, vollständiger Zugvalidierung und Schach-/Schachmatt-Erkennung.
 - Später erweiterbar, um das Laden von Partien aus dem PGN-Format, einem eigenen Schach-Bot und/oder einem Remote Multiplayer.
 
+# Features:
+
+- Komplettes Schach-Regelwerk: Unterstützt alle Standard Schachzüge, inklusive kurzer und langer Rochade, Bauern Promotion und En-Passant
+- Spielzustand-Erkennung: Überprüfung von Schach, Schachmatt und Patt nach jedem Zug um sicher Siegeserkennung zu gewährleisten
+- Spieler-Feedback: Intuitive Anzeige, welcher Spieler am Zug ist, ob man im Schach steht und wer der Sieger ist
+
 # Roadmap:
 
 - [X] Projekt aufsetzen (Gradle + JavaFX, GitHub Repo)
@@ -14,10 +20,20 @@
 - [X] Schach-Erkennung
 - [X] Schachmatt- und Patt- Erkennung + Spielende
 - [X] Rochade implementieren
-- [X] Promotion
-- [ ] Optional: Laden von Spielen aus dem PGN-Format, eigener Schach-Bot, Remote Multiplayer
+- [X] Bauern-Promotion implementieren
+- [X] En-Passant implementieren
+- [ ] Optional, später: Laden von Spielen aus dem PGN-Format, eigener Schach-Bot, Remote Multiplayer
 
 
-# Wichtige Bibliotheken:
+# Tech Stack:
 
-- JavaFX: Für die grafische Oberfläche und die Felderlogik
+- Sprache: Java
+- UI-Framework: JavaFX
+- Build-Tool: Gradle
+- Versionsverwaltung: Git, Github
+
+# Demo:
+
+![Start des Spiels: ](Screenshot 2026-07-12 130303.png)
+![Schachmatt durch Schwarz: ](Screenshot 2026-07-12 130642.png)
+![Bauern-Promotion durch weiß: ](Screenshot 2026-07-12 130832.png)
