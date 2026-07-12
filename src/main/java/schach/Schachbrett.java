@@ -3,18 +3,18 @@ package schach;
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.StackPane;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.paint.Color;
+
+import java.util.Locale;
 
 
 public class Schachbrett extends Application {
@@ -42,6 +42,8 @@ public class Schachbrett extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
+
+        //Strukturgerüst für das GUI
         GridPane Board = new GridPane();
         Board.setAlignment(Pos.CENTER);
 
@@ -50,7 +52,7 @@ public class Schachbrett extends Application {
         oben.setMinHeight(100);
         oben.setAlignment(Pos.CENTER);
 
-        VBox unten = new VBox();
+        HBox unten = new HBox();
         unten.setPrefHeight(100);
         unten.setMinHeight(100);
         unten.setAlignment(Pos.CENTER);
@@ -233,8 +235,7 @@ public class Schachbrett extends Application {
                             tile.getChildren().add(Figurenspeicher);
 
                             //Automatisches hinterherziehen des Turms beim kurzen rochieren
-                            if ((gezogeneFigur.equals("wK") || gezogeneFigur.equals("bK"))
-                                    && zielCol == startCol + 2) {
+                            if ((gezogeneFigur.equals("wK") || gezogeneFigur.equals("bK")) && zielCol == startCol + 2) {
 
                                 StackPane TurmStart = null;
                                 StackPane TurmZiel = null;
@@ -261,8 +262,7 @@ public class Schachbrett extends Application {
                             }
 
                             //Automatisches hinterherziehen des Turms beim langen rochieren
-                            if ((gezogeneFigur.equals("wK") || gezogeneFigur.equals("bK"))
-                                    && zielCol == startCol - 2) {
+                            if ((gezogeneFigur.equals("wK") || gezogeneFigur.equals("bK")) && zielCol == startCol - 2) {
 
                                 StackPane TurmStart = null;
                                 StackPane TurmZiel = null;
@@ -286,6 +286,60 @@ public class Schachbrett extends Application {
 
                                 brettStatus[startRow][3] = brettStatus[startRow][0];
                                 brettStatus[startRow][0] = null;
+                            }
+
+                            //Bauern-Promotion der weißen Bauern
+                            if (gezogeneFigur.equals("wP") && zielRow == 0) {
+
+                                Label Promotion = new  Label("Zu welcher Figur soll dein Bauer promoten?");
+                                final double Schriftgröße = 30.0;
+                                Promotion.setFont(new Font(Schriftgröße));
+                                oben.getChildren().add(Promotion);
+
+                                Button QPromotion = new Button("♕");
+                                QPromotion.setStyle("-fx-background-color: dark-gray;");
+                                QPromotion.setText("♕");
+                                QPromotion.setStyle("-fx-text-fill: light-gray;");
+                                QPromotion.setPrefSize(75, 75);
+                                QPromotion.setFont(new Font(30));
+                                unten.getChildren().add(QPromotion);
+
+                                Button RPromotion = new Button("♖");
+                                RPromotion.setStyle("-fx-background-color: dark-gray;");
+                                RPromotion.setText("♖");
+                                RPromotion.setStyle("-fx-text-fill: light-gray;");
+                                RPromotion.setPrefSize(75, 75);
+                                RPromotion.setFont(new Font(30));
+                                unten.getChildren().add(RPromotion);
+
+                                Button BPromotion = new Button("♗");
+                                BPromotion.setStyle("-fx-background-color: dark-gray;");
+                                BPromotion.setText("♗");
+                                BPromotion.setStyle("-fx-text-fill: light-gray;");
+                                BPromotion.setPrefSize(75, 75);
+                                BPromotion.setFont(new Font(30));
+                                unten.getChildren().add(BPromotion);
+
+                                Button KPromotion = new Button("♘");
+                                KPromotion.setStyle("-fx-background-color: dark-gray;");
+                                KPromotion.setText("♘");
+                                KPromotion.setStyle("-fx-text-fill: light-gray;");
+                                KPromotion.setPrefSize(75, 75);
+                                KPromotion.setFont(new Font(30));
+                                unten.getChildren().add(KPromotion);
+
+                                QPromotion.setOnMouseClicked(event -> {
+                                    StackPane clickedP = (StackPane) e.getSource();
+                                    brettStatus[zielRow][zielCol] = "wQ";
+                                    Text Figurneu = new Text("♕");
+                                    Figurneu.setStyle("-fx-font-size: 50px;");
+                                    clickedP.getChildren().clear();
+                                    clickedP.getChildren().add(Figurneu);
+                                    oben.getChildren().clear();
+                                    unten.getChildren().clear();
+                                });
+
+
                             }
 
                             if ((startRow + startCol) % 2 == 0) { //Zurückfärben des angeklickten Felds
@@ -361,6 +415,7 @@ public class Schachbrett extends Application {
                             if (erkennung3.hatlegaleZügen() == false) {
 
                                 if (Schach) {
+                                    //Erkennung von Schachmatt, so wie Siegeranzeige im GUI und reset button
                                     boolean schwarzHatGewonnen = weißamZug;
                                     String Sieger = schwarzHatGewonnen ? "Schwarz" : "Weiß";
 
@@ -389,6 +444,7 @@ public class Schachbrett extends Application {
                                     });
 
                                 } else {
+                                    //Patt anzeige und reset button
                                     System.out.println("Spiel ist vorbei...PATT!!");
                                     Label PattLabel = new Label("Patt! (Unentschieden)");
                                     PattLabel.setFont(new Font(30));
