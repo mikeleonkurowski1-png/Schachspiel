@@ -14,7 +14,7 @@
 - [X] Schach-Erkennung
 - [X] Schachmatt- und Patt- Erkennung + Spielende
 - [X] Rochade implementieren
-- [ ] Später: Promotion
+- [X] Promotion
 - [ ] Optional: Laden von Spielen aus dem PGN-Format, eigener Schach-Bot, Remote Multiplayer
 
 

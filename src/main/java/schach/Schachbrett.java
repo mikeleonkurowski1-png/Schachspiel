@@ -68,6 +68,12 @@ public class Schachbrett extends Application {
 
         Scene scene = new Scene(root, 800, 920);
 
+        Label willkommen = new Label("Willkommen! Weiß startet das Spiel. \uD83D\uDE01");
+        final double Schriftgröße = 30.0;
+        willkommen.setFont(new Font(Schriftgröße));
+        oben.getChildren().add(willkommen);
+
+
 
         // Schleife zum Erstellen des Schachbretts und der Startaufstellung
 
@@ -138,6 +144,7 @@ public class Schachbrett extends Application {
 
                 tile.setOnMouseClicked(e -> {
 
+
                     StackPane clicked = (StackPane) e.getSource();
                     int aktuelleRow = GridPane.getRowIndex(tile);
                     int aktuelleCol = GridPane.getColumnIndex(tile);
@@ -162,6 +169,8 @@ public class Schachbrett extends Application {
 
                         //Event zum bewegen einer bereits angeklickten Figur
                     } else if (Figurenspeicher != null) {
+
+                        oben.getChildren().remove(willkommen);
 
                         FigurenLogik logik = new FigurenLogik();
                         zielRow = GridPane.getRowIndex((clicked));
@@ -291,8 +300,9 @@ public class Schachbrett extends Application {
                             //Bauern-Promotion der weißen Bauern
                             if (gezogeneFigur.equals("wP") && zielRow == 0) {
 
+                                Board.setDisable(true); //Sperren des Bretts während der Promotion
+
                                 Label Promotion = new  Label("Zu welcher Figur soll dein Bauer promoten?");
-                                final double Schriftgröße = 30.0;
                                 Promotion.setFont(new Font(Schriftgröße));
                                 oben.getChildren().add(Promotion);
 
@@ -337,6 +347,7 @@ public class Schachbrett extends Application {
                                     clickedP.getChildren().add(Figurneu);
                                     oben.getChildren().clear();
                                     unten.getChildren().clear();
+                                    Board.setDisable(false);
                                 });
 
                                 RPromotion.setOnMouseClicked(event -> {
@@ -348,6 +359,7 @@ public class Schachbrett extends Application {
                                     clickedP.getChildren().add(Figurneu);
                                     oben.getChildren().clear();
                                     unten.getChildren().clear();
+                                    Board.setDisable(false);
                                 });
 
                                 BPromotion.setOnMouseClicked(event -> {
@@ -359,6 +371,7 @@ public class Schachbrett extends Application {
                                     clickedP.getChildren().add(Figurneu);
                                     oben.getChildren().clear();
                                     unten.getChildren().clear();
+                                    Board.setDisable(false);
                                 });
 
                                 KPromotion.setOnMouseClicked(event -> {
@@ -370,14 +383,16 @@ public class Schachbrett extends Application {
                                     clickedP.getChildren().add(Figurneu);
                                     oben.getChildren().clear();
                                     unten.getChildren().clear();
+                                    Board.setDisable(false);
                                 });
 
                             }
                             //Promotion für schwarze Bauern
                             if (gezogeneFigur.equals("bP") && zielRow == 7) {
 
+                                Board.setDisable(true); //Sperren des Bretts während der Promotion
+
                                 Label Promotion = new  Label("Zu welcher Figur soll dein Bauer promoten?");
-                                final double Schriftgröße = 30.0;
                                 Promotion.setFont(new Font(Schriftgröße));
                                 oben.getChildren().add(Promotion);
 
@@ -422,6 +437,7 @@ public class Schachbrett extends Application {
                                     clickedP.getChildren().add(Figurneu);
                                     oben.getChildren().clear();
                                     unten.getChildren().clear();
+                                    Board.setDisable(false);
                                 });
 
                                 RPromotion.setOnMouseClicked(event -> {
@@ -433,17 +449,19 @@ public class Schachbrett extends Application {
                                     clickedP.getChildren().add(Figurneu);
                                     oben.getChildren().clear();
                                     unten.getChildren().clear();
+                                    Board.setDisable(false);
                                 });
 
                                 BPromotion.setOnMouseClicked(event -> {
                                     StackPane clickedP = (StackPane) e.getSource();
-                                    brettStatus[zielRow][zielCol] = "wB";
+                                    brettStatus[zielRow][zielCol] = "bB";
                                     Text Figurneu = new Text("♝");
                                     Figurneu.setStyle("-fx-font-size: 50px;");
                                     clickedP.getChildren().clear();
                                     clickedP.getChildren().add(Figurneu);
                                     oben.getChildren().clear();
                                     unten.getChildren().clear();
+                                    Board.setDisable(false);
                                 });
 
                                 KPromotion.setOnMouseClicked(event -> {
@@ -455,6 +473,7 @@ public class Schachbrett extends Application {
                                     clickedP.getChildren().add(Figurneu);
                                     oben.getChildren().clear();
                                     unten.getChildren().clear();
+                                    Board.setDisable(false);
                                 });
 
                             }
@@ -537,7 +556,6 @@ public class Schachbrett extends Application {
                                     String Sieger = schwarzHatGewonnen ? "Schwarz" : "Weiß";
 
                                     Label Siegerlabel = new Label("Schachmatt! Der Sieger ist: " + Sieger);
-                                    final double Schriftgröße = 30.0;
                                     Siegerlabel.setFont(new Font(Schriftgröße));
 
                                     if (schwarzHatGewonnen) {
