@@ -363,8 +363,93 @@ public class Schachbrett extends Application {
 
                                 KPromotion.setOnMouseClicked(event -> {
                                     StackPane clickedP = (StackPane) e.getSource();
-                                    brettStatus[zielRow][zielCol] = "wK";
+                                    brettStatus[zielRow][zielCol] = "wN";
                                     Text Figurneu = new Text("♘");
+                                    Figurneu.setStyle("-fx-font-size: 50px;");
+                                    clickedP.getChildren().clear();
+                                    clickedP.getChildren().add(Figurneu);
+                                    oben.getChildren().clear();
+                                    unten.getChildren().clear();
+                                });
+
+                            }
+                            //Promotion für schwarze Bauern
+                            if (gezogeneFigur.equals("bP") && zielRow == 7) {
+
+                                Label Promotion = new  Label("Zu welcher Figur soll dein Bauer promoten?");
+                                final double Schriftgröße = 30.0;
+                                Promotion.setFont(new Font(Schriftgröße));
+                                oben.getChildren().add(Promotion);
+
+                                Button QPromotion = new Button("♛");
+                                QPromotion.setStyle("-fx-background-color: dark-gray;");
+                                QPromotion.setText("♛");
+                                QPromotion.setStyle("-fx-text-fill: light-gray;");
+                                QPromotion.setPrefSize(75, 75);
+                                QPromotion.setFont(new Font(30));
+                                unten.getChildren().add(QPromotion);
+
+                                Button RPromotion = new Button("♜");
+                                RPromotion.setStyle("-fx-background-color: dark-gray;");
+                                RPromotion.setText("♜");
+                                RPromotion.setStyle("-fx-text-fill: light-gray;");
+                                RPromotion.setPrefSize(75, 75);
+                                RPromotion.setFont(new Font(30));
+                                unten.getChildren().add(RPromotion);
+
+                                Button BPromotion = new Button("♝");
+                                BPromotion.setStyle("-fx-background-color: dark-gray;");
+                                BPromotion.setText("♝");
+                                BPromotion.setStyle("-fx-text-fill: light-gray;");
+                                BPromotion.setPrefSize(75, 75);
+                                BPromotion.setFont(new Font(30));
+                                unten.getChildren().add(BPromotion);
+
+                                Button KPromotion = new Button("♞");
+                                KPromotion.setStyle("-fx-background-color: dark-gray;");
+                                KPromotion.setText("♞");
+                                KPromotion.setStyle("-fx-text-fill: light-gray;");
+                                KPromotion.setPrefSize(75, 75);
+                                KPromotion.setFont(new Font(30));
+                                unten.getChildren().add(KPromotion);
+
+                                QPromotion.setOnMouseClicked(event -> {
+                                    StackPane clickedP = (StackPane) e.getSource();
+                                    brettStatus[zielRow][zielCol] = "bQ";
+                                    Text Figurneu = new Text("♛");
+                                    Figurneu.setStyle("-fx-font-size: 50px;");
+                                    clickedP.getChildren().clear();
+                                    clickedP.getChildren().add(Figurneu);
+                                    oben.getChildren().clear();
+                                    unten.getChildren().clear();
+                                });
+
+                                RPromotion.setOnMouseClicked(event -> {
+                                    StackPane clickedP = (StackPane) e.getSource();
+                                    brettStatus[zielRow][zielCol] = "bR";
+                                    Text Figurneu = new Text("♜");
+                                    Figurneu.setStyle("-fx-font-size: 50px;");
+                                    clickedP.getChildren().clear();
+                                    clickedP.getChildren().add(Figurneu);
+                                    oben.getChildren().clear();
+                                    unten.getChildren().clear();
+                                });
+
+                                BPromotion.setOnMouseClicked(event -> {
+                                    StackPane clickedP = (StackPane) e.getSource();
+                                    brettStatus[zielRow][zielCol] = "wB";
+                                    Text Figurneu = new Text("♝");
+                                    Figurneu.setStyle("-fx-font-size: 50px;");
+                                    clickedP.getChildren().clear();
+                                    clickedP.getChildren().add(Figurneu);
+                                    oben.getChildren().clear();
+                                    unten.getChildren().clear();
+                                });
+
+                                KPromotion.setOnMouseClicked(event -> {
+                                    StackPane clickedP = (StackPane) e.getSource();
+                                    brettStatus[zielRow][zielCol] = "bN";
+                                    Text Figurneu = new Text("♞");
                                     Figurneu.setStyle("-fx-font-size: 50px;");
                                     clickedP.getChildren().clear();
                                     clickedP.getChildren().add(Figurneu);
