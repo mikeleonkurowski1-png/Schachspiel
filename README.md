@@ -34,6 +34,7 @@
 
 # Demo:
 
-![Start des Spiels: ](Screenshot 2026-07-12 130303.png)
-![Schachmatt durch Schwarz: ](Screenshot 2026-07-12 130642.png)
-![Bauern-Promotion durch weiß: ](Screenshot 2026-07-12 130832.png)
+![Start des Spiels: ](StartDemo.png)
+![Schachmatt durch Schwarz: ](SchachmattDemo.png)
+![Bauern-Promotion durch weiß: ](PromotionDemo.png)
+
