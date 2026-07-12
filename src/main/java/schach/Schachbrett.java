@@ -350,6 +350,17 @@ public class Schachbrett extends Application {
                                     unten.getChildren().clear();
                                 });
 
+                                BPromotion.setOnMouseClicked(event -> {
+                                    StackPane clickedP = (StackPane) e.getSource();
+                                    brettStatus[zielRow][zielCol] = "wB";
+                                    Text Figurneu = new Text("♗");
+                                    Figurneu.setStyle("-fx-font-size: 50px;");
+                                    clickedP.getChildren().clear();
+                                    clickedP.getChildren().add(Figurneu);
+                                    oben.getChildren().clear();
+                                    unten.getChildren().clear();
+                                });
+
                             }
 
                             if ((startRow + startCol) % 2 == 0) { //Zurückfärben des angeklickten Felds
