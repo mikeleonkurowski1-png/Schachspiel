@@ -32,6 +32,19 @@
 - Build-Tool: Gradle
 - Versionsverwaltung: Git, Github
 
+# Installation & Start:
+1. Lade die aktuelle Schachspiel_v1.0.zip aus dem Bereich Releases herunter.
+2. Entpacke die ZIP-Datei an einem Ort deiner Wahl auf deinem Computer.
+3. Öffne den entpackten Ordner und gehe in den Unterordner bin.
+4. Starte das Spiel per Doppelklick auf die Datei Schachspiel.bat.
+
+- Hinweis für Windows-Nutzer:
+Da dieses Programm ein privates Projekt ist, kann beim ersten Start eine Sicherheitsmeldung von Windows ("Der Computer wurde durch Windows geschützt") erscheinen.
+
+1. Klicke auf "Weitere Informationen".
+2. Klicke auf den Button "Trotzdem ausführen".
+3. Das Spiel startet danach mit einem Konsolenfenster – bitte lass dieses Fenster während des Spielens einfach im Hintergrund offen, da sich sonst das Spiel mit schließt
+
 # Demo:
 
 ![Start des Spiels: ](StartDemo.png)
