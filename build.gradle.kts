@@ -17,7 +17,7 @@ javafx {
 }
 
 application {
-    mainClass.set("src/main/java/schach/Main.java")
+    mainClass.set("schach.AppStarter")
 }
 
 dependencies {
