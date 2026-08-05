@@ -693,9 +693,8 @@ public class Schachbrett extends Application {
         });
         unten.setRight(vor);
 
-
-
-
+        zurück.setDisable(true);
+        vor.setDisable(true);
 
 
         //Erstellen der Szene (Brett)
