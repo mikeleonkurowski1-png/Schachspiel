@@ -55,10 +55,11 @@ public class Schachbrett extends Application {
         oben.setMinHeight(100);
         oben.setAlignment(Pos.CENTER);
 
-        HBox unten = new HBox();
+        BorderPane unten = new BorderPane();
         unten.setPrefHeight(100);
         unten.setMinHeight(100);
-        unten.setAlignment(Pos.CENTER);
+        unten.setMaxWidth(640);
+        BorderPane.setAlignment(unten,  Pos.CENTER);
 
         StackPane mitte = new StackPane(Board);
         mitte.setAlignment(Pos.CENTER);
@@ -337,6 +338,9 @@ public class Schachbrett extends Application {
                             //Bauern-Promotion der weißen Bauern
                             if (gezogeneFigur.equals("wP") && zielRow == 0) {
 
+                                HBox promotionsButtons = new HBox();
+                                promotionsButtons.setAlignment(Pos.CENTER);
+
                                 Board.setDisable(true); //Sperren des Bretts während der Promotion
 
                                 Label Promotion = new  Label("Zu welcher Figur soll dein Bauer promoten?");
@@ -349,7 +353,7 @@ public class Schachbrett extends Application {
                                 QPromotion.setStyle("-fx-text-fill: light-gray;");
                                 QPromotion.setPrefSize(75, 75);
                                 QPromotion.setFont(new Font(30));
-                                unten.getChildren().add(QPromotion);
+                                promotionsButtons.getChildren().add(QPromotion);
 
                                 Button RPromotion = new Button("♖");
                                 RPromotion.setStyle("-fx-background-color: dark-gray;");
@@ -357,7 +361,7 @@ public class Schachbrett extends Application {
                                 RPromotion.setStyle("-fx-text-fill: light-gray;");
                                 RPromotion.setPrefSize(75, 75);
                                 RPromotion.setFont(new Font(30));
-                                unten.getChildren().add(RPromotion);
+                                promotionsButtons.getChildren().add(RPromotion);
 
                                 Button BPromotion = new Button("♗");
                                 BPromotion.setStyle("-fx-background-color: dark-gray;");
@@ -365,7 +369,7 @@ public class Schachbrett extends Application {
                                 BPromotion.setStyle("-fx-text-fill: light-gray;");
                                 BPromotion.setPrefSize(75, 75);
                                 BPromotion.setFont(new Font(30));
-                                unten.getChildren().add(BPromotion);
+                                promotionsButtons.getChildren().add(BPromotion);
 
                                 Button KPromotion = new Button("♘");
                                 KPromotion.setStyle("-fx-background-color: dark-gray;");
@@ -373,7 +377,9 @@ public class Schachbrett extends Application {
                                 KPromotion.setStyle("-fx-text-fill: light-gray;");
                                 KPromotion.setPrefSize(75, 75);
                                 KPromotion.setFont(new Font(30));
-                                unten.getChildren().add(KPromotion);
+                                promotionsButtons.getChildren().add(KPromotion);
+
+                                unten.setCenter(promotionsButtons);
 
                                 QPromotion.setOnMouseClicked(event -> {
                                     StackPane clickedP = (StackPane) e.getSource();
@@ -383,7 +389,7 @@ public class Schachbrett extends Application {
                                     clickedP.getChildren().clear();
                                     clickedP.getChildren().add(Figurneu);
                                     oben.getChildren().clear();
-                                    unten.getChildren().clear();
+                                    unten.setCenter(null);
                                     Board.setDisable(false);
                                 });
 
@@ -395,7 +401,7 @@ public class Schachbrett extends Application {
                                     clickedP.getChildren().clear();
                                     clickedP.getChildren().add(Figurneu);
                                     oben.getChildren().clear();
-                                    unten.getChildren().clear();
+                                    unten.setCenter(null);
                                     Board.setDisable(false);
                                 });
 
@@ -407,7 +413,7 @@ public class Schachbrett extends Application {
                                     clickedP.getChildren().clear();
                                     clickedP.getChildren().add(Figurneu);
                                     oben.getChildren().clear();
-                                    unten.getChildren().clear();
+                                    unten.setCenter(null);
                                     Board.setDisable(false);
                                 });
 
@@ -419,13 +425,16 @@ public class Schachbrett extends Application {
                                     clickedP.getChildren().clear();
                                     clickedP.getChildren().add(Figurneu);
                                     oben.getChildren().clear();
-                                    unten.getChildren().clear();
+                                    unten.setCenter(null);
                                     Board.setDisable(false);
                                 });
 
                             }
                             //Promotion für schwarze Bauern
                             if (gezogeneFigur.equals("bP") && zielRow == 7) {
+
+                                HBox promotionsButtons = new HBox();
+                                promotionsButtons.setAlignment(Pos.CENTER);
 
                                 Board.setDisable(true); //Sperren des Bretts während der Promotion
 
@@ -439,7 +448,7 @@ public class Schachbrett extends Application {
                                 QPromotion.setStyle("-fx-text-fill: light-gray;");
                                 QPromotion.setPrefSize(75, 75);
                                 QPromotion.setFont(new Font(30));
-                                unten.getChildren().add(QPromotion);
+                                promotionsButtons.getChildren().add(QPromotion);
 
                                 Button RPromotion = new Button("♜");
                                 RPromotion.setStyle("-fx-background-color: dark-gray;");
@@ -447,7 +456,7 @@ public class Schachbrett extends Application {
                                 RPromotion.setStyle("-fx-text-fill: light-gray;");
                                 RPromotion.setPrefSize(75, 75);
                                 RPromotion.setFont(new Font(30));
-                                unten.getChildren().add(RPromotion);
+                                promotionsButtons.getChildren().add(RPromotion);
 
                                 Button BPromotion = new Button("♝");
                                 BPromotion.setStyle("-fx-background-color: dark-gray;");
@@ -455,7 +464,7 @@ public class Schachbrett extends Application {
                                 BPromotion.setStyle("-fx-text-fill: light-gray;");
                                 BPromotion.setPrefSize(75, 75);
                                 BPromotion.setFont(new Font(30));
-                                unten.getChildren().add(BPromotion);
+                                promotionsButtons.getChildren().add(BPromotion);
 
                                 Button KPromotion = new Button("♞");
                                 KPromotion.setStyle("-fx-background-color: dark-gray;");
@@ -463,7 +472,9 @@ public class Schachbrett extends Application {
                                 KPromotion.setStyle("-fx-text-fill: light-gray;");
                                 KPromotion.setPrefSize(75, 75);
                                 KPromotion.setFont(new Font(30));
-                                unten.getChildren().add(KPromotion);
+                                promotionsButtons.getChildren().add(KPromotion);
+
+                                unten.setCenter(promotionsButtons);
 
                                 QPromotion.setOnMouseClicked(event -> {
                                     StackPane clickedP = (StackPane) e.getSource();
@@ -473,7 +484,7 @@ public class Schachbrett extends Application {
                                     clickedP.getChildren().clear();
                                     clickedP.getChildren().add(Figurneu);
                                     oben.getChildren().clear();
-                                    unten.getChildren().clear();
+                                    unten.setCenter(null);
                                     Board.setDisable(false);
                                 });
 
@@ -485,7 +496,7 @@ public class Schachbrett extends Application {
                                     clickedP.getChildren().clear();
                                     clickedP.getChildren().add(Figurneu);
                                     oben.getChildren().clear();
-                                    unten.getChildren().clear();
+                                    unten.setCenter(null);
                                     Board.setDisable(false);
                                 });
 
@@ -497,7 +508,7 @@ public class Schachbrett extends Application {
                                     clickedP.getChildren().clear();
                                     clickedP.getChildren().add(Figurneu);
                                     oben.getChildren().clear();
-                                    unten.getChildren().clear();
+                                    unten.setCenter(null);
                                     Board.setDisable(false);
                                 });
 
@@ -509,7 +520,7 @@ public class Schachbrett extends Application {
                                     clickedP.getChildren().clear();
                                     clickedP.getChildren().add(Figurneu);
                                     oben.getChildren().clear();
-                                    unten.getChildren().clear();
+                                    unten.setCenter(null);
                                     Board.setDisable(false);
                                 });
 
@@ -588,6 +599,7 @@ public class Schachbrett extends Application {
                             if (erkennung3.hatlegaleZügen() == false) {
 
                                 if (Schach) {
+
                                     //Erkennung von Schachmatt, so wie Siegeranzeige im GUI und reset button
                                     boolean schwarzHatGewonnen = weißamZug;
                                     String Sieger = schwarzHatGewonnen ? "Schwarz" : "Weiß";
@@ -610,12 +622,13 @@ public class Schachbrett extends Application {
                                     MattresetButton.setStyle("-fx-text-fill: light-gray;");
                                     MattresetButton.setPrefSize(200, 35);
                                     MattresetButton.setFont(new Font(30));
-                                    unten.getChildren().add(MattresetButton);
+                                    unten.setCenter(MattresetButton);
                                     MattresetButton.setOnMouseClicked(event -> {
                                         appNeustart(primaryStage);
                                     });
 
                                 } else {
+
                                     //Patt anzeige und reset button
                                     System.out.println("Spiel ist vorbei...PATT!!");
                                     Label PattLabel = new Label("Patt! (Unentschieden)");
@@ -628,7 +641,7 @@ public class Schachbrett extends Application {
                                     PattresetButton.setStyle("-fx-text-fill: light-gray;");
                                     PattresetButton.setPrefSize(200, 35);
                                     PattresetButton.setFont(new Font(30));
-                                    unten.getChildren().add(PattresetButton);
+                                    unten.setCenter(PattresetButton);
                                     PattresetButton.setOnMouseClicked(event -> {
                                         appNeustart(primaryStage);
                                     });
@@ -659,6 +672,31 @@ public class Schachbrett extends Application {
                 });
             }
         }
+
+        Button zurück = new Button();
+        zurück.setText("<-");
+        zurück.autosize();
+        zurück.setStyle("-fx-background-color: dark-gray;");
+        zurück.setStyle("-fx-text-fill: light-gray;");
+        zurück.setOnMouseClicked(event -> {
+
+        });
+        unten.setLeft(zurück);
+
+        Button vor = new Button();
+        vor.setText("->");
+        vor.autosize();
+        vor.setStyle("-fx-background-color: dark-gray;");
+        vor.setStyle("-fx-text-fill: light-gray;");
+        vor.setOnMouseClicked(event -> {
+
+        });
+        unten.setRight(vor);
+
+
+
+
+
 
         //Erstellen der Szene (Brett)
         scene.setFill(Color.GRAY);
