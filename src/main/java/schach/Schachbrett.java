@@ -21,7 +21,7 @@ public class Schachbrett extends Application {
     public static void main(String[] args) {
         launch(args);
     }
-
+    private Historie historie = new Historie();
     private static final int Tile_size = 80;
     Text Figurenspeicher = null;
     StackPane TileSpeicher = null;
@@ -76,6 +76,43 @@ public class Schachbrett extends Application {
         final double Schriftgröße = 30.0;
         willkommen.setFont(new Font(Schriftgröße));
         oben.getChildren().add(willkommen);
+
+
+        Button vor = new Button();
+        vor.setText("->");
+        vor.autosize();
+        vor.setStyle("-fx-background-color: dark-gray;");
+        vor.setStyle("-fx-text-fill: light-gray;");
+        vor.setOnMouseClicked(event -> {
+            String[][] neuerZustand = historie.redo();
+            if (neuerZustand != null) {
+                brettStatus = neuerZustand;
+                brettNeuZeichnen(Board);
+                weißamZug = !weißamZug;
+                vor.setDisable(true);
+            }
+        });
+        unten.setRight(vor);
+
+        Button zurück = new Button();
+        zurück.setText("<-");
+        zurück.autosize();
+        zurück.setStyle("-fx-background-color: dark-gray;");
+        zurück.setStyle("-fx-text-fill: light-gray;");
+        zurück.setOnMouseClicked(event -> {
+            String[][] alterZustand = historie.undo();
+            if (alterZustand != null) {
+                brettStatus = alterZustand;
+                brettNeuZeichnen(Board);
+                vor.setDisable(false);
+                zurück.setDisable(true);
+                weißamZug = !weißamZug;
+            }
+        });
+        unten.setLeft(zurück);
+
+        vor.setDisable(true);
+        zurück.setDisable(true);
 
 
 
@@ -157,6 +194,8 @@ public class Schachbrett extends Application {
                     if (tile.getChildren().isEmpty() == false && Figurenspeicher == null) {
 
                         String FigurName = brettStatus[aktuelleRow][aktuelleCol];
+
+
                         //Dieser Block stellt sicher, dass man nur eine Figur der Farbe auswählen kann, die dran ist
                         if (FigurName != null) {
                             if ((weißamZug == true && FigurName.startsWith("b")) || (weißamZug == false && FigurName.startsWith("w"))) {
@@ -169,6 +208,10 @@ public class Schachbrett extends Application {
                         startCol = GridPane.getColumnIndex((clicked));
                         startRow = GridPane.getRowIndex((clicked));
                         tile.setStyle("-fx-background-color: #add8e6");
+                        historie.getZurückState(brettStatus);
+                        zurück.setDisable(false);
+                        vor.setDisable(true);
+
 
 
                         //Event zum bewegen einer bereits angeklickten Figur
@@ -270,6 +313,11 @@ public class Schachbrett extends Application {
                             TileSpeicher.getChildren().clear();
                             tile.getChildren().clear();
                             tile.getChildren().add(Figurenspeicher);
+                            String[][] aktBrett = historie.getVorState(brettStatus);
+                            historie.getVorState(brettStatus);
+
+                                zurück.setDisable(false);
+                            vor.setDisable(true);
 
                             if (enPassant) {
                                 for (Node node : Board.getChildren()) {
@@ -673,28 +721,10 @@ public class Schachbrett extends Application {
             }
         }
 
-        Button zurück = new Button();
-        zurück.setText("<-");
-        zurück.autosize();
-        zurück.setStyle("-fx-background-color: dark-gray;");
-        zurück.setStyle("-fx-text-fill: light-gray;");
-        zurück.setOnMouseClicked(event -> {
 
-        });
-        unten.setLeft(zurück);
 
-        Button vor = new Button();
-        vor.setText("->");
-        vor.autosize();
-        vor.setStyle("-fx-background-color: dark-gray;");
-        vor.setStyle("-fx-text-fill: light-gray;");
-        vor.setOnMouseClicked(event -> {
-
-        });
-        unten.setRight(vor);
-
-        zurück.setDisable(true);
-        vor.setDisable(true);
+        //zurück.setDisable(true);
+        //vor.setDisable(true);
 
 
         //Erstellen der Szene (Brett)
@@ -740,6 +770,50 @@ public class Schachbrett extends Application {
 
         } catch(Exception e){
             e.printStackTrace();
+        }
+    }
+
+    //Hilfsmethode zum aktualisieren des Bretts anhand einer Kopie in Form eines 2d-Arrays
+    public void brettNeuZeichnen(GridPane board){
+        for (Node node :  board.getChildren()) {
+            if (node instanceof StackPane) {
+                StackPane tile =  (StackPane) node;
+                Integer row = GridPane.getRowIndex(node);
+                Integer col = GridPane.getColumnIndex(node);
+
+                if (row != null && col != null) {
+                    tile.getChildren().clear();
+
+                    String figurCode = brettStatus[row][col];
+                    if (figurCode != null) {
+                        String unicodeZeichen = getUnicodeZeichen(figurCode);
+                        if (unicodeZeichen != null) {
+                            Text figurtext = new  Text(unicodeZeichen);
+                            figurtext.setStyle("-fx-font-size: 50px;");
+                            tile.getChildren().add(figurtext);
+                        }
+                    }
+                }
+
+            }
+        }
+    }
+    //Hilfsmethode zum Konvertieren der Texte
+    public String getUnicodeZeichen(String figurCode) {
+        switch (figurCode) {
+            case "wK": return "♔";
+            case "wQ": return "♕";
+            case "wR": return "♖";
+            case "wB": return "♗";
+            case "wN": return "♘";
+            case "wP": return "♙";
+            case "bK": return "♚";
+            case "bQ": return "♛";
+            case "bR": return "♜";
+            case "bB": return "♝";
+            case "bN": return "♞";
+            case "bP": return "♟";
+            default: return null;
         }
     }
 }

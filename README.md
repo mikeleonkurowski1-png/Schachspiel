@@ -29,6 +29,7 @@
 - [x] Castling implementation (Kingside / Queenside)
 - [x] Pawn promotion implementation
 - [x] *En passant* implementation
+- [ ] *In Progress:* Small move History with Undo- and Redo- Buttons
 - [ ] *Optional / Planned:* PGN file parser, custom chess AI bot, remote multiplayer support
 
 ## Installation & Quick Start
@@ -47,6 +48,6 @@
 
 ## Demo
 
-![Game Start](StartDemo.png)
-![Checkmate by Black](SchachmattDemo.png)
-![Pawn Promotion by White](PromotionDemo.png)
+![Game Start](DemoBilder/StartDemo.png)
+![Checkmate by Black](DemoBilder/SchachmattDemo.png)
+![Pawn Promotion by White](DemoBilder/PromotionDemo.png)
