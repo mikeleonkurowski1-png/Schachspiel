@@ -29,7 +29,7 @@
 - [x] Castling implementation (Kingside / Queenside)
 - [x] Pawn promotion implementation
 - [x] *En passant* implementation
-- [ ] *In Progress:* Small move History with Undo- and Redo- Buttons
+- [X] Small move History with Undo- and Redo- Buttons
 - [ ] *Optional / Planned:* PGN file parser, custom chess AI bot, remote multiplayer support
 
 ## Installation & Quick Start

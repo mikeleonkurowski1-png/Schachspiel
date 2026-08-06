@@ -5,32 +5,41 @@ public class Historie {
     private String[][] zurückState = new String[8][8];
     private String[][] vorState = new String[8][8];
 
-    public String[][] getZurückState(String[][] brettStatus){
+    public void getZurückState(String[][] brettStatus){
 
         for (int i = 0; i < 8; i++){
             for (int j = 0; j < 8; j++){
                 zurückState[i][j] = Schachbrett.brettStatus[i][j];
             }
         }
-        return zurückState;
     }
 
-    public String[][] getVorState(String[][] brettStatus){
+    public void getVorState(String[][] brettStatus){
         for (int i = 0; i < 8; i++){
             for (int j = 0; j < 8; j++){
                 vorState[i][j] = Schachbrett.brettStatus[i][j];
             }
         }
-        return vorState;
     }
 
     public String[][] undo() {
-        return zurückState;
+        String[][] kopie = new String[8][8];
+        for (int i = 0; i < 8; i++) {
+            for (int j = 0; j < 8; j++) {
+                kopie[i][j] = zurückState[i][j];
+            }
+        }
+        return kopie;
     }
 
     public String[][] redo() {
-        return vorState;
+        String[][] kopie = new String[8][8];
+        for (int i = 0; i < 8; i++) {
+            for (int j = 0; j < 8; j++) {
+                kopie[i][j] = vorState[i][j];
+            }
+        }
+        return kopie;
+    }
     }
 
-
-}

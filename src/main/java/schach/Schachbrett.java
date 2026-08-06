@@ -86,7 +86,9 @@ public class Schachbrett extends Application {
         vor.setOnMouseClicked(event -> {
             String[][] neuerZustand = historie.redo();
             if (neuerZustand != null) {
-                brettStatus = neuerZustand;
+                for (int i = 0; i < 8; i++) {
+                    System.arraycopy(neuerZustand[i], 0, brettStatus[i], 0, 8);
+                }
                 brettNeuZeichnen(Board);
                 weißamZug = !weißamZug;
                 vor.setDisable(true);
@@ -102,7 +104,9 @@ public class Schachbrett extends Application {
         zurück.setOnMouseClicked(event -> {
             String[][] alterZustand = historie.undo();
             if (alterZustand != null) {
-                brettStatus = alterZustand;
+                for (int i = 0; i < 8; i++) {
+                    System.arraycopy(alterZustand[i], 0, brettStatus[i], 0, 8);
+                }
                 brettNeuZeichnen(Board);
                 vor.setDisable(false);
                 zurück.setDisable(true);
@@ -208,8 +212,6 @@ public class Schachbrett extends Application {
                         startCol = GridPane.getColumnIndex((clicked));
                         startRow = GridPane.getRowIndex((clicked));
                         tile.setStyle("-fx-background-color: #add8e6");
-                        historie.getZurückState(brettStatus);
-                        zurück.setDisable(false);
                         vor.setDisable(true);
 
 
@@ -227,7 +229,7 @@ public class Schachbrett extends Application {
 
                         if (logik.ZugErlaubnis(startRow, startCol, zielRow, zielCol)) { //Überprüft, ob der Zug legal ist
 
-
+                            historie.getZurückState(brettStatus);
 
                             String geschlageneEnPassantFigur = null;
 
@@ -313,10 +315,8 @@ public class Schachbrett extends Application {
                             TileSpeicher.getChildren().clear();
                             tile.getChildren().clear();
                             tile.getChildren().add(Figurenspeicher);
-                            String[][] aktBrett = historie.getVorState(brettStatus);
                             historie.getVorState(brettStatus);
-
-                                zurück.setDisable(false);
+                            zurück.setDisable(false);
                             vor.setDisable(true);
 
                             if (enPassant) {
