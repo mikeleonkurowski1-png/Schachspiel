@@ -315,9 +315,7 @@ public class Schachbrett extends Application {
                             TileSpeicher.getChildren().clear();
                             tile.getChildren().clear();
                             tile.getChildren().add(Figurenspeicher);
-                            historie.getVorState(brettStatus);
-                            zurück.setDisable(false);
-                            vor.setDisable(true);
+
 
                             if (enPassant) {
                                 for (Node node : Board.getChildren()) {
@@ -573,6 +571,9 @@ public class Schachbrett extends Application {
                                 });
 
                             }
+                            historie.getVorState(brettStatus);
+                            zurück.setDisable(false);
+                            vor.setDisable(true);
 
                             if ((startRow + startCol) % 2 == 0) { //Zurückfärben des angeklickten Felds
                                 TileSpeicher.setStyle("-fx-background-color: #F5F5F5");
@@ -785,6 +786,8 @@ public class Schachbrett extends Application {
                     tile.getChildren().clear();
 
                     String figurCode = brettStatus[row][col];
+                    if ("wK".equals(figurCode)) { WKönigRow = row; WKönigCol = col; }
+                    if ("bK".equals(figurCode)) { BKönigRow = row; BKönigCol = col; }
                     if (figurCode != null) {
                         String unicodeZeichen = getUnicodeZeichen(figurCode);
                         if (unicodeZeichen != null) {
