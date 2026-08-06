@@ -437,6 +437,7 @@ public class Schachbrett extends Application {
                                     oben.getChildren().clear();
                                     unten.setCenter(null);
                                     Board.setDisable(false);
+                                    historie.getVorState(brettStatus);
                                 });
 
                                 RPromotion.setOnMouseClicked(event -> {
@@ -449,6 +450,7 @@ public class Schachbrett extends Application {
                                     oben.getChildren().clear();
                                     unten.setCenter(null);
                                     Board.setDisable(false);
+                                    historie.getVorState(brettStatus);
                                 });
 
                                 BPromotion.setOnMouseClicked(event -> {
@@ -461,6 +463,7 @@ public class Schachbrett extends Application {
                                     oben.getChildren().clear();
                                     unten.setCenter(null);
                                     Board.setDisable(false);
+                                    historie.getVorState(brettStatus);
                                 });
 
                                 KPromotion.setOnMouseClicked(event -> {
@@ -473,6 +476,7 @@ public class Schachbrett extends Application {
                                     oben.getChildren().clear();
                                     unten.setCenter(null);
                                     Board.setDisable(false);
+                                    historie.getVorState(brettStatus);
                                 });
 
                             }
@@ -532,6 +536,7 @@ public class Schachbrett extends Application {
                                     oben.getChildren().clear();
                                     unten.setCenter(null);
                                     Board.setDisable(false);
+                                    historie.getVorState(brettStatus);
                                 });
 
                                 RPromotion.setOnMouseClicked(event -> {
@@ -544,6 +549,7 @@ public class Schachbrett extends Application {
                                     oben.getChildren().clear();
                                     unten.setCenter(null);
                                     Board.setDisable(false);
+                                    historie.getVorState(brettStatus);
                                 });
 
                                 BPromotion.setOnMouseClicked(event -> {
@@ -556,6 +562,7 @@ public class Schachbrett extends Application {
                                     oben.getChildren().clear();
                                     unten.setCenter(null);
                                     Board.setDisable(false);
+                                    historie.getVorState(brettStatus);
                                 });
 
                                 KPromotion.setOnMouseClicked(event -> {
@@ -568,6 +575,7 @@ public class Schachbrett extends Application {
                                     oben.getChildren().clear();
                                     unten.setCenter(null);
                                     Board.setDisable(false);
+                                    historie.getVorState(brettStatus);
                                 });
 
                             }
