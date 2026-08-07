@@ -28,22 +28,14 @@ public class Schachbrett extends Application {
     Text Figurenspeicher = null;
     StackPane TileSpeicher = null;
     public static String[][] brettStatus = new String[8][8]; //Dient der Logik im Hintergrund [Speichert Figuren-Position)
-    int startRow = 0;
-    int startCol = 0;
-    int zielRow = 0;
-    int zielCol = 0;
+    int startRow = 0, startCol = 0, zielRow = 0, zielCol = 0;
     String originalTileFarbe = null;
     public static boolean weißamZug = true;
-    public static int WKönigRow = 7;
-    public static int WKönigCol = 4;
-    public static int BKönigRow = 0;
-    public static int BKönigCol = 4;
-
-    public static int enPassantRow = -1;
-    public static int enPassantCol = -1;
+    public static int WKönigRow = 7, WKönigCol = 4, BKönigRow = 0,  BKönigCol = 4;
+    public static int enPassantRow = -1,  enPassantCol = -1;
 
     //Dropshadow (Underglow fürs Brett) um anzuzeigen, welcher Spieler am Zug ist
-        DropShadow dropShadow = new DropShadow();
+    DropShadow dropShadow = new DropShadow();
 
     @Override
     public void start(Stage primaryStage) throws Exception {
@@ -118,11 +110,7 @@ public class Schachbrett extends Application {
         vor.setDisable(true);
         zurück.setDisable(true);
 
-
-
         // Schleife zum Erstellen des Schachbretts und der Startaufstellung
-
-
         for (int row = 0; row < 8; row++) {
             for (int col = 0; col < 8; col++) {
                 StackPane tile = new StackPane();
@@ -134,59 +122,18 @@ public class Schachbrett extends Application {
                     tile.setStyle("-fx-background-color: #708090");
                 }
 
-                if (row == 0 && col == 0 || row == 0 && col == 7) {
-                    Figur = new Text("♜");
-                    brettStatus[row][col] = "bR";
-                } else if (row == 0 && col == 1 || row == 0 && col == 6) {
-                    Figur = new Text("♞");
-                    brettStatus[row][col] = "bN";
-                } else if (row == 0 && col == 2 || row == 0 && col == 5) {
-                    Figur = new Text("♝");
-                    brettStatus[row][col] = "bB";
-                } else if (row == 0 && col == 3) {
-                    Figur = new Text("♛");
-                    brettStatus[row][col] = "bQ";
-                } else if (row == 0 && col == 4) {
-                    Figur = new Text("♚");
-                    brettStatus[row][col] = "bK";
-                } else if (row == 1) {
-                    Figur = new Text("♟");
-                    brettStatus[row][col] = "bP";
-                } else if (row == 7 && col == 0 || row == 7 && col == 7) {
-                    Figur = new Text("♖");
-                    brettStatus[row][col] = "wR";
-                } else if (row == 7 && col == 1 || row == 7 && col == 6) {
-                    Figur = new Text("♘");
-                    brettStatus[row][col] = "wN";
-                } else if (row == 7 && col == 2 || row == 7 && col == 5) {
-                    Figur = new Text("♗");
-                    brettStatus[row][col] = "wB";
-                } else if (row == 7 && col == 3) {
-                    Figur = new Text("♕");
-                    brettStatus[row][col] = "wQ";
-                } else if (row == 7 && col == 4) {
-                    Figur = new Text("♔");
-                    brettStatus[row][col] = "wK";
-                } else if (row == 6) {
-                    Figur = new Text("♙");
-                    brettStatus[row][col] = "wP";
-                } else {
-                    Figur = null;
-                }
+                Figur = erzeugeStartFigur(row, col);
                 if (Figur != null) {
                     Figur.setStyle("-fx-font-size: 50px;");
                     tile.getChildren().add(Figur);
                 }
-
 
                 tile.setPrefSize(Tile_size, Tile_size);
 
                 Board.add(tile, col, row);
 
 
-
                 // Maus-Klick Event
-
                 tile.setOnMouseClicked(e -> {
 
 
@@ -684,5 +631,48 @@ public class Schachbrett extends Application {
         });
 
         return btn;
+    }
+
+    private Text erzeugeStartFigur(int row, int col) {
+        if (row == 0 && (col == 0 || col == 7)) {
+            brettStatus[row][col] = "bR";
+            return new Text("♜");
+        } else if (row == 0 && (col == 1 || col == 6)) {
+            brettStatus[row][col] = "bN";
+            return new Text("♞");
+        } else if (row == 0 && (col == 2 || col == 5)) {
+            brettStatus[row][col] = "bB";
+            return new Text("♝");
+        } else if (row == 0 && col == 3) {
+            brettStatus[row][col] = "bQ";
+            return new Text("♛");
+        } else if (row == 0 && col == 4) {
+            brettStatus[row][col] = "bK";
+            return new Text("♚");
+        } else if (row == 1) {
+            brettStatus[row][col] = "bP";
+            return new Text("♟");
+        } else if (row == 7 && (col == 0 || col == 7)) {
+            brettStatus[row][col] = "wR";
+            return new Text("♖");
+        } else if (row == 7 && (col == 1 || col == 6)) {
+            brettStatus[row][col] = "wN";
+            return new Text("♘");
+        } else if (row == 7 && (col == 2 || col == 5)) {
+            brettStatus[row][col] = "wB";
+            return new Text("♗");
+        } else if (row == 7 && col == 3) {
+            brettStatus[row][col] = "wQ";
+            return new Text("♕");
+        } else if (row == 7 && col == 4) {
+            brettStatus[row][col] = "wK";
+            return new Text("♔");
+        } else if (row == 6) {
+            brettStatus[row][col] = "wP";
+            return new Text("♙");
+        } else {
+            brettStatus[row][col] = "";
+            return null;
+        }
     }
 }
