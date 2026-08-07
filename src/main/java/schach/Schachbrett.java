@@ -14,13 +14,15 @@ import javafx.stage.Stage;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.paint.Color;
 
-import java.util.Locale;
-
 
 public class Schachbrett extends Application {
     public static void main(String[] args) {
         launch(args);
     }
+
+    private GridPane Board;
+    private VBox oben;
+    private BorderPane unten;
     private Historie historie = new Historie();
     private static final int Tile_size = 80;
     Text Figurenspeicher = null;
@@ -384,199 +386,37 @@ public class Schachbrett extends Application {
                             //Bauern-Promotion der weißen Bauern
                             if (gezogeneFigur.equals("wP") && zielRow == 0) {
 
-                                HBox promotionsButtons = new HBox();
+                                Board.setDisable(true);
+
+                                Label promotion = new Label("Zu welcher Figur soll dein Bauer promoten?");
+                                promotion.setFont(new Font(Schriftgröße));
+                                oben.getChildren().add(promotion);
+
+                                HBox promotionsButtons = new HBox(
+                                        erstellePromotionsButton("wQ", "♕", zielRow, zielCol, Board, oben, unten),
+                                        erstellePromotionsButton("wR", "♖", zielRow, zielCol, Board, oben, unten),
+                                        erstellePromotionsButton("wB", "♗", zielRow, zielCol, Board, oben, unten),
+                                        erstellePromotionsButton("wN", "♘", zielRow, zielCol, Board, oben, unten)
+                                );
                                 promotionsButtons.setAlignment(Pos.CENTER);
 
-                                Board.setDisable(true); //Sperren des Bretts während der Promotion
-
-                                Label Promotion = new  Label("Zu welcher Figur soll dein Bauer promoten?");
-                                Promotion.setFont(new Font(Schriftgröße));
-                                oben.getChildren().add(Promotion);
-
-                                Button QPromotion = new Button("♕");
-                                QPromotion.setStyle("-fx-background-color: dark-gray;");
-                                QPromotion.setText("♕");
-                                QPromotion.setStyle("-fx-text-fill: light-gray;");
-                                QPromotion.setPrefSize(75, 75);
-                                QPromotion.setFont(new Font(30));
-                                promotionsButtons.getChildren().add(QPromotion);
-
-                                Button RPromotion = new Button("♖");
-                                RPromotion.setStyle("-fx-background-color: dark-gray;");
-                                RPromotion.setText("♖");
-                                RPromotion.setStyle("-fx-text-fill: light-gray;");
-                                RPromotion.setPrefSize(75, 75);
-                                RPromotion.setFont(new Font(30));
-                                promotionsButtons.getChildren().add(RPromotion);
-
-                                Button BPromotion = new Button("♗");
-                                BPromotion.setStyle("-fx-background-color: dark-gray;");
-                                BPromotion.setText("♗");
-                                BPromotion.setStyle("-fx-text-fill: light-gray;");
-                                BPromotion.setPrefSize(75, 75);
-                                BPromotion.setFont(new Font(30));
-                                promotionsButtons.getChildren().add(BPromotion);
-
-                                Button KPromotion = new Button("♘");
-                                KPromotion.setStyle("-fx-background-color: dark-gray;");
-                                KPromotion.setText("♘");
-                                KPromotion.setStyle("-fx-text-fill: light-gray;");
-                                KPromotion.setPrefSize(75, 75);
-                                KPromotion.setFont(new Font(30));
-                                promotionsButtons.getChildren().add(KPromotion);
-
                                 unten.setCenter(promotionsButtons);
-
-                                QPromotion.setOnMouseClicked(event -> {
-                                    StackPane clickedP = (StackPane) e.getSource();
-                                    brettStatus[zielRow][zielCol] = "wQ";
-                                    Text Figurneu = new Text("♕");
-                                    Figurneu.setStyle("-fx-font-size: 50px;");
-                                    clickedP.getChildren().clear();
-                                    clickedP.getChildren().add(Figurneu);
-                                    oben.getChildren().clear();
-                                    unten.setCenter(null);
-                                    Board.setDisable(false);
-                                    historie.getVorState(brettStatus);
-                                });
-
-                                RPromotion.setOnMouseClicked(event -> {
-                                    StackPane clickedP = (StackPane) e.getSource();
-                                    brettStatus[zielRow][zielCol] = "wR";
-                                    Text Figurneu = new Text("♖");
-                                    Figurneu.setStyle("-fx-font-size: 50px;");
-                                    clickedP.getChildren().clear();
-                                    clickedP.getChildren().add(Figurneu);
-                                    oben.getChildren().clear();
-                                    unten.setCenter(null);
-                                    Board.setDisable(false);
-                                    historie.getVorState(brettStatus);
-                                });
-
-                                BPromotion.setOnMouseClicked(event -> {
-                                    StackPane clickedP = (StackPane) e.getSource();
-                                    brettStatus[zielRow][zielCol] = "wB";
-                                    Text Figurneu = new Text("♗");
-                                    Figurneu.setStyle("-fx-font-size: 50px;");
-                                    clickedP.getChildren().clear();
-                                    clickedP.getChildren().add(Figurneu);
-                                    oben.getChildren().clear();
-                                    unten.setCenter(null);
-                                    Board.setDisable(false);
-                                    historie.getVorState(brettStatus);
-                                });
-
-                                KPromotion.setOnMouseClicked(event -> {
-                                    StackPane clickedP = (StackPane) e.getSource();
-                                    brettStatus[zielRow][zielCol] = "wN";
-                                    Text Figurneu = new Text("♘");
-                                    Figurneu.setStyle("-fx-font-size: 50px;");
-                                    clickedP.getChildren().clear();
-                                    clickedP.getChildren().add(Figurneu);
-                                    oben.getChildren().clear();
-                                    unten.setCenter(null);
-                                    Board.setDisable(false);
-                                    historie.getVorState(brettStatus);
-                                });
 
                             }
                             //Promotion für schwarze Bauern
                             if (gezogeneFigur.equals("bP") && zielRow == 7) {
 
-                                HBox promotionsButtons = new HBox();
-                                promotionsButtons.setAlignment(Pos.CENTER);
+                                Board.setDisable(true);
+                                Label promotion = new  Label("Zu welcher Figur soll dein Bauer promoten?");
+                                promotion.setFont(new Font(Schriftgröße));
+                                oben.getChildren().add(promotion);
 
-                                Board.setDisable(true); //Sperren des Bretts während der Promotion
-
-                                Label Promotion = new  Label("Zu welcher Figur soll dein Bauer promoten?");
-                                Promotion.setFont(new Font(Schriftgröße));
-                                oben.getChildren().add(Promotion);
-
-                                Button QPromotion = new Button("♛");
-                                QPromotion.setStyle("-fx-background-color: dark-gray;");
-                                QPromotion.setText("♛");
-                                QPromotion.setStyle("-fx-text-fill: light-gray;");
-                                QPromotion.setPrefSize(75, 75);
-                                QPromotion.setFont(new Font(30));
-                                promotionsButtons.getChildren().add(QPromotion);
-
-                                Button RPromotion = new Button("♜");
-                                RPromotion.setStyle("-fx-background-color: dark-gray;");
-                                RPromotion.setText("♜");
-                                RPromotion.setStyle("-fx-text-fill: light-gray;");
-                                RPromotion.setPrefSize(75, 75);
-                                RPromotion.setFont(new Font(30));
-                                promotionsButtons.getChildren().add(RPromotion);
-
-                                Button BPromotion = new Button("♝");
-                                BPromotion.setStyle("-fx-background-color: dark-gray;");
-                                BPromotion.setText("♝");
-                                BPromotion.setStyle("-fx-text-fill: light-gray;");
-                                BPromotion.setPrefSize(75, 75);
-                                BPromotion.setFont(new Font(30));
-                                promotionsButtons.getChildren().add(BPromotion);
-
-                                Button KPromotion = new Button("♞");
-                                KPromotion.setStyle("-fx-background-color: dark-gray;");
-                                KPromotion.setText("♞");
-                                KPromotion.setStyle("-fx-text-fill: light-gray;");
-                                KPromotion.setPrefSize(75, 75);
-                                KPromotion.setFont(new Font(30));
-                                promotionsButtons.getChildren().add(KPromotion);
-
-                                unten.setCenter(promotionsButtons);
-
-                                QPromotion.setOnMouseClicked(event -> {
-                                    StackPane clickedP = (StackPane) e.getSource();
-                                    brettStatus[zielRow][zielCol] = "bQ";
-                                    Text Figurneu = new Text("♛");
-                                    Figurneu.setStyle("-fx-font-size: 50px;");
-                                    clickedP.getChildren().clear();
-                                    clickedP.getChildren().add(Figurneu);
-                                    oben.getChildren().clear();
-                                    unten.setCenter(null);
-                                    Board.setDisable(false);
-                                    historie.getVorState(brettStatus);
-                                });
-
-                                RPromotion.setOnMouseClicked(event -> {
-                                    StackPane clickedP = (StackPane) e.getSource();
-                                    brettStatus[zielRow][zielCol] = "bR";
-                                    Text Figurneu = new Text("♜");
-                                    Figurneu.setStyle("-fx-font-size: 50px;");
-                                    clickedP.getChildren().clear();
-                                    clickedP.getChildren().add(Figurneu);
-                                    oben.getChildren().clear();
-                                    unten.setCenter(null);
-                                    Board.setDisable(false);
-                                    historie.getVorState(brettStatus);
-                                });
-
-                                BPromotion.setOnMouseClicked(event -> {
-                                    StackPane clickedP = (StackPane) e.getSource();
-                                    brettStatus[zielRow][zielCol] = "bB";
-                                    Text Figurneu = new Text("♝");
-                                    Figurneu.setStyle("-fx-font-size: 50px;");
-                                    clickedP.getChildren().clear();
-                                    clickedP.getChildren().add(Figurneu);
-                                    oben.getChildren().clear();
-                                    unten.setCenter(null);
-                                    Board.setDisable(false);
-                                    historie.getVorState(brettStatus);
-                                });
-
-                                KPromotion.setOnMouseClicked(event -> {
-                                    StackPane clickedP = (StackPane) e.getSource();
-                                    brettStatus[zielRow][zielCol] = "bN";
-                                    Text Figurneu = new Text("♞");
-                                    Figurneu.setStyle("-fx-font-size: 50px;");
-                                    clickedP.getChildren().clear();
-                                    clickedP.getChildren().add(Figurneu);
-                                    oben.getChildren().clear();
-                                    unten.setCenter(null);
-                                    Board.setDisable(false);
-                                    historie.getVorState(brettStatus);
-                                });
+                                HBox promotionsbuttons = new HBox(erstellePromotionsButton("bQ", "♛", zielRow, zielCol, Board, oben, unten),
+                                                                    erstellePromotionsButton("bR", "♜", zielRow, zielCol, Board, oben, unten),
+                                                                    erstellePromotionsButton("bB", "♝", zielRow, zielCol, Board, oben, unten),
+                                                                    erstellePromotionsButton("bN", "♞", zielRow, zielCol, Board, oben, unten));
+                                promotionsbuttons.setAlignment(Pos.CENTER);
+                                unten.setCenter(promotionsbuttons);
 
                             }
                             historie.getVorState(brettStatus);
@@ -730,12 +570,6 @@ public class Schachbrett extends Application {
             }
         }
 
-
-
-        //zurück.setDisable(true);
-        //vor.setDisable(true);
-
-
         //Erstellen der Szene (Brett)
         scene.setFill(Color.GRAY);
         dropShadow.setRadius(30);
@@ -826,5 +660,31 @@ public class Schachbrett extends Application {
             case "bP": return "♟";
             default: return null;
         }
+    }
+
+    //Hilfsmethode zur erstellung der Promotionsbuttons
+    private Button erstellePromotionsButton(String figurCode, String symbol, int zielRow, int zielCol, GridPane board, Pane oben, BorderPane unten) {
+        Button btn = new Button(symbol);
+
+        // Dein exaktes Styling:
+        btn.setStyle("-fx-background-color: dark-gray; -fx-text-fill: light-gray;");
+        btn.setPrefSize(75, 75);
+        btn.setFont(new Font(30));
+
+        btn.setOnAction(e -> {
+            // 1. Logik-Array aktualisieren
+            brettStatus[zielRow][zielCol] = figurCode;
+
+            // 2. UI zurücksetzen & Brett neu zeichnen (ersetzt das fehleranfällige StackPane-Casting)
+            brettNeuZeichnen(board);
+            oben.getChildren().clear();
+            unten.setCenter(null);
+            board.setDisable(false);
+
+            // 3. Historie für Redo sichern
+            historie.getVorState(brettStatus);
+        });
+
+        return btn;
     }
 }
