@@ -671,7 +671,7 @@ public class Schachbrett extends Application {
             brettStatus[row][col] = "wP";
             return new Text("♙");
         } else {
-            brettStatus[row][col] = "";
+            brettStatus[row][col] = null;
             return null;
         }
     }
