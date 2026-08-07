@@ -81,10 +81,9 @@ public class Schachbrett extends Application {
 
 
         Button vor = new Button();
-        vor.setText("->");
-        vor.autosize();
-        vor.setStyle("-fx-background-color: dark-gray;");
-        vor.setStyle("-fx-text-fill: light-gray;");
+        vor.setText("⟹");
+        vor.setFont(new Font(30));
+        vor.setStyle("-fx-background-color: dark-gray; -fx-text-fill: light-gray;");
         vor.setOnMouseClicked(event -> {
             String[][] neuerZustand = historie.redo();
             if (neuerZustand != null) {
@@ -99,10 +98,9 @@ public class Schachbrett extends Application {
         unten.setRight(vor);
 
         Button zurück = new Button();
-        zurück.setText("<-");
-        zurück.autosize();
-        zurück.setStyle("-fx-background-color: dark-gray;");
-        zurück.setStyle("-fx-text-fill: light-gray;");
+        zurück.setText("⟸");
+        zurück.setFont(new Font(30));
+        zurück.setStyle("-fx-background-color: dark-gray; -fx-text-fill: light-gray;");
         zurück.setOnMouseClicked(event -> {
             String[][] alterZustand = historie.undo();
             if (alterZustand != null) {
