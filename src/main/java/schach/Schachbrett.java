@@ -15,12 +15,17 @@ import javafx.stage.Stage;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.paint.Color;
 
+import java.util.ArrayList;
+import java.util.List;
+
 
 public class Schachbrett extends Application {
     public static void main(String[] args) {
         launch(args);
     }
 
+
+    private final List<String> redoCache = new ArrayList<>();
     private VBox oben;
     private BorderPane unten;
     private Historie historie = new Historie();
@@ -116,10 +121,19 @@ public class Schachbrett extends Application {
                     System.arraycopy(neuerZustand[i], 0, brettStatus[i], 0, 8);
                 }
                 brettNeuZeichnen(Board);
+
+                if (!redoCache.isEmpty()) {
+                    String wiederhergestellterZug = redoCache.remove(redoCache.size() - 1);
+                    historieliste.getItems().add(wiederhergestellterZug);
+                    historieliste.scrollTo(historieliste.getItems().size() - 1);
+                }
                 weißamZug = !weißamZug;
-                vor.setDisable(true);
+                if (redoCache.isEmpty()) {
+                    vor.setDisable(true);
+                }
             }
         });
+
         unten.setRight(vor);
 
         Button zurück = new Button();
@@ -136,7 +150,8 @@ public class Schachbrett extends Application {
 
                 int letzterIndex = historieliste.getItems().size() - 1;
                 if (letzterIndex >= 0) {
-                    historieliste.getItems().remove(letzterIndex);
+                    String entfernterZug = historieliste.getItems().remove(letzterIndex);
+                    redoCache.add(entfernterZug);
                 }
                 vor.setDisable(false);
                 zurück.setDisable(true);
@@ -489,6 +504,8 @@ public class Schachbrett extends Application {
 
                             historieliste.getItems().add(zugText);
                             historieliste.scrollTo(historieliste.getItems().size() - 1);
+
+                            redoCache.clear();
 
 
 

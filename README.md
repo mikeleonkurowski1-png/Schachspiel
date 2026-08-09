@@ -30,6 +30,7 @@
 - [x] Pawn promotion implementation
 - [x] *En passant* implementation
 - [X] Small move History with Undo- and Redo- Buttons
+- [ ] Move History implemented in the UI
 - [ ] *Optional / Planned:* PGN file parser, custom chess AI bot, remote multiplayer support
 
 ## Installation & Quick Start
