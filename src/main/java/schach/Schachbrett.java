@@ -122,7 +122,10 @@ public class Schachbrett extends Application {
                 for (int i = 0; i < 8; i++) {
                     System.arraycopy(neuerZustand[i], 0, brettStatus[i], 0, 8);
                 }
+
+                weißamZug = !weißamZug;
                 brettNeuZeichnen(Board);
+                weißamZug = !weißamZug;
 
                 if (!redoCache.isEmpty()) {
                     String wiederhergestellterZug = redoCache.remove(redoCache.size() - 1);
@@ -148,7 +151,10 @@ public class Schachbrett extends Application {
                 for (int i = 0; i < 8; i++) {
                     System.arraycopy(alterZustand[i], 0, brettStatus[i], 0, 8);
                 }
+
+                weißamZug = !weißamZug;
                 brettNeuZeichnen(Board);
+                weißamZug = !weißamZug;
 
                 int letzterIndex = historieliste.getItems().size() - 1;
                 if (letzterIndex >= 0) {
@@ -209,6 +215,11 @@ public class Schachbrett extends Application {
                 tile.setPrefSize(Tile_size, Tile_size);
 
                 Board.add(tile, col, row);
+
+
+
+
+
 
 
                 // Maus-Klick Event
@@ -680,6 +691,9 @@ public class Schachbrett extends Application {
                 Integer col = GridPane.getColumnIndex(node);
 
                 if (row != null && col != null) {
+
+                    boolean HellerFleck = (row + col) % 2 == 0;
+                    tile.setStyle("-fx-background-color: " + (HellerFleck ? "#F5F5F5" : "#708090") + ";");
                     tile.getChildren().clear();
 
                     String figurCode = brettStatus[row][col];
@@ -697,7 +711,30 @@ public class Schachbrett extends Application {
 
             }
         }
-    }
+
+        Schacherkennung erkennung = new  Schacherkennung();
+        boolean stehtimSchach = erkennung.StehtimSchach();
+
+        if (stehtimSchach) {
+            int koenigRow = weißamZug ? WKönigRow : BKönigRow;
+            int koenigCol = weißamZug ? WKönigCol : BKönigCol;
+
+            // Kachel des betroffenen Königs rot einfärben
+            for (Node node : board.getChildren()) {
+                if (node instanceof StackPane) {
+                    Integer r = GridPane.getRowIndex(node);
+                    Integer c = GridPane.getColumnIndex(node);
+                    if (r != null && c != null && r == koenigRow && c == koenigCol) {
+                        node.setStyle("-fx-background-color: #FF0000;");
+                        break;
+                    }
+                }
+            }
+            dropShadow.setColor(Color.RED);
+        } else {
+            dropShadow.setColor(weißamZug ? Color.WHITE : Color.BLACK);
+            }
+        }
 
     //Hilfsmethode zum Konvertieren der Texte
     public String getUnicodeZeichen(String figurCode) {
@@ -788,6 +825,7 @@ public class Schachbrett extends Application {
         }
     }
 
+    //Hilfsmethode zum entfernen aller Punkte der möglichen Züge
     private void highlightsentfernen(GridPane board) {
         for (Node node : board.getChildren()){
             if (node instanceof StackPane){
@@ -797,6 +835,7 @@ public class Schachbrett extends Application {
         }
     }
 
+    //Hilfsmethode zum Anzeigen der legalen Züge
     private void zeigelegaleZüge(GridPane board, int sRow, int sCol){
         highlightsentfernen(board);
         FigurenLogik logik =  new FigurenLogik();
