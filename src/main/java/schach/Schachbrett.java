@@ -215,6 +215,11 @@ public class Schachbrett extends Application {
                 tile.setOnMouseClicked(e -> {
 
 
+
+
+
+
+
                     StackPane clicked = (StackPane) e.getSource();
                     int aktuelleRow = GridPane.getRowIndex(tile);
                     int aktuelleCol = GridPane.getColumnIndex(tile);
@@ -238,11 +243,14 @@ public class Schachbrett extends Application {
                         startRow = GridPane.getRowIndex((clicked));
                         tile.setStyle("-fx-background-color: #add8e6");
                         vor.setDisable(true);
+                        zeigelegaleZüge(Board, startRow, startCol);
 
 
 
                         //Event zum bewegen einer bereits angeklickten Figur
                     } else if (Figurenspeicher != null) {
+
+                        highlightsentfernen(Board);
 
                         oben.getChildren().remove(willkommen);
 
@@ -777,6 +785,67 @@ public class Schachbrett extends Application {
         } else {
             brettStatus[row][col] = null;
             return null;
+        }
+    }
+
+    private void highlightsentfernen(GridPane board) {
+        for (Node node : board.getChildren()){
+            if (node instanceof StackPane){
+                StackPane tile =  (StackPane) node;
+                tile.getChildren().removeIf(child -> "highlight".equals(child.getUserData()));
+            }
+        }
+    }
+
+    private void zeigelegaleZüge(GridPane board, int sRow, int sCol){
+        highlightsentfernen(board);
+        FigurenLogik logik =  new FigurenLogik();
+        Schacherkennung erkennung = new Schacherkennung();
+
+        for (Node node : board.getChildren()){
+            if (node instanceof StackPane){
+                StackPane tile =  (StackPane) node;
+                Integer zRow = GridPane.getRowIndex(tile);
+                Integer zCol = GridPane.getColumnIndex(tile);
+
+                if (zRow == null || zCol == null) continue;
+
+                if (logik.ZugErlaubnis(sRow, sCol, zRow, zCol)){
+
+                    String alteZielfigur = brettStatus[zRow][zCol];
+                    brettStatus[zRow][zCol] = brettStatus[sRow][sCol];
+                    brettStatus[sRow][sCol] = null;
+
+                    int altWKRow = WKönigRow, altWKCol = WKönigCol;
+                    int altBKRow = BKönigRow, altBKCol = BKönigCol;
+
+                    if ("wK".equals(brettStatus[zRow][zCol])){WKönigRow = zRow; WKönigCol = zCol;}
+                    if ("bK".equals(brettStatus[zRow][zCol])) { BKönigRow = zRow; BKönigCol = zCol; }
+
+                    weißamZug = !weißamZug;
+                    boolean inSchach = erkennung.StehtimSchach();
+                    weißamZug = !weißamZug;
+
+                    brettStatus[sRow][sCol] = brettStatus[zRow][zCol];
+                    brettStatus[zRow][zCol] = alteZielfigur;
+                    WKönigRow = altWKRow; WKönigCol = altWKCol;
+                    BKönigRow = altBKRow; BKönigCol = altBKCol;
+
+                    if (!inSchach) {
+                        if (weißamZug){
+                            javafx.scene.shape.Circle dot = new javafx.scene.shape.Circle(12, Color.rgb(225, 225, 225, 0.75));
+                            dot.setUserData("highlight");
+                            dot.setMouseTransparent(true);
+                            tile.getChildren().add(dot);
+                        } else if (!weißamZug){
+                            javafx.scene.shape.Circle dot = new javafx.scene.shape.Circle(12, Color.rgb(0, 0, 0, 0.75));
+                            dot.setUserData("highlight");
+                            dot.setMouseTransparent(true);
+                            tile.getChildren().add(dot);
+                        }
+                    }
+                }
+            }
         }
     }
 }
