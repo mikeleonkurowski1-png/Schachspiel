@@ -76,6 +76,8 @@ public class Schachbrett extends Application {
         historieliste.setMaxHeight(615);
         historieliste.setMaxWidth(180);
         historieliste.setMaxWidth(180);
+        historieliste.setEditable(false);
+        historieliste.setFocusTraversable(false);
         historieliste.setStyle("-fx-background-color: #787878; " + "-fx-control-inner-background: #505050; " + "-fx-background-radius: 8px; " + "-fx-padding: 5px;");
 
         rechtsmitte.getChildren().addAll(Historie, historieliste);
@@ -131,6 +133,11 @@ public class Schachbrett extends Application {
                     System.arraycopy(alterZustand[i], 0, brettStatus[i], 0, 8);
                 }
                 brettNeuZeichnen(Board);
+
+                int letzterIndex = historieliste.getItems().size() - 1;
+                if (letzterIndex >= 0) {
+                    historieliste.getItems().remove(letzterIndex);
+                }
                 vor.setDisable(false);
                 zurück.setDisable(true);
                 weißamZug = !weißamZug;
@@ -295,6 +302,7 @@ public class Schachbrett extends Application {
                             TileSpeicher.getChildren().clear();
                             tile.getChildren().clear();
                             tile.getChildren().add(Figurenspeicher);
+
 
 
                             if (enPassant) {
@@ -468,6 +476,22 @@ public class Schachbrett extends Application {
                                     }
                                 }
                             }
+
+
+                            //Block zum hinzufügen gemachter Züge zur Zug Historie
+                            char vonSpalte = (char) ('a' + startCol);
+                            int vonZeile = 8-startRow;
+                            char nachSpalte =  (char) ('a' + zielCol);
+                            int nachZeile = 8-zielRow;
+
+                            String figur = brettStatus[zielRow][zielCol];
+                            String zugText = String.format("%s: %c%d ➔ %c%d", figur, vonSpalte, vonZeile, nachSpalte, nachZeile);
+
+                            historieliste.getItems().add(zugText);
+                            historieliste.scrollTo(historieliste.getItems().size() - 1);
+
+
+
                             weißamZug = !weißamZug; //Spielerwechsel
 
                             Schacherkennung erkennung3 = new Schacherkennung();
@@ -553,6 +577,11 @@ public class Schachbrett extends Application {
         dropShadow.setRadius(30);
         dropShadow.setSpread(0.6);
         dropShadow.setColor(Color.WHITE);
+
+        scene.getStylesheets().add("data:text/css," +
+                ".list-cell { -fx-background-color: transparent; -fx-text-fill: dark-gray; }" +
+                ".list-cell:selected { -fx-background-color: transparent; -fx-text-fill: white; }"
+        );
 
 
         Board.setEffect(dropShadow);
