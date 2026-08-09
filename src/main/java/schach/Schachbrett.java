@@ -712,8 +712,10 @@ public class Schachbrett extends Application {
             }
         }
 
+        weißamZug = !weißamZug;
         Schacherkennung erkennung = new  Schacherkennung();
         boolean stehtimSchach = erkennung.StehtimSchach();
+        weißamZug = !weißamZug;
 
         if (stehtimSchach) {
             int koenigRow = weißamZug ? WKönigRow : BKönigRow;
