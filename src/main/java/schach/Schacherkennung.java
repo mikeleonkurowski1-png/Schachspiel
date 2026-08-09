@@ -4,14 +4,14 @@ public class Schacherkennung {
     public boolean StehtimSchach() {
         FigurenLogik logik = new FigurenLogik();
 
-        if (Schachbrett.weißamZug == true) {
+        if (Schachbrett.weißamZug) {
 
             for (int r = 0; r < 8; r++) {
                 for (int c = 0; c < 8; c++) {
 
                     String Figur = Schachbrett.brettStatus[r][c];
                     if (Figur != null && Figur.charAt(0) == 'w') {
-                        if (logik.ZugErlaubnis(r, c, Schachbrett.BKönigRow, Schachbrett.BKönigCol) == true){
+                        if (logik.ZugErlaubnis(r, c, Schachbrett.BKönigRow, Schachbrett.BKönigCol)){
                             return true;
 
                         }
@@ -19,13 +19,13 @@ public class Schacherkennung {
                     }
                 }
             }
-        } else if (Schachbrett.weißamZug == false) {
+        } else if (!Schachbrett.weißamZug) {
 
             for (int r = 0; r < 8; r++) {
                 for (int c = 0; c < 8; c++) {
                     String Figur = Schachbrett.brettStatus[r][c];
                     if (Figur != null && Figur.charAt(0) == 'b') {
-                        if (logik.ZugErlaubnis(r, c, Schachbrett.WKönigRow, Schachbrett.WKönigCol) == true){
+                        if (logik.ZugErlaubnis(r, c, Schachbrett.WKönigRow, Schachbrett.WKönigCol)){
                             return true;
                         }
                     }
@@ -34,19 +34,19 @@ public class Schacherkennung {
         }
         return false;
     }
-        //Funktion zur Berechnung ob ein Spieler überhaupt noch legale Züge hat oder im Schachmatt oder Patt steht.
+    //Funktion zur Berechnung ob ein Spieler überhaupt noch legale Züge hat oder im Schachmatt oder Patt steht.
     public boolean hatlegaleZügen() {
         FigurenLogik logik = new FigurenLogik();
         boolean bool = true;
 
-        if (Schachbrett.weißamZug == true) {
+        if (Schachbrett.weißamZug) {
             for (int r = 0; r < 8; r++) {
                 for (int c = 0; c < 8; c++) {
                     String Figur = Schachbrett.brettStatus[r][c];
                     if (Figur != null && Figur.charAt(0) == 'w') {
                         for (int j = 0; j < 8; j++) {
                             for (int h = 0; h < 8; h++) {
-                                if (logik.ZugErlaubnis(r, c, j, h) == true) {
+                                if (logik.ZugErlaubnis(r, c, j, h)) {
 
                                     String alteZielFigur = Schachbrett.brettStatus[j][h];
                                     Schachbrett.brettStatus[j][h] = Schachbrett.brettStatus[r][c];
@@ -123,7 +123,7 @@ public class Schacherkennung {
                                     Schachbrett.BKönigCol = altBKönigCol;
                                     Schachbrett.BKönigRow = altBKönigRow;
 
-                                    if (immernochSchach == false) {
+                                    if (!immernochSchach) {
 
                                         return bool = true;
                                     }

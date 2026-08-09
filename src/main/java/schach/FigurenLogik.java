@@ -30,35 +30,19 @@ public class FigurenLogik {
 
                 case "wR", "bR":
 
-                    if (TurmKollision(sRow, sCol, zRow, zCol)) {
-                        return true;
-                    } else {
-                        return false;
-                    }
+                    return TurmKollision(sRow, sCol, zRow, zCol);
 
                 case "wN", "bN":
 
-                    if (zRow == sRow + 2 && zCol == sCol + 1 || zRow == sRow + 2 && zCol == sCol - 1 || zRow == sRow - 2 && zCol == sCol + 1 || zRow == sRow - 2 && zCol == sCol - 1 || zRow == sRow + 1 && zCol == sCol + 2 || zRow == sRow - 1 && zCol == sCol + 2 || zRow == sRow + 1 && zCol == sCol - 2 || zRow == sRow - 1 && zCol == sCol - 2) {
-                        return true;
-                    } else {
-                        return false;
-                    }
+                    return zRow == sRow + 2 && zCol == sCol + 1 || zRow == sRow + 2 && zCol == sCol - 1 || zRow == sRow - 2 && zCol == sCol + 1 || zRow == sRow - 2 && zCol == sCol - 1 || zRow == sRow + 1 && zCol == sCol + 2 || zRow == sRow - 1 && zCol == sCol + 2 || zRow == sRow + 1 && zCol == sCol - 2 || zRow == sRow - 1 && zCol == sCol - 2;
 
                 case "wB", "bB":
 
-                    if (LäuferKollision(sRow, sCol, zRow, zCol)) {
-                        return true;
-                    } else {
-                        return false;
-                    }
+                    return LäuferKollision(sRow, sCol, zRow, zCol);
 
                 case "wQ", "bQ":
 
-                    if (TurmKollision(sRow, sCol, zRow, zCol) || LäuferKollision(sRow, sCol, zRow, zCol)) {
-                        return true;
-                    } else {
-                        return false;
-                    }
+                    return TurmKollision(sRow, sCol, zRow, zCol) || LäuferKollision(sRow, sCol, zRow, zCol);
 
                 case "wK", "bK":
 
@@ -67,7 +51,7 @@ public class FigurenLogik {
                         return true;
 
                         //Zug-Validierung zum Rochieren
-                    } else if (zRow == sRow && zCol == sCol + 2 && ((Figur.equals("wK") && WKbewegt == false && WRbewegt == false) || (Figur.equals("bK") && BKbewegt == false && BRbewegt == false)) ) {
+                    } else if (zRow == sRow && zCol == sCol + 2 && ((Figur.equals("wK") && !WKbewegt && !WRbewegt) || (Figur.equals("bK") && !BKbewegt && !BRbewegt)) ) {
 
                         if (Schachbrett.brettStatus[zRow][sCol + 1] == null && Schachbrett.brettStatus[zRow][sCol + 2] == null) {
                             Schacherkennung Logik = new Schacherkennung();
@@ -99,7 +83,7 @@ public class FigurenLogik {
                             return true;
                         }
                         return false;
-                    } else if (zRow == sRow && zCol == sCol - 2 && ((Figur.equals("wK") && WKbewegt == false && WRbewegt == false) || (Figur.equals("bK") && BKbewegt == false && BRbewegt == false)) ) {
+                    } else if (zRow == sRow && zCol == sCol - 2 && ((Figur.equals("wK") && !WKbewegt && !WRbewegt) || (Figur.equals("bK") && !BKbewegt && !BRbewegt)) ) {
 
                         if (Schachbrett.brettStatus[zRow][sCol - 1] == null && Schachbrett.brettStatus[zRow][sCol - 2] == null && Schachbrett.brettStatus[sRow][sCol - 3] == null) {
                             Schacherkennung Logik = new Schacherkennung();
@@ -147,19 +131,11 @@ public class FigurenLogik {
 
                     if (sRow == 1) { //Checken ob der Bauer noch nicht gezogen ist, falls nicht 2 Felder laufen ermöglichen
 
-                        if (zRow == sRow + 1 && sCol == zCol && Schachbrett.brettStatus[zRow][zCol] == null || zRow == sRow + 2 && zCol == sCol && (Schachbrett.brettStatus[zRow][zCol] == null && Schachbrett.brettStatus[zRow - 1][zCol] == null)) {
-                            return true;
-                        } else {
-                            return false;
-                        }
+                        return zRow == sRow + 1 && sCol == zCol && Schachbrett.brettStatus[zRow][zCol] == null || zRow == sRow + 2 && zCol == sCol && (Schachbrett.brettStatus[zRow][zCol] == null && Schachbrett.brettStatus[zRow - 1][zCol] == null);
 
                     } else {
 
-                        if (zRow == sRow + 1 && sCol == zCol && Schachbrett.brettStatus[zRow][zCol] == null) {
-                            return true;
-                        } else {
-                            return false;
-                        }
+                        return zRow == sRow + 1 && sCol == zCol && Schachbrett.brettStatus[zRow][zCol] == null;
                     }
 
                 case "wP":
@@ -174,17 +150,9 @@ public class FigurenLogik {
                         return true;
                     }
                     if (sRow == 6) { //Checken ob der Bauer noch nicht gezogen ist, falls nicht 2 Felder laufen ermöglichen
-                        if (zRow == sRow - 1 && sCol == zCol && Schachbrett.brettStatus[zRow][zCol] == null || zRow == sRow - 2 && sCol == zCol && (Schachbrett.brettStatus[zRow][zCol] == null && Schachbrett.brettStatus[zRow + 1][zCol] == null)) {
-                            return true;
-                        } else {
-                            return false;
-                        }
+                        return zRow == sRow - 1 && sCol == zCol && Schachbrett.brettStatus[zRow][zCol] == null || zRow == sRow - 2 && sCol == zCol && (Schachbrett.brettStatus[zRow][zCol] == null && Schachbrett.brettStatus[zRow + 1][zCol] == null);
                     } else {
-                        if (zRow == sRow - 1 && sCol == zCol && Schachbrett.brettStatus[zRow][zCol] == null) {
-                            return true;
-                        } else {
-                            return false;
-                        }
+                        return zRow == sRow - 1 && sCol == zCol && Schachbrett.brettStatus[zRow][zCol] == null;
                     }
 
             }

@@ -7,6 +7,7 @@ import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.ListView;
 import javafx.scene.layout.*;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
@@ -20,7 +21,6 @@ public class Schachbrett extends Application {
         launch(args);
     }
 
-    private GridPane Board;
     private VBox oben;
     private BorderPane unten;
     private Historie historie = new Historie();
@@ -55,8 +55,39 @@ public class Schachbrett extends Application {
         unten.setMaxWidth(640);
         BorderPane.setAlignment(unten,  Pos.CENTER);
 
-        StackPane mitte = new StackPane(Board);
-        mitte.setAlignment(Pos.CENTER);
+        VBox linksmitte = new VBox();
+        linksmitte.setAlignment(Pos.CENTER);
+        linksmitte.setMinWidth(200);
+        linksmitte.setPrefWidth(200);
+        linksmitte.setMaxWidth(200);
+
+
+        VBox rechtsmitte = new VBox();
+        rechtsmitte.setAlignment(Pos.CENTER);
+        rechtsmitte.setPrefWidth(200);
+        rechtsmitte.setMinWidth(200);
+        rechtsmitte.setMaxWidth(200);
+
+        Label Historie = new Label("Zug-Historie");
+        Historie.setFont(new Font( 20));
+
+        ListView<String> historieliste = new ListView<>();
+        historieliste.setPrefHeight(615);
+        historieliste.setMaxHeight(615);
+        historieliste.setMaxWidth(180);
+        historieliste.setMaxWidth(180);
+        historieliste.setStyle("-fx-background-color: #787878; " + "-fx-control-inner-background: #505050; " + "-fx-background-radius: 8px; " + "-fx-padding: 5px;");
+
+        rechtsmitte.getChildren().addAll(Historie, historieliste);
+
+        StackPane BoardContainer = new StackPane(Board);
+        BoardContainer.setAlignment(Pos.CENTER);
+
+        StackPane mitte = new StackPane();
+        mitte.getChildren().addAll(BoardContainer, rechtsmitte);
+        StackPane.setAlignment(BoardContainer, Pos.CENTER);
+        StackPane.setAlignment(rechtsmitte, Pos.CENTER_RIGHT);
+        StackPane.setMargin(rechtsmitte, new Insets(0, 10,0,0));
 
         BorderPane root = new BorderPane();
         root.setStyle("-fx-background-color: gray;");
@@ -64,7 +95,7 @@ public class Schachbrett extends Application {
         root.setCenter(mitte);
         root.setBottom(unten);
 
-        Scene scene = new Scene(root, 800, 920);
+        Scene scene = new Scene(root, 1100, 920);
 
         Label willkommen = new Label("Willkommen! Weiß startet das Spiel. \uD83D\uDE01");
         final double Schriftgröße = 30.0;
@@ -123,6 +154,8 @@ public class Schachbrett extends Application {
                 }
 
                 Figur = erzeugeStartFigur(row, col);
+
+
                 if (Figur != null) {
                     Figur.setStyle("-fx-font-size: 50px;");
                     tile.getChildren().add(Figur);
@@ -588,6 +621,7 @@ public class Schachbrett extends Application {
             }
         }
     }
+
     //Hilfsmethode zum Konvertieren der Texte
     public String getUnicodeZeichen(String figurCode) {
         switch (figurCode) {
@@ -633,6 +667,7 @@ public class Schachbrett extends Application {
         return btn;
     }
 
+    //Hilfsmethode zum erstellen der Startaufstellung der Fiiguren
     private Text erzeugeStartFigur(int row, int col) {
         if (row == 0 && (col == 0 || col == 7)) {
             brettStatus[row][col] = "bR";
