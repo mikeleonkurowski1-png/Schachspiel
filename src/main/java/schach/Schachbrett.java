@@ -91,10 +91,12 @@ public class Schachbrett extends Application {
         BoardContainer.setAlignment(Pos.CENTER);
 
         StackPane mitte = new StackPane();
-        mitte.getChildren().addAll(BoardContainer, rechtsmitte);
+        mitte.getChildren().addAll(BoardContainer, rechtsmitte, linksmitte);
         StackPane.setAlignment(BoardContainer, Pos.CENTER);
         StackPane.setAlignment(rechtsmitte, Pos.CENTER_RIGHT);
+        StackPane.setAlignment(linksmitte, Pos.CENTER_LEFT);
         StackPane.setMargin(rechtsmitte, new Insets(0, 10,0,0));
+        StackPane.setMargin(linksmitte, new Insets(0, 10,0,0));
 
         BorderPane root = new BorderPane();
         root.setStyle("-fx-background-color: gray;");
@@ -162,6 +164,27 @@ public class Schachbrett extends Application {
 
         vor.setDisable(true);
         zurück.setDisable(true);
+
+
+        Button reset = new Button();
+        reset.setText("↺");
+        reset.setFont(new Font(45));
+        reset.setStyle("-fx-background-color: dark-gray; -fx-text-fill: light-gray;");
+        reset.setOnMouseClicked(event -> {
+            appNeustart(primaryStage);
+        });
+        linksmitte.getChildren().add(reset);
+
+        Button close = new Button();
+        close.setText("✕");
+        close.setFont(new Font(45));
+        close.setStyle("-fx-background-color: dark-gray; -fx-text-fill: light-gray;");
+        close.setOnMouseClicked(event -> {
+            System.exit(0);
+        });
+        linksmitte.getChildren().add(close);
+
+
 
         // Schleife zum Erstellen des Schachbretts und der Startaufstellung
         for (int row = 0; row < 8; row++) {
