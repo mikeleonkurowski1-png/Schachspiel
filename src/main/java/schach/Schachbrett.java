@@ -1,5 +1,6 @@
 package schach;
 
+import javafx.animation.KeyFrame;
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -14,6 +15,8 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.paint.Color;
+import javafx.animation.Timeline;
+import javafx.util.Duration;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,7 +27,8 @@ public class Schachbrett extends Application {
         launch(args);
     }
 
-
+    int WeißZeit = 600;
+    int SchwarzZeit = 600;
     private final List<String> redoCache = new ArrayList<>();
     private VBox oben;
     private BorderPane unten;
@@ -172,6 +176,16 @@ public class Schachbrett extends Application {
         zurück.setDisable(true);
 
 
+        Label schwarzzeit = new Label();
+        schwarzzeit.setText("10:00");
+        schwarzzeit.setFont(new Font(30));
+        linksmitte.getChildren().add(schwarzzeit);
+
+        Label temp1 = new Label();
+        temp1.setText(" ");
+        temp1.setFont(new Font(110));
+        linksmitte.getChildren().add(temp1);
+
         Button reset = new Button();
         reset.setText("↺");
         reset.setFont(new Font(45));
@@ -190,6 +204,29 @@ public class Schachbrett extends Application {
         });
         linksmitte.getChildren().add(close);
 
+        Label temp2 = new Label();
+        temp2.setText(" ");
+        temp2.setFont(new Font(110));
+        linksmitte.getChildren().add(temp2);
+
+        Label weißzeit = new Label();
+        weißzeit.setText("10:00");
+        weißzeit.setFont(new Font(30));
+        linksmitte.getChildren().add(weißzeit);
+
+        Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(1), e -> {
+            if (weißamZug) {
+                String aktwzeit = zeitformatieren(WeißZeit);
+                WeißZeit = WeißZeit - 1;
+                weißzeit.setText(aktwzeit);
+            } else if (weißamZug == false){
+                String aktszeit = zeitformatieren(SchwarzZeit);
+                SchwarzZeit = SchwarzZeit - 1;
+                schwarzzeit.setText(aktszeit);
+            }
+        }));
+        timeline.setCycleCount(Timeline.INDEFINITE);
+        timeline.play();
 
 
         // Schleife zum Erstellen des Schachbretts und der Startaufstellung
@@ -637,10 +674,7 @@ public class Schachbrett extends Application {
         dropShadow.setSpread(0.6);
         dropShadow.setColor(Color.WHITE);
 
-        scene.getStylesheets().add("data:text/css," +
-                ".list-cell { -fx-background-color: transparent; -fx-text-fill: dark-gray; }" +
-                ".list-cell:selected { -fx-background-color: transparent; -fx-text-fill: white; }"
-        );
+        scene.getStylesheets().add("data:text/css," + ".list-cell { -fx-background-color: transparent; -fx-text-fill: dark-gray; }" + ".list-cell:selected { -fx-background-color: transparent; -fx-text-fill: white; }");
 
 
         Board.setEffect(dropShadow);
@@ -888,5 +922,21 @@ public class Schachbrett extends Application {
                 }
             }
         }
+    }
+
+    private String zeitformatieren(int StartZeit){
+        int RestMin = StartZeit / 60;
+        int RestSek = StartZeit % 60;
+
+        String tempMin = "" +  RestMin;
+        if (RestMin < 10){
+            tempMin =  "0" + RestMin;
+        }
+        String tempSek = "" +  RestSek;
+        if (RestSek < 10){
+            tempSek =  "0" + RestSek;
+        }
+
+        return tempMin + ":" + tempSek;
     }
 }
