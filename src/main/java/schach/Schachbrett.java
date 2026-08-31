@@ -18,6 +18,7 @@ import javafx.scene.paint.Color;
 import javafx.animation.Timeline;
 import javafx.util.Duration;
 
+import java.sql.Time;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -42,6 +43,7 @@ public class Schachbrett extends Application {
     public static boolean weißamZug = true;
     public static int WKönigRow = 7, WKönigCol = 4, BKönigRow = 0,  BKönigCol = 4;
     public static int enPassantRow = -1,  enPassantCol = -1;
+    private Timeline timeline;
 
     //Dropshadow (Underglow fürs Brett) um anzuzeigen, welcher Spieler am Zug ist
     DropShadow dropShadow = new DropShadow();
@@ -214,19 +216,74 @@ public class Schachbrett extends Application {
         weißzeit.setFont(new Font(30));
         linksmitte.getChildren().add(weißzeit);
 
-        Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(1), e -> {
+
+        //Block für die Schachuhr und deren Funktionalität
+        timeline = new Timeline(new KeyFrame(Duration.seconds(1), e -> {
             if (weißamZug) {
-                String aktwzeit = zeitformatieren(WeißZeit);
                 WeißZeit = WeißZeit - 1;
+                String aktwzeit = zeitformatieren(WeißZeit);
                 weißzeit.setText(aktwzeit);
+
+                if (weißamZug && WeißZeit <= 0) {
+                    timeline.stop();
+                    Board.setDisable(true);
+                    weißzeit.setText("00:00");
+                    Button MattresetButton = new Button("Reset");
+                    MattresetButton.setStyle("-fx-background-color: dark-gray;");
+                    MattresetButton.setText("Reset");
+                    MattresetButton.setStyle("-fx-text-fill: light-gray;");
+                    MattresetButton.setPrefSize(200, 35);
+                    MattresetButton.setFont(new Font(30));
+                    unten.setCenter(MattresetButton);
+                    MattresetButton.setOnMouseClicked(event -> {
+                        appNeustart(primaryStage);
+                    });
+
+                    oben.getChildren().remove(willkommen);
+                    Label Siegerlabel = new Label();
+                    Siegerlabel.setFont(new Font(Schriftgröße));
+
+                        Siegerlabel.setText("Zeit abgelaufen! Der Sieger ist: Schwarz");
+                        root.setStyle("-fx-background-color: black;");
+                        Siegerlabel.setStyle("-fx-text-fill: white;");
+
+                    oben.getChildren().add(Siegerlabel);
+                }
             } else if (weißamZug == false){
-                String aktszeit = zeitformatieren(SchwarzZeit);
                 SchwarzZeit = SchwarzZeit - 1;
+                String aktszeit = zeitformatieren(SchwarzZeit);
                 schwarzzeit.setText(aktszeit);
+
+                if (!weißamZug && SchwarzZeit <= 0) {
+                    timeline.stop();
+                    Board.setDisable(true);
+                    schwarzzeit.setText("00:00");
+                    Button MattresetButton = new Button("Reset");
+                    MattresetButton.setStyle("-fx-background-color: dark-gray;");
+                    MattresetButton.setText("Reset");
+                    MattresetButton.setStyle("-fx-text-fill: light-gray;");
+                    MattresetButton.setPrefSize(200, 35);
+                    MattresetButton.setFont(new Font(30));
+                    unten.setCenter(MattresetButton);
+                    MattresetButton.setOnMouseClicked(event -> {
+                        appNeustart(primaryStage);
+                    });
+
+                    oben.getChildren().remove(willkommen);
+                    Label Siegerlabel = new Label();
+                    Siegerlabel.setFont(new Font(Schriftgröße));
+
+                    Siegerlabel.setText("Zeit abgelaufen! Der Sieger ist: Weiß");
+                    root.setStyle("-fx-background-color: white;");
+                    Siegerlabel.setStyle("-fx-text-fill: black;");
+
+                    oben.getChildren().add(Siegerlabel);
+                }
             }
         }));
         timeline.setCycleCount(Timeline.INDEFINITE);
         timeline.play();
+
 
 
         // Schleife zum Erstellen des Schachbretts und der Startaufstellung
@@ -690,6 +747,9 @@ public class Schachbrett extends Application {
     public void appNeustart(Stage primaryStage) {
         brettStatus = new String[8][8];
         weißamZug = true;
+
+        WeißZeit = 600;
+        SchwarzZeit = 600;
 
         FigurenLogik.WKbewegt = false;
         FigurenLogik.BKbewegt = false;
