@@ -29,6 +29,8 @@ public class Schachbrett extends Application {
         launch(args);
     }
 
+    private Stage primaryStage;
+
     int WeißZeit = 600;
     int SchwarzZeit = 600;
     private final List<String> redoCache = new ArrayList<>();
@@ -55,6 +57,21 @@ public class Schachbrett extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
+
+        this.primaryStage = primaryStage;
+        primaryStage.setTitle("Schachbrett");
+
+        zeigeHauptmenue();
+        primaryStage.show();
+
+    }
+
+    public void zeigeHauptmenue() {
+        MainMenu menu = new MainMenu(this);
+        primaryStage.setScene(menu.getScene());
+    }
+
+    public void starteSchachbrett(){
 
 
         weißgeschlagenListe = getWeißgeschlagenListe();
@@ -717,7 +734,7 @@ public class Schachbrett extends Application {
                             }
 
                             String figurSymbol = getUnicodeZeichen(figur);
-                            String zugText = String.format("%s %c%d ➔ %c%d%s",
+                            String zugText = String.format("%s %c%d ➔ %c%d%s", //KI - gernerierte Formatierung (funktioniert)
                                     figurSymbol, vonSpalte, vonZeile, nachSpalte, nachZeile, geschlagenText);
 
                             historieliste.getItems().add(zugText);
@@ -828,6 +845,10 @@ public class Schachbrett extends Application {
         primaryStage.setMinWidth(800);
         primaryStage.setMinHeight(920);
         primaryStage.show();
+
+        // Am Ende deiner starteSpielfeld()-Methode:
+        Scene gameScene = new Scene(root, 1000, 800); // (dein Root-Pane)
+        primaryStage.setScene(gameScene);
     }
     // Erzeugt die Liste aller durch schwarz geschlagenen Figuren. also aller weißen geschlagenen Figuren
     private static FlowPane getSchwarzgeschlagenListe() {
