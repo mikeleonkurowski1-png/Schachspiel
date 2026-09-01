@@ -7,7 +7,11 @@
 
 - **Full Chess Ruleset:** Supports all standard chess moves, including castling (kingside/queenside), pawn promotion, and *en passant*.
 - **Game State Detection:** Real-time evaluation of check, checkmate, and stalemate after every move to ensure accurate game-ending conditions.
-- **Intuitive Player Feedback:** Clear UI indicators showing active player turns, check status, and game outcome announcements.
+- **Move History & Undo/Redo:** Real-time logging of all played moves with instant Undo and Redo navigation buttons.
+- **Captured Pieces Tracker:** Dynamic side-panel display using FlowPane layouts with custom piece styling and Unicode symbols for both White and Black.
+- **Visual Move Indicators:** Clear UI highlights showing all legal target squares when selecting a piece.
+- **Integrated Chess Clock:** Dual countdown timers for timed competitive play.
+- **Polished UI & Controls:** Modern dark aesthetic featuring board glow effects, intuitive turn indicators, and quick-action buttons to reset or close the game.
 
 ## Tech Stack & Architecture
 
@@ -33,6 +37,8 @@
 - [X] Move History implemented in the UI
 - [X] Buttons for reseting the round and closing the application
 - [X] Indicators showing all possible moves
+- [X] Chess clock implementation
+- [X] Captured pieces lists
 - [ ] *Optional / Planned:* PGN file parser, custom chess AI bot, remote multiplayer support
 
 ## Installation & Quick Start
@@ -51,6 +57,6 @@
 
 ## Demo
 
-![Game Start](DemoBilder/StartDemo.png)
-![Checkmate by Black](DemoBilder/SchachmattDemo.png)
-![Pawn Promotion by White](DemoBilder/PromotionDemo.png)
+![Game Start](DemoBilder/Spielstart.png)
+![Checkmate by Black](DemoBilder/schwarzMatt.png)
+![Pawn Promotion by White](DemoBilder/PromotionW.png)

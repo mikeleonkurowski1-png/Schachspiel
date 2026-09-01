@@ -265,7 +265,6 @@ public class Schachbrett extends Application {
         Label weißzeit = new Label();
         weißzeit.setText("10:00");
         weißzeit.setFont(new Font(30));
-        weißzeit.setStyle("-fx-text-fill: white");
         linksmitte.getChildren().add(weißzeit);
 
 
@@ -484,7 +483,7 @@ public class Schachbrett extends Application {
                                 figurLabel.setStyle("-fx-font-size: 18px; -fx-text-fill: white;");
 
                                 if (geschlagen.startsWith("w")) {
-                                    figurLabel.setStyle("-fx-font-size: 18px; -fx-text-fill: white;");
+                                    figurLabel.setStyle("-fx-font-size: 18px; ");
                                     weißgeschlagenListe.getChildren().add(figurLabel);
                                 } else if (geschlagen.startsWith("b")) {
                                     figurLabel.setStyle("-fx-font-size: 18px; -fx-text-fill: black;");
@@ -734,18 +733,23 @@ public class Schachbrett extends Application {
                                     Siegerlabel.setFont(new Font(Schriftgröße));
 
                                     if (schwarzHatGewonnen) {
-                                        root.setStyle("-fx-background-color: black;");
+                                        timeline.stop();
+                                        root.setStyle("-fx-background-color: #1D1D1D;");
                                         Siegerlabel.setStyle("-fx-text-fill: white;");
+                                        schwarzzeit.setStyle("-fx-text-fill: black;");
+                                        weißzeit.setStyle("-fx-text-fill: black;");
                                     } else {
+                                        timeline.stop();
                                         root.setStyle("-fx-background-color: white;");
                                         Siegerlabel.setStyle("-fx-text-fill: black;");
+                                        reset.setStyle("-fx-background-color: white;");
                                     }
                                     oben.getChildren().add(Siegerlabel);
 
                                     Button MattresetButton = new Button("Reset");
-                                    MattresetButton.setStyle("-fx-background-color: dark-gray;");
+                                    MattresetButton.setStyle("-fx-background-color: transparent;");
                                     MattresetButton.setText("Reset");
-                                    MattresetButton.setStyle("-fx-text-fill: light-gray;");
+                                    MattresetButton.setStyle("-fx-text-fill: black;");
                                     MattresetButton.setPrefSize(200, 35);
                                     MattresetButton.setFont(new Font(30));
                                     unten.setCenter(MattresetButton);
@@ -762,9 +766,9 @@ public class Schachbrett extends Application {
                                     oben.getChildren().add(PattLabel);
 
                                     Button PattresetButton = new Button("Reset");
-                                    PattresetButton.setStyle("-fx-background-color: dark-gray;");
+                                    PattresetButton.setStyle("-fx-background-color: transparent;");
                                     PattresetButton.setText("Reset");
-                                    PattresetButton.setStyle("-fx-text-fill: light-gray;");
+                                    PattresetButton.setStyle("-fx-text-fill: black;");
                                     PattresetButton.setPrefSize(200, 35);
                                     PattresetButton.setFont(new Font(30));
                                     unten.setCenter(PattresetButton);
@@ -819,24 +823,24 @@ public class Schachbrett extends Application {
     // Erzeugt die Liste aller durch schwarz geschlagenen Figuren. also aller weißen geschlagenen Figuren
     private static FlowPane getSchwarzgeschlagenListe() {
         FlowPane liste = new FlowPane();
-        liste.setHgap(1);             // Horizontaler Abstand zwischen den Figuren
-        liste.setVgap(2);             // Vertikaler Abstand bei Zeilenumbruch
-        liste.setPrefWrapLength(170); // Bricht automatisch ab dieser Breite um
+        liste.setHgap(1);
+        liste.setVgap(2);
+        liste.setPrefWrapLength(170);
         liste.setMaxWidth(180);
         liste.setMinHeight(70);
-        liste.setStyle("-fx-background-color: gray; -fx-background-radius: 8px; -fx-padding: 5px;");
+        liste.setStyle("-fx-background-color: transparent; -fx-background-radius: 8px; -fx-padding: 5px;");
         return liste;
     }
 
     //Erzeugt die Liste aller schwarzen geschlagenen Figuren
     private static FlowPane getWeißgeschlagenListe() {
         FlowPane liste = new FlowPane();
-        liste.setHgap(1);             // Horizontaler Abstand zwischen den Figuren
-        liste.setVgap(2);             // Vertikaler Abstand bei Zeilenumbruch
-        liste.setPrefWrapLength(170); // Bricht automatisch ab dieser Breite um
+        liste.setHgap(1);
+        liste.setVgap(2);
+        liste.setPrefWrapLength(170);
         liste.setMaxWidth(180);
         liste.setMinHeight(70);
-        liste.setStyle("-fx-background-color: gray; -fx-background-radius: 8px; -fx-padding: 5px;");
+        liste.setStyle("-fx-background-color: transparent; -fx-background-radius: 8px; -fx-padding: 5px;");
         return liste;
     }
 
