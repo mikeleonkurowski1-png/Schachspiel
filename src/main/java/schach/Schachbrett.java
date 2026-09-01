@@ -17,6 +17,8 @@ import javafx.scene.effect.DropShadow;
 import javafx.scene.paint.Color;
 import javafx.animation.Timeline;
 import javafx.util.Duration;
+import javafx.geometry.Orientation;
+import javafx.scene.layout.FlowPane;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,8 +47,8 @@ public class Schachbrett extends Application {
     private Timeline timeline;
     private final List<String> geschlagenUndoCache = new ArrayList<>();
     private final List<String> geschlagenRedoCache = new ArrayList<>();
-    ListView<String> weißgeschlagenListe =  new ListView<>();
-    ListView<String> schwarzgeschlagenListe =   new ListView<>();
+    FlowPane weißgeschlagenListe = new FlowPane();
+    FlowPane schwarzgeschlagenListe = new FlowPane();
 
     //Dropshadow (Underglow fürs Brett) um anzuzeigen, welcher Spieler am Zug ist
     DropShadow dropShadow = new DropShadow();
@@ -158,9 +160,13 @@ public class Schachbrett extends Application {
                 if (wiederhergestellterSchlag != null) {
                     String symbol = getUnicodeZeichen(wiederhergestellterSchlag);
                     if (wiederhergestellterSchlag.startsWith("w")) {
-                        weißgeschlagenListe.getItems().add(symbol);
+                        Label figur = new Label(symbol);
+                        figur.setStyle("-fx-font-size: 18px; -fx-text-fill: white;");
+                        weißgeschlagenListe.getChildren().add(figur);
                     } else if (wiederhergestellterSchlag.startsWith("b")) {
-                        schwarzgeschlagenListe.getItems().add(symbol);
+                        Label figur = new Label(symbol);
+                        figur.setStyle("-fx-font-size: 18px; -fx-text-fill: black;");
+                        schwarzgeschlagenListe.getChildren().add(figur);
                     }
                 }
             }
@@ -200,14 +206,17 @@ public class Schachbrett extends Application {
 
                 if (entfernterSchlag != null) {
                     if (entfernterSchlag.startsWith("w")) {
-                        int lastIndex = weißgeschlagenListe.getItems().size() - 1;
-                        if (lastIndex >= 0) weißgeschlagenListe.getItems().remove(lastIndex);
+                        if (!weißgeschlagenListe.getChildren().isEmpty()) {
+                            weißgeschlagenListe.getChildren().remove(weißgeschlagenListe.getChildren().size() - 1);
+                        }
                     } else if (entfernterSchlag.startsWith("b")) {
-                        int lastIndex = schwarzgeschlagenListe.getItems().size() - 1;
-                        if (lastIndex >= 0) schwarzgeschlagenListe.getItems().remove(lastIndex);
+                        if (!schwarzgeschlagenListe.getChildren().isEmpty()) {
+                            schwarzgeschlagenListe.getChildren().remove(schwarzgeschlagenListe.getChildren().size() - 1);
+                        }
                     }
                 }
             }
+
         });
         unten.setLeft(zurück);
 
@@ -256,6 +265,7 @@ public class Schachbrett extends Application {
         Label weißzeit = new Label();
         weißzeit.setText("10:00");
         weißzeit.setFont(new Font(30));
+        weißzeit.setStyle("-fx-text-fill: white");
         linksmitte.getChildren().add(weißzeit);
 
 
@@ -468,12 +478,17 @@ public class Schachbrett extends Application {
 
                             //Falls eine Figur geschlagen wurde, zur passenden Liste hinzufügen
                             if (geschlagen != null) {
-                                String symbol = getUnicodeZeichen(geschlagen); // Nutzt deine bestehende Methode
+                                String symbol = getUnicodeZeichen(geschlagen);
+
+                                Label figurLabel = new Label(symbol);
+                                figurLabel.setStyle("-fx-font-size: 18px; -fx-text-fill: white;");
 
                                 if (geschlagen.startsWith("w")) {
-                                    weißgeschlagenListe.getItems().add(symbol);
+                                    figurLabel.setStyle("-fx-font-size: 18px; -fx-text-fill: white;");
+                                    weißgeschlagenListe.getChildren().add(figurLabel);
                                 } else if (geschlagen.startsWith("b")) {
-                                    schwarzgeschlagenListe.getItems().add(symbol);
+                                    figurLabel.setStyle("-fx-font-size: 18px; -fx-text-fill: black;");
+                                    schwarzgeschlagenListe.getChildren().add(figurLabel);
                                 }
                             }
 
@@ -790,8 +805,7 @@ public class Schachbrett extends Application {
         dropShadow.setSpread(0.6);
         dropShadow.setColor(Color.WHITE);
 
-        scene.getStylesheets().add("data:text/css," + ".list-cell { -fx-background-color: transparent; -fx-text-fill: dark-gray; }" + ".list-cell:selected { -fx-background-color: transparent; -fx-text-fill: white; }");
-
+        scene.getStylesheets().add("data:text/css," + ".list-cell { -fx-background-color: transparent; -fx-text-fill: dark-gray; -fx-min-width: 0px; -fx-padding: 0 1px; -fx-alignment: center; }" + ".list-cell:selected { -fx-background-color: transparent; -fx-text-fill: white; }");
 
         Board.setEffect(dropShadow);
         Board.setPadding(new Insets(40));
@@ -802,29 +816,28 @@ public class Schachbrett extends Application {
         primaryStage.setMinHeight(920);
         primaryStage.show();
     }
-
-    private static ListView<String> getSchwarzgeschlagenListe() {
-        ListView<String> schwarzgeschlagenListe = new ListView<>();
-        schwarzgeschlagenListe.setMinHeight(70);
-        schwarzgeschlagenListe.setMaxHeight(70);
-        schwarzgeschlagenListe.setMaxWidth(180);
-        schwarzgeschlagenListe.setMaxWidth(180);
-        schwarzgeschlagenListe.setEditable(false);
-        schwarzgeschlagenListe.setFocusTraversable(false);
-        schwarzgeschlagenListe.setStyle("-fx-background-color: gray; " + "-fx-control-inner-background: #505050; " + "-fx-background-radius: 8px; " + "-fx-padding: 5px;");
-        return schwarzgeschlagenListe;
+    // Erzeugt die Liste aller durch schwarz geschlagenen Figuren. also aller weißen geschlagenen Figuren
+    private static FlowPane getSchwarzgeschlagenListe() {
+        FlowPane liste = new FlowPane();
+        liste.setHgap(1);             // Horizontaler Abstand zwischen den Figuren
+        liste.setVgap(2);             // Vertikaler Abstand bei Zeilenumbruch
+        liste.setPrefWrapLength(170); // Bricht automatisch ab dieser Breite um
+        liste.setMaxWidth(180);
+        liste.setMinHeight(70);
+        liste.setStyle("-fx-background-color: gray; -fx-background-radius: 8px; -fx-padding: 5px;");
+        return liste;
     }
 
-    private static ListView<String> getWeißgeschlagenListe() {
-        ListView<String> weißgeschlagenListe = new ListView<>();
-        weißgeschlagenListe.setMinHeight(70);
-        weißgeschlagenListe.setMaxHeight(70);
-        weißgeschlagenListe.setMaxWidth(180);
-        weißgeschlagenListe.setMaxWidth(180);
-        weißgeschlagenListe.setEditable(false);
-        weißgeschlagenListe.setFocusTraversable(false);
-        weißgeschlagenListe.setStyle("-fx-background-color: gray; " + "-fx-control-inner-background: #505050; " + "-fx-background-radius: 8px; " + "-fx-padding: 5px;");
-        return weißgeschlagenListe;
+    //Erzeugt die Liste aller schwarzen geschlagenen Figuren
+    private static FlowPane getWeißgeschlagenListe() {
+        FlowPane liste = new FlowPane();
+        liste.setHgap(1);             // Horizontaler Abstand zwischen den Figuren
+        liste.setVgap(2);             // Vertikaler Abstand bei Zeilenumbruch
+        liste.setPrefWrapLength(170); // Bricht automatisch ab dieser Breite um
+        liste.setMaxWidth(180);
+        liste.setMinHeight(70);
+        liste.setStyle("-fx-background-color: gray; -fx-background-radius: 8px; -fx-padding: 5px;");
+        return liste;
     }
 
     //Kleine Hilfsmethode zum Neustarten des Spiels
