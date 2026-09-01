@@ -89,6 +89,7 @@ public class Schachbrett extends Application {
         rechtsmitte.setMaxWidth(200);
 
         Label Historie = new Label("Zug-Historie");
+        Historie.setStyle("-fx-text-fill: black;");
         Historie.setFont(new Font( 20));
 
         ListView<String> historieliste = new ListView<>();
@@ -709,7 +710,15 @@ public class Schachbrett extends Application {
                             int nachZeile = 8-zielRow;
 
                             String figur = brettStatus[zielRow][zielCol];
-                            String zugText = String.format("%s: %c%d ➔ %c%d", figur, vonSpalte, vonZeile, nachSpalte, nachZeile);
+                            String geschlagenText = "";
+                            if (geschlagen != null) {
+                                String geschlagenSymbol = getUnicodeZeichen(geschlagen);
+                                geschlagenText = "  (x " + geschlagenSymbol + ")";
+                            }
+
+                            String figurSymbol = getUnicodeZeichen(figur);
+                            String zugText = String.format("%s %c%d ➔ %c%d%s",
+                                    figurSymbol, vonSpalte, vonZeile, nachSpalte, nachZeile, geschlagenText);
 
                             historieliste.getItems().add(zugText);
                             historieliste.scrollTo(historieliste.getItems().size() - 1);
