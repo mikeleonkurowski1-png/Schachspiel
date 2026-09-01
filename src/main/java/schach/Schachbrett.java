@@ -18,7 +18,6 @@ import javafx.scene.paint.Color;
 import javafx.animation.Timeline;
 import javafx.util.Duration;
 
-import java.sql.Time;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -44,12 +43,20 @@ public class Schachbrett extends Application {
     public static int WKönigRow = 7, WKönigCol = 4, BKönigRow = 0,  BKönigCol = 4;
     public static int enPassantRow = -1,  enPassantCol = -1;
     private Timeline timeline;
+    private final List<String> geschlagenUndoCache = new ArrayList<>();
+    private final List<String> geschlagenRedoCache = new ArrayList<>();
+    ListView<String> weißgeschlagenListe =  new ListView<>();
+    ListView<String> schwarzgeschlagenListe =   new ListView<>();
 
     //Dropshadow (Underglow fürs Brett) um anzuzeigen, welcher Spieler am Zug ist
     DropShadow dropShadow = new DropShadow();
 
     @Override
     public void start(Stage primaryStage) throws Exception {
+
+
+        weißgeschlagenListe = getWeißgeschlagenListe();
+        schwarzgeschlagenListe = getSchwarzgeschlagenListe();
 
         //Strukturgerüst für das GUI
         GridPane Board = new GridPane();
@@ -143,6 +150,21 @@ public class Schachbrett extends Application {
                     vor.setDisable(true);
                 }
             }
+
+            if (!geschlagenRedoCache.isEmpty()) {
+                String wiederhergestellterSchlag = geschlagenRedoCache.remove(geschlagenRedoCache.size() - 1);
+                geschlagenUndoCache.add(wiederhergestellterSchlag);
+
+                if (wiederhergestellterSchlag != null) {
+                    String symbol = getUnicodeZeichen(wiederhergestellterSchlag);
+                    if (wiederhergestellterSchlag.startsWith("w")) {
+                        weißgeschlagenListe.getItems().add(symbol);
+                    } else if (wiederhergestellterSchlag.startsWith("b")) {
+                        schwarzgeschlagenListe.getItems().add(symbol);
+                    }
+                }
+            }
+
         });
 
         unten.setRight(vor);
@@ -171,6 +193,21 @@ public class Schachbrett extends Application {
                 zurück.setDisable(true);
                 weißamZug = !weißamZug;
             }
+
+            if (!geschlagenUndoCache.isEmpty()) {
+                String entfernterSchlag = geschlagenUndoCache.remove(geschlagenUndoCache.size() - 1);
+                geschlagenRedoCache.add(entfernterSchlag);
+
+                if (entfernterSchlag != null) {
+                    if (entfernterSchlag.startsWith("w")) {
+                        int lastIndex = weißgeschlagenListe.getItems().size() - 1;
+                        if (lastIndex >= 0) weißgeschlagenListe.getItems().remove(lastIndex);
+                    } else if (entfernterSchlag.startsWith("b")) {
+                        int lastIndex = schwarzgeschlagenListe.getItems().size() - 1;
+                        if (lastIndex >= 0) schwarzgeschlagenListe.getItems().remove(lastIndex);
+                    }
+                }
+            }
         });
         unten.setLeft(zurück);
 
@@ -183,9 +220,12 @@ public class Schachbrett extends Application {
         schwarzzeit.setFont(new Font(30));
         linksmitte.getChildren().add(schwarzzeit);
 
+
+        linksmitte.getChildren().add(weißgeschlagenListe);
+
         Label temp1 = new Label();
         temp1.setText(" ");
-        temp1.setFont(new Font(110));
+        temp1.setFont(new Font(60));
         linksmitte.getChildren().add(temp1);
 
         Button reset = new Button();
@@ -208,8 +248,10 @@ public class Schachbrett extends Application {
 
         Label temp2 = new Label();
         temp2.setText(" ");
-        temp2.setFont(new Font(110));
+        temp2.setFont(new Font(60));
         linksmitte.getChildren().add(temp2);
+
+        linksmitte.getChildren().add(schwarzgeschlagenListe);
 
         Label weißzeit = new Label();
         weißzeit.setText("10:00");
@@ -420,6 +462,23 @@ public class Schachbrett extends Application {
                                 Figurenspeicher = null;
                                 return;
                             }
+
+                            // Geschlagene Figur ermitteln um sie in die geschlagenenListe einzutragen
+                            String geschlagen = enPassant ? geschlageneEnPassantFigur : alteZielFigur;
+
+                            //Falls eine Figur geschlagen wurde, zur passenden Liste hinzufügen
+                            if (geschlagen != null) {
+                                String symbol = getUnicodeZeichen(geschlagen); // Nutzt deine bestehende Methode
+
+                                if (geschlagen.startsWith("w")) {
+                                    weißgeschlagenListe.getItems().add(symbol);
+                                } else if (geschlagen.startsWith("b")) {
+                                    schwarzgeschlagenListe.getItems().add(symbol);
+                                }
+                            }
+
+                            geschlagenUndoCache.add(geschlagen);
+                            geschlagenRedoCache.clear();
 
                             String gezogeneFigur = brettStatus[zielRow][zielCol];
 
@@ -743,6 +802,31 @@ public class Schachbrett extends Application {
         primaryStage.setMinHeight(920);
         primaryStage.show();
     }
+
+    private static ListView<String> getSchwarzgeschlagenListe() {
+        ListView<String> schwarzgeschlagenListe = new ListView<>();
+        schwarzgeschlagenListe.setMinHeight(70);
+        schwarzgeschlagenListe.setMaxHeight(70);
+        schwarzgeschlagenListe.setMaxWidth(180);
+        schwarzgeschlagenListe.setMaxWidth(180);
+        schwarzgeschlagenListe.setEditable(false);
+        schwarzgeschlagenListe.setFocusTraversable(false);
+        schwarzgeschlagenListe.setStyle("-fx-background-color: gray; " + "-fx-control-inner-background: #505050; " + "-fx-background-radius: 8px; " + "-fx-padding: 5px;");
+        return schwarzgeschlagenListe;
+    }
+
+    private static ListView<String> getWeißgeschlagenListe() {
+        ListView<String> weißgeschlagenListe = new ListView<>();
+        weißgeschlagenListe.setMinHeight(70);
+        weißgeschlagenListe.setMaxHeight(70);
+        weißgeschlagenListe.setMaxWidth(180);
+        weißgeschlagenListe.setMaxWidth(180);
+        weißgeschlagenListe.setEditable(false);
+        weißgeschlagenListe.setFocusTraversable(false);
+        weißgeschlagenListe.setStyle("-fx-background-color: gray; " + "-fx-control-inner-background: #505050; " + "-fx-background-radius: 8px; " + "-fx-padding: 5px;");
+        return weißgeschlagenListe;
+    }
+
     //Kleine Hilfsmethode zum Neustarten des Spiels
     public void appNeustart(Stage primaryStage) {
         brettStatus = new String[8][8];
