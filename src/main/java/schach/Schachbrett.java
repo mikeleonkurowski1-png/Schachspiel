@@ -267,11 +267,11 @@ public class Schachbrett extends Application {
         linksmitte.getChildren().add(reset);
 
         Button close = new Button();
-        close.setText("✕");
+        close.setText("⌂");
         close.setFont(new Font(45));
         close.setStyle("-fx-background-color: dark-gray; -fx-text-fill: light-gray;");
         close.setOnMouseClicked(event -> {
-            System.exit(0);
+            zeigeHauptmenue();
         });
         linksmitte.getChildren().add(close);
 
