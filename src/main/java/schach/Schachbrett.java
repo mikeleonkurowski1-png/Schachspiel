@@ -52,6 +52,7 @@ public class Schachbrett extends Application {
     FlowPane schwarzgeschlagenListe = new FlowPane();
     MainMenu menu =  new MainMenu(this);
     private boolean UhrAn;
+    private boolean undoan;
 
     //Dropshadow (Underglow fürs Brett) um anzuzeigen, welcher Spieler am Zug ist
     DropShadow dropShadow = new DropShadow();
@@ -75,9 +76,10 @@ public class Schachbrett extends Application {
     } //Methode zum anzeigen des Hauptmenüs
 
     //Methode zum anzeigen des eigentlichen Spiels
-    public void starteSchachbrett(boolean UhrAn){
+    public void starteSchachbrett(boolean UhrAn, boolean undoan){
 
         this.UhrAn = UhrAn;
+        this.undoan = undoan;
         weißgeschlagenListe = getWeißgeschlagenListe();
         schwarzgeschlagenListe = getSchwarzgeschlagenListe();
 
@@ -195,7 +197,9 @@ public class Schachbrett extends Application {
 
         });
 
-        unten.setRight(vor);
+        if (undoan) {
+            unten.setRight(vor);
+        }
 
         Button zurück = new Button();
         zurück.setText("⟸");
@@ -240,7 +244,10 @@ public class Schachbrett extends Application {
             }
 
         });
-        unten.setLeft(zurück);
+
+        if (undoan) {
+            unten.setLeft(zurück);
+        }
 
         vor.setDisable(true);
         zurück.setDisable(true);
@@ -935,7 +942,7 @@ public class Schachbrett extends Application {
         originalTileFarbe = null;
 
         try{
-           starteSchachbrett(UhrAn);
+           starteSchachbrett(UhrAn, undoan);
 
         } catch(Exception e){
             e.printStackTrace();

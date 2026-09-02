@@ -12,6 +12,7 @@ import javafx.scene.text.Font;
 public class MainMenu {
     private final Scene scene;
     private boolean UhrAn = true;
+    private boolean undoan = true;
 
     public MainMenu(Schachbrett schachbrett) {
 
@@ -37,7 +38,7 @@ public class MainMenu {
             Spielen.setStyle("-fx-background-color: gray; -fx-text-fill: white; -fx-border-color: white; -fx-border-width: 1.5px; -fx-border-radius: 5px; -fx-background-radius: 5px; -fx-focus-color: transparent; -fx-faint-focus-color: transparent;");
         });
         Spielen.setOnAction(e -> {
-            schachbrett.starteSchachbrett(UhrAn);
+            schachbrett.starteSchachbrett(UhrAn, undoan);
         });
         BorderPane.setMargin(Spielen, new Insets(0, 0, 40, 0));
         BorderPane.setAlignment(Spielen, Pos.CENTER);
@@ -45,7 +46,7 @@ public class MainMenu {
 
         HBox mitte = new HBox();
         mitte.setSpacing(10);
-        mitte.setPadding(new Insets(10));
+        mitte.setPadding(new Insets(30));
         mitte.setAlignment(Pos.CENTER);
         root.setCenter(mitte);
 
@@ -70,6 +71,26 @@ public class MainMenu {
         });
         mitte.getChildren().add(Uhr);
 
+        Button undoredo = new Button();
+        undoredo.setText("Undo/Redo active!");
+        undoredo.setStyle("-fx-background-color: gray; -fx-text-fill: white; -fx-border-color: white; -fx-border-width: 1.5px; -fx-border-radius: 5px; -fx-background-radius: 5px; -fx-focus-color: transparent; -fx-faint-focus-color: transparent;");
+        undoredo.setOnMouseEntered(event -> {
+            undoredo.setStyle("-fx-background-color: gray; -fx-text-fill: black; -fx-border-color: black; -fx-border-width: 1.5px; -fx-border-radius: 5px; -fx-background-radius: 5px; -fx-focus-color: transparent; -fx-faint-focus-color: transparent;");
+        });
+        undoredo.setOnMouseExited(event -> {
+            undoredo.setStyle("-fx-background-color: gray; -fx-text-fill: white; -fx-border-color: white; -fx-border-width: 1.5px; -fx-border-radius: 5px; -fx-background-radius: 5px; -fx-focus-color: transparent; -fx-faint-focus-color: transparent;");
+        });
+        undoredo.setOnMouseClicked(event -> {
+            if (undoan) {
+                undoan = false;
+                undoredo.setText("Undo/Redo deactivated!");
+            }
+            else  {
+                undoan = true;
+                undoredo.setText("Undo/Redo active!");
+            }
+        });
+        mitte.getChildren().add(undoredo);
 
 
         this.scene = new Scene(root, 1000, 800);
