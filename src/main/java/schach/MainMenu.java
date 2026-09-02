@@ -13,6 +13,7 @@ public class MainMenu {
     private final Scene scene;
     private boolean UhrAn = true;
     private boolean undoan = true;
+    private boolean flipping = true;
 
     public MainMenu(Schachbrett schachbrett) {
 
@@ -38,7 +39,7 @@ public class MainMenu {
             Spielen.setStyle("-fx-background-color: gray; -fx-text-fill: white; -fx-border-color: white; -fx-border-width: 1.5px; -fx-border-radius: 5px; -fx-background-radius: 5px; -fx-focus-color: transparent; -fx-faint-focus-color: transparent;");
         });
         Spielen.setOnAction(e -> {
-            schachbrett.starteSchachbrett(UhrAn, undoan);
+            schachbrett.starteSchachbrett(UhrAn, undoan, flipping);
         });
         BorderPane.setMargin(Spielen, new Insets(0, 0, 40, 0));
         BorderPane.setAlignment(Spielen, Pos.CENTER);
@@ -92,6 +93,26 @@ public class MainMenu {
         });
         mitte.getChildren().add(undoredo);
 
+        Button flip = new Button();
+        flip.setText("Board flip active!");
+        flip.setStyle("-fx-background-color: gray; -fx-text-fill: white; -fx-border-color: white; -fx-border-width: 1.5px; -fx-border-radius: 5px; -fx-background-radius: 5px; -fx-focus-color: transparent; -fx-faint-focus-color: transparent;");
+        flip.setOnMouseEntered(event -> {
+            flip.setStyle("-fx-background-color: gray; -fx-text-fill: black; -fx-border-color: black; -fx-border-width: 1.5px; -fx-border-radius: 5px; -fx-background-radius: 5px; -fx-focus-color: transparent; -fx-faint-focus-color: transparent;");
+        });
+        flip.setOnMouseExited(event -> {
+            flip.setStyle("-fx-background-color: gray; -fx-text-fill: white; -fx-border-color: white; -fx-border-width: 1.5px; -fx-border-radius: 5px; -fx-background-radius: 5px; -fx-focus-color: transparent; -fx-faint-focus-color: transparent;");
+        });
+        flip.setOnMouseClicked(event -> {
+            if (flipping) {
+                flipping = false;
+                flip.setText("Board flip deactivated!");
+            }
+            else   {
+                flipping = true;
+                flip.setText("Board flip active!");
+            }
+        });
+        mitte.getChildren().add(flip);
 
         this.scene = new Scene(root, 1000, 800);
     }

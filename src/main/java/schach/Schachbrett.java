@@ -1,6 +1,7 @@
 package schach;
 
 import javafx.animation.KeyFrame;
+import javafx.animation.RotateTransition;
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -53,6 +54,7 @@ public class Schachbrett extends Application {
     MainMenu menu =  new MainMenu(this);
     private boolean UhrAn;
     private boolean undoan;
+    private boolean flipan;
 
     //Dropshadow (Underglow fürs Brett) um anzuzeigen, welcher Spieler am Zug ist
     DropShadow dropShadow = new DropShadow();
@@ -76,7 +78,7 @@ public class Schachbrett extends Application {
     } //Methode zum anzeigen des Hauptmenüs
 
     //Methode zum anzeigen des eigentlichen Spiels
-    public void starteSchachbrett(boolean UhrAn, boolean undoan){
+    public void starteSchachbrett(boolean UhrAn, boolean undoan, boolean flipan){
 
         this.UhrAn = UhrAn;
         this.undoan = undoan;
@@ -787,13 +789,17 @@ public class Schachbrett extends Application {
 
                             weißamZug = !weißamZug; //Spielerwechsel
 
-                            double winkel = weißamZug? 0 : 180;
+                           if (flipan) {
+                               double winkel = weißamZug ? 0 : 180;
 
-                            Board.setRotate(winkel);
+                               RotateTransition rotate = new RotateTransition(Duration.millis(500), Board);
+                               rotate.setToAngle(winkel);
+                               rotate.play();
 
-                            for (Node child : Board.getChildren()) {
-                                child.setRotate(winkel);
-                            }
+                               for (Node child : Board.getChildren()) {
+                                   child.setRotate(winkel);
+                               }
+                           }
 
                             Schacherkennung erkennung3 = new Schacherkennung();
                             if (erkennung3.hatlegaleZügen() == false) {
@@ -950,7 +956,7 @@ public class Schachbrett extends Application {
         originalTileFarbe = null;
 
         try{
-           starteSchachbrett(UhrAn, undoan);
+           starteSchachbrett(UhrAn, undoan, flipan);
 
         } catch(Exception e){
             e.printStackTrace();
