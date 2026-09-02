@@ -271,6 +271,31 @@ public class Schachbrett extends Application {
         close.setFont(new Font(45));
         close.setStyle("-fx-background-color: dark-gray; -fx-text-fill: light-gray;");
         close.setOnMouseClicked(event -> {
+            brettStatus = new String[8][8];
+            weißamZug = true;
+
+            timeline.stop();
+
+            WeißZeit = 600;
+            SchwarzZeit = 600;
+
+            FigurenLogik.WKbewegt = false;
+            FigurenLogik.BKbewegt = false;
+            FigurenLogik.WRbewegt = false;
+            FigurenLogik.BRbewegt = false;
+
+            WKönigCol = 4;
+            WKönigRow = 7;
+            BKönigRow = 0;
+            BKönigCol = 4;
+
+            enPassantRow = -1;
+            enPassantCol = -1;
+
+            Figurenspeicher = null;
+            TileSpeicher = null;
+            originalTileFarbe = null;
+
             zeigeHauptmenue();
         });
         linksmitte.getChildren().add(close);
@@ -879,6 +904,8 @@ public class Schachbrett extends Application {
     public void BrettNeustart(Stage primaryStage) {
         brettStatus = new String[8][8];
         weißamZug = true;
+
+        timeline.stop();
 
         WeißZeit = 600;
         SchwarzZeit = 600;
