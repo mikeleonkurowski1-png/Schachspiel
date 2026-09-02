@@ -787,6 +787,14 @@ public class Schachbrett extends Application {
 
                             weißamZug = !weißamZug; //Spielerwechsel
 
+                            double winkel = weißamZug? 0 : 180;
+
+                            Board.setRotate(winkel);
+
+                            for (Node child : Board.getChildren()) {
+                                child.setRotate(winkel);
+                            }
+
                             Schacherkennung erkennung3 = new Schacherkennung();
                             if (erkennung3.hatlegaleZügen() == false) {
 
