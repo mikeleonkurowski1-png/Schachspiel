@@ -17,7 +17,6 @@ import javafx.scene.effect.DropShadow;
 import javafx.scene.paint.Color;
 import javafx.animation.Timeline;
 import javafx.util.Duration;
-import javafx.geometry.Orientation;
 import javafx.scene.layout.FlowPane;
 
 import java.util.ArrayList;
@@ -61,16 +60,19 @@ public class Schachbrett extends Application {
         this.primaryStage = primaryStage;
         primaryStage.setTitle("Schachbrett");
 
+        primaryStage.setResizable(false);
+
         zeigeHauptmenue();
         primaryStage.show();
 
-    }
+    } //startet das Programm im Hauptmenü
 
     public void zeigeHauptmenue() {
         MainMenu menu = new MainMenu(this);
         primaryStage.setScene(menu.getScene());
-    }
+    } //Methode zum anzeigen des Hauptmenüs
 
+    //Methode zum anzeigen des eigentlichen Spiels
     public void starteSchachbrett(){
 
 
@@ -260,7 +262,7 @@ public class Schachbrett extends Application {
         reset.setFont(new Font(45));
         reset.setStyle("-fx-background-color: dark-gray; -fx-text-fill: light-gray;");
         reset.setOnMouseClicked(event -> {
-            appNeustart(primaryStage);
+            BrettNeustart(primaryStage);
         });
         linksmitte.getChildren().add(reset);
 
@@ -305,7 +307,7 @@ public class Schachbrett extends Application {
                     MattresetButton.setFont(new Font(30));
                     unten.setCenter(MattresetButton);
                     MattresetButton.setOnMouseClicked(event -> {
-                        appNeustart(primaryStage);
+                        BrettNeustart(primaryStage);
                     });
 
                     oben.getChildren().remove(willkommen);
@@ -335,7 +337,7 @@ public class Schachbrett extends Application {
                     MattresetButton.setFont(new Font(30));
                     unten.setCenter(MattresetButton);
                     MattresetButton.setOnMouseClicked(event -> {
-                        appNeustart(primaryStage);
+                        BrettNeustart(primaryStage);
                     });
 
                     oben.getChildren().remove(willkommen);
@@ -780,7 +782,7 @@ public class Schachbrett extends Application {
                                     MattresetButton.setFont(new Font(30));
                                     unten.setCenter(MattresetButton);
                                     MattresetButton.setOnMouseClicked(event -> {
-                                        appNeustart(primaryStage);
+                                        BrettNeustart(primaryStage);
                                     });
 
                                 } else {
@@ -799,7 +801,7 @@ public class Schachbrett extends Application {
                                     PattresetButton.setFont(new Font(30));
                                     unten.setCenter(PattresetButton);
                                     PattresetButton.setOnMouseClicked(event -> {
-                                        appNeustart(primaryStage);
+                                        BrettNeustart(primaryStage);
                                     });
 
                                 }
@@ -846,8 +848,7 @@ public class Schachbrett extends Application {
         primaryStage.setMinHeight(920);
         primaryStage.show();
 
-        // Am Ende deiner starteSpielfeld()-Methode:
-        Scene gameScene = new Scene(root, 1000, 800); // (dein Root-Pane)
+        Scene gameScene = new Scene(root, 1000, 800);
         primaryStage.setScene(gameScene);
     }
     // Erzeugt die Liste aller durch schwarz geschlagenen Figuren. also aller weißen geschlagenen Figuren
@@ -875,7 +876,7 @@ public class Schachbrett extends Application {
     }
 
     //Kleine Hilfsmethode zum Neustarten des Spiels
-    public void appNeustart(Stage primaryStage) {
+    public void BrettNeustart(Stage primaryStage) {
         brettStatus = new String[8][8];
         weißamZug = true;
 
@@ -900,7 +901,7 @@ public class Schachbrett extends Application {
         originalTileFarbe = null;
 
         try{
-           start(primaryStage);
+           starteSchachbrett();
 
         } catch(Exception e){
             e.printStackTrace();
