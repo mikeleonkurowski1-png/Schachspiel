@@ -789,7 +789,9 @@ public class Schachbrett extends Application {
 
                             weißamZug = !weißamZug; //Spielerwechsel
 
-                           if (flipan) {
+                            Schacherkennung erkennung3 = new Schacherkennung();
+
+                           if (flipan && erkennung3.hatlegaleZügen()) {
                                double winkel = weißamZug ? 0 : 180;
 
                                RotateTransition rotate = new RotateTransition(Duration.millis(500), Board);
@@ -801,10 +803,15 @@ public class Schachbrett extends Application {
                                }
                            }
 
-                            Schacherkennung erkennung3 = new Schacherkennung();
+
                             if (erkennung3.hatlegaleZügen() == false) {
 
                                 if (Schach) {
+
+                                    Node MattKönig = holeKoenigNode(Board, weißamZug);
+                                    RotateTransition Königkippen = new RotateTransition(Duration.millis(500), MattKönig);
+                                    Königkippen.setByAngle(90);
+                                    Königkippen.play();
 
                                     //Erkennung von Schachmatt, so wie Siegeranzeige im GUI und reset button
                                     boolean schwarzHatGewonnen = weißamZug;
@@ -1171,6 +1178,7 @@ public class Schachbrett extends Application {
         }
     }
 
+    //Hilfsmethode zum formatieren der Zeit, wie der name sagt
     private String zeitformatieren(int StartZeit){
         int RestMin = StartZeit / 60;
         int RestSek = StartZeit % 60;
@@ -1185,5 +1193,26 @@ public class Schachbrett extends Application {
         }
 
         return tempMin + ":" + tempSek;
+    }
+
+    //Hilfsmethode zum kippen des gegnerischen Königs bei Schachmatt
+    private Node holeKoenigNode(GridPane board, boolean weiss) {
+        int kRow = weiss ? WKönigRow : BKönigRow;
+        int kCol = weiss ? WKönigCol : BKönigCol;
+
+        for (Node node : board.getChildren()) {
+            Integer r = GridPane.getRowIndex(node);
+            Integer c = GridPane.getColumnIndex(node);
+
+            if (r != null && c != null && r == kRow && c == kCol) {
+                if (node instanceof StackPane) {
+                    StackPane tile = (StackPane) node;
+                    if (!tile.getChildren().isEmpty()) {
+                        return tile.getChildren().get(0); // Gibt das Text-Objekt der Figur zurück
+                    }
+                }
+            }
+        }
+        return null;
     }
 }
