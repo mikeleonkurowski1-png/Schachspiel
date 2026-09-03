@@ -1,6 +1,7 @@
 package schach;
 
 import javafx.animation.KeyFrame;
+import javafx.animation.PauseTransition;
 import javafx.animation.RotateTransition;
 import javafx.application.Application;
 import javafx.geometry.Insets;
@@ -19,12 +20,16 @@ import javafx.scene.paint.Color;
 import javafx.animation.Timeline;
 import javafx.util.Duration;
 import javafx.scene.layout.FlowPane;
+import javafx.concurrent.Task;
 
+import javax.swing.text.html.StyleSheet;
 import java.util.ArrayList;
 import java.util.List;
 
 
 public class Schachbrett extends Application {
+
+
     public static void main(String[] args) {
         launch(args);
     }
@@ -54,6 +59,14 @@ public class Schachbrett extends Application {
     MainMenu menu =  new MainMenu(this);
     private boolean UhrAn;
     private boolean undoan;
+    private boolean Botaus;
+    public GridPane Board;
+    private boolean Schach;
+    private double Schriftgröße;
+    private BorderPane root;
+    private Button reset;
+    private Label weißzeit;
+    private Label schwarzzeit;
     private boolean flipan;
 
     //Dropshadow (Underglow fürs Brett) um anzuzeigen, welcher Spieler am Zug ist
@@ -78,10 +91,12 @@ public class Schachbrett extends Application {
     } //Methode zum anzeigen des Hauptmenüs
 
     //Methode zum anzeigen des eigentlichen Spiels
-    public void starteSchachbrett(boolean UhrAn, boolean undoan, boolean flipan){
+    public void starteSchachbrett(boolean UhrAn, boolean undoan, boolean Botaus, boolean flipan){
 
         this.UhrAn = UhrAn;
         this.undoan = undoan;
+        this.flipan = flipan;
+
         weißgeschlagenListe = getWeißgeschlagenListe();
         schwarzgeschlagenListe = getSchwarzgeschlagenListe();
 
@@ -789,101 +804,11 @@ public class Schachbrett extends Application {
 
                             weißamZug = !weißamZug; //Spielerwechsel
 
-                            if (!weißamZug){
-                                fuhreBotZugaus(Board);
-                            }
+                            brettNeuZeichnen(Board);
+                            SpielZustandnachZug(Board);
 
-
-                            Schacherkennung erkennung3 = new Schacherkennung();
-
-                           if (flipan && erkennung3.hatlegaleZügen()) {
-                               double winkel = weißamZug ? 0 : 180;
-
-                               RotateTransition rotate = new RotateTransition(Duration.millis(500), Board);
-                               rotate.setToAngle(winkel);
-                               rotate.play();
-
-                               for (Node child : Board.getChildren()) {
-                                   child.setRotate(winkel);
-                               }
-                           }
-
-
-                            if (erkennung3.hatlegaleZügen() == false) {
-
-                                if (Schach) {
-
-                                    Node MattKönig = holeKoenigNode(Board, weißamZug);
-                                    RotateTransition Königkippen = new RotateTransition(Duration.millis(500), MattKönig);
-                                    Königkippen.setByAngle(90);
-                                    Königkippen.play();
-
-                                    //Erkennung von Schachmatt, so wie Siegeranzeige im GUI und reset button
-                                    boolean schwarzHatGewonnen = weißamZug;
-                                    String Sieger = schwarzHatGewonnen ? "Schwarz" : "Weiß";
-
-                                    Label Siegerlabel = new Label("Schachmatt! Der Sieger ist: " + Sieger);
-                                    Siegerlabel.setFont(new Font(Schriftgröße));
-
-                                    if (schwarzHatGewonnen) {
-                                        timeline.stop();
-                                        root.setStyle("-fx-background-color: #1D1D1D;");
-                                        Siegerlabel.setStyle("-fx-text-fill: white;");
-                                        schwarzzeit.setStyle("-fx-text-fill: black;");
-                                        weißzeit.setStyle("-fx-text-fill: black;");
-                                    } else {
-                                        timeline.stop();
-                                        root.setStyle("-fx-background-color: white;");
-                                        Siegerlabel.setStyle("-fx-text-fill: black;");
-                                        reset.setStyle("-fx-background-color: white;");
-                                    }
-                                    oben.getChildren().add(Siegerlabel);
-
-                                    Button MattresetButton = new Button("Reset");
-                                    MattresetButton.setStyle("-fx-background-color: transparent;");
-                                    MattresetButton.setText("Reset");
-                                    MattresetButton.setStyle("-fx-text-fill: black;");
-                                    MattresetButton.setPrefSize(200, 35);
-                                    MattresetButton.setFont(new Font(30));
-                                    unten.setCenter(MattresetButton);
-                                    MattresetButton.setOnMouseClicked(event -> {
-                                        BrettNeustart(primaryStage);
-                                    });
-
-                                } else {
-
-                                    //Patt anzeige und reset button
-                                    System.out.println("Spiel ist vorbei...PATT!!");
-                                    Label PattLabel = new Label("Patt! (Unentschieden)");
-                                    PattLabel.setFont(new Font(30));
-                                    oben.getChildren().add(PattLabel);
-
-                                    Button PattresetButton = new Button("Reset");
-                                    PattresetButton.setStyle("-fx-background-color: transparent;");
-                                    PattresetButton.setText("Reset");
-                                    PattresetButton.setStyle("-fx-text-fill: black;");
-                                    PattresetButton.setPrefSize(200, 35);
-                                    PattresetButton.setFont(new Font(30));
-                                    unten.setCenter(PattresetButton);
-                                    PattresetButton.setOnMouseClicked(event -> {
-                                        BrettNeustart(primaryStage);
-                                    });
-
-                                }
-                                Board.setDisable(true);
-                                return;
-                            }
-
-
-                            if (!Schach) {
-                              DropShadow Anzeige = (DropShadow) Board.getEffect(); //Dropshadow ändern, je nachdem wer am Zug ist
-                                if (Anzeige != null) {
-                                    if (weißamZug == true) {
-                                        Anzeige.setColor(Color.WHITE);
-                                    } else {
-                                        Anzeige.setColor(Color.BLACK);
-                                    }
-                                }
+                            if (!Board.isDisabled() && !Botaus){
+                                starteBotDenkprozess(Board);
                             }
 
                         } else {
@@ -968,7 +893,7 @@ public class Schachbrett extends Application {
         originalTileFarbe = null;
 
         try{
-           starteSchachbrett(UhrAn, undoan, flipan);
+           starteSchachbrett(UhrAn, undoan, Botaus, flipan);
 
         } catch(Exception e){
             e.printStackTrace();
@@ -1221,25 +1146,130 @@ public class Schachbrett extends Application {
         return null;
     }
 
-    public void fuhreBotZugaus(GridPane board){
+    public void starteBotDenkprozess(GridPane board) {
+        board.setDisable(true);
 
-        Zug botZug = ChessBot.berechnebestenZug(2, false);
+        PauseTransition pause = new PauseTransition(Duration.seconds(3));
+        pause.setOnFinished(e -> {
+            // 1. Bot-Zug berechnen & brettStatus anpassen
+            Zug botZug = ChessBot.berechnebestenZug(3, false);
+            if (botZug != null) {
+                brettStatus[botZug.endRow][botZug.endCol] = brettStatus[botZug.startRow][botZug.startCol];
+                brettStatus[botZug.startRow][botZug.startCol] = null;
 
-        if (botZug == null) {
-            return; //Kein Zug möglich
+                if ("bK".equals(brettStatus[botZug.endRow][botZug.endCol])) {
+                    BKönigRow = botZug.endRow;
+                    BKönigCol = botZug.endCol;
+                }
+            }
+
+            weißamZug = true;
+            board.setDisable(false);
+
+            brettNeuZeichnen(board);
+
+            SpielZustandnachZug(board);
+        });
+
+        pause.play();
+    }
+
+    public void SpielZustandnachZug(GridPane board) {
+        Schacherkennung erkennung3 = new Schacherkennung();
+        boolean Schach = erkennung3.StehtimSchach();
+
+        if (flipan) {
+            if (erkennung3.hatlegaleZügen()) {
+                double winkel = weißamZug ? 0 : 180;
+
+                RotateTransition rotate = new RotateTransition(Duration.millis(500), board);
+                rotate.setToAngle(winkel);
+                rotate.play();
+
+                for (Node child : board.getChildren()) {
+                    child.setRotate(winkel);
+                }
+
+            }
         }
 
-        String gezogeneFigur = brettStatus[botZug.startRow][botZug.startCol];
-        brettStatus[botZug.endRow][botZug.endCol] = gezogeneFigur;
-        brettStatus[botZug.startRow][botZug.startCol] = null;
 
-        if ("bK".equals(gezogeneFigur)) {
-            BKönigRow = botZug.endRow;
-            BKönigCol = botZug.endCol;
+        if (erkennung3.hatlegaleZügen() == false) {
+
+            if (Schach) {
+
+                Node MattKönig = holeKoenigNode(board, weißamZug);
+                RotateTransition Königkippen = new RotateTransition(Duration.millis(500), MattKönig);
+                Königkippen.setByAngle(90);
+                Königkippen.play();
+
+                //Erkennung von Schachmatt, so wie Siegeranzeige im GUI und reset button
+                boolean schwarzHatGewonnen = weißamZug;
+                String Sieger = schwarzHatGewonnen ? "Schwarz" : "Weiß";
+
+                Label Siegerlabel = new Label("Schachmatt! Der Sieger ist: " + Sieger);
+                Siegerlabel.setFont(new Font(30));
+
+
+                if (schwarzHatGewonnen) {
+                    timeline.stop();
+                    root.setStyle("-fx-background-color: #1D1D1D;");
+                    Siegerlabel.setStyle("-fx-text-fill: white;");
+                    schwarzzeit.setStyle("-fx-text-fill: black;");
+                    weißzeit.setStyle("-fx-text-fill: black;");
+                } else {
+                    timeline.stop();
+                    root.setStyle("-fx-background-color: white;");
+                    Siegerlabel.setStyle("-fx-text-fill: black;");
+                    reset.setStyle("-fx-background-color: white;");
+                }
+                oben.getChildren().add(Siegerlabel);
+
+                Button MattresetButton = new Button("Reset");
+                MattresetButton.setStyle("-fx-background-color: transparent;");
+                MattresetButton.setText("Reset");
+                MattresetButton.setStyle("-fx-text-fill: black;");
+                MattresetButton.setPrefSize(200, 35);
+                MattresetButton.setFont(new Font(30));
+                unten.setCenter(MattresetButton);
+                MattresetButton.setOnMouseClicked(event -> {
+                    BrettNeustart(primaryStage);
+                });
+
+            } else {
+
+                //Patt anzeige und reset button
+                System.out.println("Spiel ist vorbei...PATT!!");
+                Label PattLabel = new Label("Patt! (Unentschieden)");
+                PattLabel.setFont(new Font(30));
+                oben.getChildren().add(PattLabel);
+
+                Button PattresetButton = new Button("Reset");
+                PattresetButton.setStyle("-fx-background-color: transparent;");
+                PattresetButton.setText("Reset");
+                PattresetButton.setStyle("-fx-text-fill: black;");
+                PattresetButton.setPrefSize(200, 35);
+                PattresetButton.setFont(new Font(30));
+                unten.setCenter(PattresetButton);
+                PattresetButton.setOnMouseClicked(event -> {
+                    BrettNeustart(primaryStage);
+                });
+
+            }
+            board.setDisable(true);
+            return;
         }
 
-        weißamZug = true;
 
-        brettNeuZeichnen(board);
+        if (!Schach) {
+            DropShadow Anzeige = (DropShadow) board.getEffect(); //Dropshadow ändern, je nachdem wer am Zug ist
+            if (Anzeige != null) {
+                if (weißamZug == true) {
+                    Anzeige.setColor(Color.WHITE);
+                } else {
+                    Anzeige.setColor(Color.BLACK);
+                }
+            }
+        }
     }
 }

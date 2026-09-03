@@ -13,7 +13,8 @@ public class MainMenu {
     private final Scene scene;
     private boolean UhrAn = true;
     private boolean undoan = true;
-    private boolean flipping = true;
+    private boolean Botaus = true;
+    private boolean flipan = true;
 
     public MainMenu(Schachbrett schachbrett) {
 
@@ -39,7 +40,7 @@ public class MainMenu {
             Spielen.setStyle("-fx-background-color: gray; -fx-text-fill: white; -fx-border-color: white; -fx-border-width: 1.5px; -fx-border-radius: 5px; -fx-background-radius: 5px; -fx-focus-color: transparent; -fx-faint-focus-color: transparent;");
         });
         Spielen.setOnAction(e -> {
-            schachbrett.starteSchachbrett(UhrAn, undoan, flipping);
+            schachbrett.starteSchachbrett(UhrAn, undoan, Botaus, flipan);
         });
         BorderPane.setMargin(Spielen, new Insets(0, 0, 40, 0));
         BorderPane.setAlignment(Spielen, Pos.CENTER);
@@ -93,8 +94,29 @@ public class MainMenu {
         });
         mitte.getChildren().add(undoredo);
 
+        Button Bot = new Button();
+        Bot.setText("ChessBot deactivated!");
+        Bot.setStyle("-fx-background-color: gray; -fx-text-fill: white; -fx-border-color: white; -fx-border-width: 1.5px; -fx-border-radius: 5px; -fx-background-radius: 5px; -fx-focus-color: transparent; -fx-faint-focus-color: transparent;");
+        Bot.setOnMouseEntered(event -> {
+            Bot.setStyle("-fx-background-color: gray; -fx-text-fill: black; -fx-border-color: black; -fx-border-width: 1.5px; -fx-border-radius: 5px; -fx-background-radius: 5px; -fx-focus-color: transparent; -fx-faint-focus-color: transparent;");
+        });
+        Bot.setOnMouseExited(event -> {
+            Bot.setStyle("-fx-background-color: gray; -fx-text-fill: white; -fx-border-color: white; -fx-border-width: 1.5px; -fx-border-radius: 5px; -fx-background-radius: 5px; -fx-focus-color: transparent; -fx-faint-focus-color: transparent;");
+        });
+        Bot.setOnMouseClicked(event -> {
+            if (Botaus) {
+                Botaus = false;
+                Bot.setText("Chessbot activated!");
+            }
+            else   {
+                Botaus = true;
+                Bot.setText("Chessbot deactivated!");
+            }
+        });
+        mitte.getChildren().add(Bot);
+
         Button flip = new Button();
-        flip.setText("Board flip active!");
+        flip.setText("Flip activated!");
         flip.setStyle("-fx-background-color: gray; -fx-text-fill: white; -fx-border-color: white; -fx-border-width: 1.5px; -fx-border-radius: 5px; -fx-background-radius: 5px; -fx-focus-color: transparent; -fx-faint-focus-color: transparent;");
         flip.setOnMouseEntered(event -> {
             flip.setStyle("-fx-background-color: gray; -fx-text-fill: black; -fx-border-color: black; -fx-border-width: 1.5px; -fx-border-radius: 5px; -fx-background-radius: 5px; -fx-focus-color: transparent; -fx-faint-focus-color: transparent;");
@@ -103,16 +125,18 @@ public class MainMenu {
             flip.setStyle("-fx-background-color: gray; -fx-text-fill: white; -fx-border-color: white; -fx-border-width: 1.5px; -fx-border-radius: 5px; -fx-background-radius: 5px; -fx-focus-color: transparent; -fx-faint-focus-color: transparent;");
         });
         flip.setOnMouseClicked(event -> {
-            if (flipping) {
-                flipping = false;
-                flip.setText("Board flip deactivated!");
+            if (flipan) {
+                flipan = false;
+                flip.setText("Flip deactivated!");
             }
             else   {
-                flipping = true;
-                flip.setText("Board flip active!");
+                flipan = true;
+                flip.setText("Flip activated!");
             }
         });
         mitte.getChildren().add(flip);
+
+
 
         this.scene = new Scene(root, 1000, 800);
     }
