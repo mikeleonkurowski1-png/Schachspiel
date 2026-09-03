@@ -789,6 +789,11 @@ public class Schachbrett extends Application {
 
                             weißamZug = !weißamZug; //Spielerwechsel
 
+                            if (!weißamZug){
+                                fuhreBotZugaus(Board);
+                            }
+
+
                             Schacherkennung erkennung3 = new Schacherkennung();
 
                            if (flipan && erkennung3.hatlegaleZügen()) {
@@ -1214,5 +1219,27 @@ public class Schachbrett extends Application {
             }
         }
         return null;
+    }
+
+    public void fuhreBotZugaus(GridPane board){
+
+        Zug botZug = ChessBot.berechnebestenZug(2, false);
+
+        if (botZug == null) {
+            return; //Kein Zug möglich
+        }
+
+        String gezogeneFigur = brettStatus[botZug.startRow][botZug.startCol];
+        brettStatus[botZug.endRow][botZug.endCol] = gezogeneFigur;
+        brettStatus[botZug.startRow][botZug.startCol] = null;
+
+        if ("bK".equals(gezogeneFigur)) {
+            BKönigRow = botZug.endRow;
+            BKönigCol = botZug.endCol;
+        }
+
+        weißamZug = true;
+
+        brettNeuZeichnen(board);
     }
 }
