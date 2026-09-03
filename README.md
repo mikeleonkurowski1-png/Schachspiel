@@ -39,6 +39,8 @@
 - [X] Indicators showing all possible moves
 - [X] Chess clock implementation
 - [X] Captured pieces lists
+- [X] Basic Main Menu with game settings
+- [X] Board rotate animation after each move
 - [ ] *Optional / Planned:* PGN file parser, custom chess AI bot, remote multiplayer support
 
 ## Installation & Quick Start
