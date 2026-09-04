@@ -1,5 +1,6 @@
 package schach;
 
+import com.sun.javafx.geom.BaseBounds;
 import javafx.animation.KeyFrame;
 import javafx.animation.PauseTransition;
 import javafx.animation.RotateTransition;
@@ -96,6 +97,7 @@ public class Schachbrett extends Application {
         this.UhrAn = UhrAn;
         this.undoan = undoan;
         this.flipan = flipan;
+        this.Botaus = Botaus;
 
         weißgeschlagenListe = getWeißgeschlagenListe();
         schwarzgeschlagenListe = getSchwarzgeschlagenListe();
@@ -104,12 +106,12 @@ public class Schachbrett extends Application {
         GridPane Board = new GridPane();
         Board.setAlignment(Pos.CENTER);
 
-        VBox oben = new VBox();
+        oben = new VBox();
         oben.setPrefHeight(100);
         oben.setMinHeight(100);
         oben.setAlignment(Pos.CENTER);
 
-        BorderPane unten = new BorderPane();
+        unten = new BorderPane();
         unten.setPrefHeight(100);
         unten.setMinHeight(100);
         unten.setMaxWidth(640);
@@ -154,7 +156,7 @@ public class Schachbrett extends Application {
         StackPane.setMargin(rechtsmitte, new Insets(0, 10,0,0));
         StackPane.setMargin(linksmitte, new Insets(0, 10,0,0));
 
-        BorderPane root = new BorderPane();
+        root = new BorderPane();
         root.setStyle("-fx-background-color: gray;");
         root.setTop(oben);
         root.setCenter(mitte);
@@ -271,7 +273,7 @@ public class Schachbrett extends Application {
 
 
 
-            Label schwarzzeit = new Label();
+            schwarzzeit = new Label();
             schwarzzeit.setText("10:00");
             schwarzzeit.setFont(new Font(30));
             if (UhrAn) {
@@ -336,7 +338,7 @@ public class Schachbrett extends Application {
         linksmitte.getChildren().add(schwarzgeschlagenListe);
 
 
-            Label weißzeit = new Label();
+            weißzeit = new Label();
             weißzeit.setText("10:00");
             weißzeit.setFont(new Font(30));
             if (UhrAn) {
@@ -867,13 +869,18 @@ public class Schachbrett extends Application {
 
     //Kleine Hilfsmethode zum Neustarten des Spiels
     public void BrettNeustart(Stage primaryStage) {
+
         brettStatus = new String[8][8];
         weißamZug = true;
 
-        timeline.stop();
+        if (timeline != null) {
+            timeline.stop();
+        }
 
         WeißZeit = 600;
         SchwarzZeit = 600;
+
+        Botaus = Botaus;
 
         FigurenLogik.WKbewegt = false;
         FigurenLogik.BKbewegt = false;
@@ -1154,6 +1161,27 @@ public class Schachbrett extends Application {
             // 1. Bot-Zug berechnen & brettStatus anpassen
             Zug botZug = ChessBot.berechnebestenZug(3, false);
             if (botZug != null) {
+
+                //Trackt ob Figur geschlagen wird vom Bot und added sie zur Liste der geschlagenen Figuren
+                String geschlageneFigur = brettStatus[botZug.endRow][botZug.endCol];
+                if (geschlageneFigur != null) {
+                    String symbol = getUnicodeZeichen(geschlageneFigur);
+                    Label figurLabel = new Label(symbol);
+
+                    if (geschlageneFigur.startsWith("w")) {
+                        figurLabel.setStyle("-fx-font-size: 18px;");
+                        weißgeschlagenListe.getChildren().add(figurLabel);
+                    } else if (geschlageneFigur.startsWith("b")) {
+                        figurLabel.setStyle("-fx-font-size: 18px; -fx-text-fill: black;");
+                        schwarzgeschlagenListe.getChildren().add(figurLabel);
+                    }
+                    geschlagenUndoCache.add(geschlageneFigur);
+                    geschlagenRedoCache.clear();
+                } else {
+                    geschlagenUndoCache.add(null);
+                }
+
+                //Bot-Zug ausführen
                 brettStatus[botZug.endRow][botZug.endCol] = brettStatus[botZug.startRow][botZug.startCol];
                 brettStatus[botZug.startRow][botZug.startCol] = null;
 
@@ -1176,7 +1204,9 @@ public class Schachbrett extends Application {
 
     public void SpielZustandnachZug(GridPane board) {
         Schacherkennung erkennung3 = new Schacherkennung();
+        weißamZug = !weißamZug;
         boolean Schach = erkennung3.StehtimSchach();
+        weißamZug = !weißamZug;
 
         if (flipan) {
             if (erkennung3.hatlegaleZügen()) {
@@ -1212,25 +1242,32 @@ public class Schachbrett extends Application {
 
 
                 if (schwarzHatGewonnen) {
-                    timeline.stop();
+                    if (timeline != null) {
+                        timeline.stop();
+                    }
                     root.setStyle("-fx-background-color: #1D1D1D;");
                     Siegerlabel.setStyle("-fx-text-fill: white;");
-                    schwarzzeit.setStyle("-fx-text-fill: black;");
-                    weißzeit.setStyle("-fx-text-fill: black;");
+                    if (UhrAn) {
+                        schwarzzeit.setStyle("-fx-text-fill: black;");
+                        weißzeit.setStyle("-fx-text-fill: black;");
+                    }
                 } else {
-                    timeline.stop();
+                    if (timeline != null) {
+                        timeline.stop();
+                    }
                     root.setStyle("-fx-background-color: white;");
-                    Siegerlabel.setStyle("-fx-text-fill: black;");
-                    reset.setStyle("-fx-background-color: white;");
+                        Siegerlabel.setStyle("-fx-text-fill: black;");
                 }
+                oben.getChildren().clear();
                 oben.getChildren().add(Siegerlabel);
 
                 Button MattresetButton = new Button("Reset");
-                MattresetButton.setStyle("-fx-background-color: transparent;");
+                //MattresetButton.setStyle("-fx-background-color: transparent;");
                 MattresetButton.setText("Reset");
                 MattresetButton.setStyle("-fx-text-fill: black;");
                 MattresetButton.setPrefSize(200, 35);
                 MattresetButton.setFont(new Font(30));
+                unten.getChildren().clear();
                 unten.setCenter(MattresetButton);
                 MattresetButton.setOnMouseClicked(event -> {
                     BrettNeustart(primaryStage);
@@ -1242,6 +1279,7 @@ public class Schachbrett extends Application {
                 System.out.println("Spiel ist vorbei...PATT!!");
                 Label PattLabel = new Label("Patt! (Unentschieden)");
                 PattLabel.setFont(new Font(30));
+                oben.getChildren().clear();
                 oben.getChildren().add(PattLabel);
 
                 Button PattresetButton = new Button("Reset");
@@ -1250,6 +1288,7 @@ public class Schachbrett extends Application {
                 PattresetButton.setStyle("-fx-text-fill: black;");
                 PattresetButton.setPrefSize(200, 35);
                 PattresetButton.setFont(new Font(30));
+                unten.getChildren().clear();
                 unten.setCenter(PattresetButton);
                 PattresetButton.setOnMouseClicked(event -> {
                     BrettNeustart(primaryStage);

@@ -85,7 +85,7 @@ public class FigurenLogik {
                         return false;
                     } else if (zRow == sRow && zCol == sCol - 2 && ((Figur.equals("wK") && !WKbewegt && !WRbewegt) || (Figur.equals("bK") && !BKbewegt && !BRbewegt)) ) {
 
-                        if (Schachbrett.brettStatus[zRow][sCol - 1] == null && Schachbrett.brettStatus[zRow][sCol - 2] == null && Schachbrett.brettStatus[sRow][sCol - 3] == null) {
+                        if (sCol >= 3 && Schachbrett.brettStatus[zRow][sCol - 1] == null && Schachbrett.brettStatus[zRow][sCol - 2] == null && Schachbrett.brettStatus[zRow][sCol - 3] == null) {
                             Schacherkennung Logik = new Schacherkennung();
 
                             String King = Schachbrett.brettStatus[zRow][sCol];
