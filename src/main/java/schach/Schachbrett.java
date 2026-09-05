@@ -1159,7 +1159,7 @@ public class Schachbrett extends Application {
         PauseTransition pause = new PauseTransition(Duration.seconds(3));
         pause.setOnFinished(e -> {
             // 1. Bot-Zug berechnen & brettStatus anpassen
-            Zug botZug = ChessBot.berechnebestenZug(3, false);
+            Zug botZug = ChessBot.berechnebestenZug(5, false);
             if (botZug != null) {
 
                 //Trackt ob Figur geschlagen wird vom Bot und added sie zur Liste der geschlagenen Figuren

@@ -127,6 +127,8 @@ public class ChessBot {
 
         List<Zug> besteZuege =  new ArrayList<>();
         int besterWert = Weiß ? Integer.MIN_VALUE : Integer.MAX_VALUE;
+        int alpha = Integer.MIN_VALUE;
+        int beta = Integer.MAX_VALUE;
 
         for (Zug zug : legaleZuege) {
 
@@ -146,7 +148,7 @@ public class ChessBot {
                 Schachbrett.BKönigCol = zug.endCol;
             }
 
-            int wert = minimax(tiefe - 1, !Weiß);
+            int wert = minimax(tiefe - 1,alpha, beta, !Weiß);
 
             Schachbrett.brettStatus[zug.startRow][zug.startCol] = Schachbrett.brettStatus[zug.endRow][zug.endCol];
             Schachbrett.brettStatus[zug.endRow][zug.endCol] = alteZielFigur;
@@ -178,7 +180,7 @@ public class ChessBot {
     }
 
     // MiniMax algorithmus wie aus der Algorithmen Vorlesung der Züge Simuliert
-    private static int minimax(int tiefe, boolean Weiß) {
+    private static int minimax(int tiefe,int alpha, int beta, boolean Weiß) {
         if (tiefe == 0) {
             return bewerteStellung(Schachbrett.brettStatus);
         }
@@ -209,7 +211,7 @@ public class ChessBot {
                     Schachbrett.BKönigCol = zug.endCol;
                 }
 
-                int wert = minimax(tiefe - 1, false);
+                int wert = minimax(tiefe - 1, alpha, beta, false);
 
                 Schachbrett.brettStatus[zug.startRow][zug.startCol] = Schachbrett.brettStatus[zug.endRow][zug.endCol];
                 Schachbrett.brettStatus[zug.endRow][zug.endCol] = alteZielFigur;
@@ -219,6 +221,10 @@ public class ChessBot {
                 Schachbrett.BKönigCol = altBKCol;
 
                 maxWert = Math.max(maxWert, wert);
+                alpha = Math.max(alpha, maxWert);
+                if (beta <= alpha) {
+                    break;
+                }
             }
             return maxWert;
         } else {
@@ -241,7 +247,7 @@ public class ChessBot {
                 Schachbrett.BKönigCol = zug.endCol;
             }
 
-            int wert = minimax(tiefe - 1, true);
+            int wert = minimax(tiefe - 1, alpha, beta, true);
 
             Schachbrett.brettStatus[zug.startRow][zug.startCol] = Schachbrett.brettStatus[zug.endRow][zug.endCol];
             Schachbrett.brettStatus[zug.endRow][zug.endCol] = alteZielFigur;
@@ -251,6 +257,10 @@ public class ChessBot {
             Schachbrett.BKönigCol = altBKCol;
 
             minWert = Math.min(minWert, wert);
+            beta = Math.min(beta, minWert);
+            if (beta <= alpha) {
+                break;
+            }
             }
             return minWert;
         }

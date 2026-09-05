@@ -120,7 +120,7 @@ public class FigurenLogik {
 
 
                     //En-Passant
-                    if (zRow == sRow + 1 && (zCol == sCol - 1 || zCol == sCol + 1) && ZielFigur == null && Schachbrett.enPassantCol == zCol && Schachbrett.enPassantRow == sRow && Schachbrett.brettStatus[sRow][zCol].equals("wP")) {
+                    if (zRow == sRow + 1 && (zCol == sCol - 1 || zCol == sCol + 1) && ZielFigur == null && Schachbrett.enPassantCol == zCol && Schachbrett.enPassantRow == sRow && "wP".equals(Schachbrett.brettStatus[sRow][zCol])) {
                         return true;
                     }
 
@@ -141,7 +141,7 @@ public class FigurenLogik {
                 case "wP":
 
                     //En-Passant
-                    if (zRow == sRow - 1 && (zCol == sCol - 1 || zCol == sCol + 1) && ZielFigur == null && Schachbrett.enPassantCol == zCol && Schachbrett.enPassantRow == sRow && Schachbrett.brettStatus[sRow][zCol].equals("bP")) {
+                    if (zRow == sRow - 1 && (zCol == sCol - 1 || zCol == sCol + 1) && ZielFigur == null && Schachbrett.enPassantCol == zCol && Schachbrett.enPassantRow == sRow && "wP".equals(Schachbrett.brettStatus[sRow][zCol])) {
                     return true;
                     }
 
