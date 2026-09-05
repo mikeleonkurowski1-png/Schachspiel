@@ -6,6 +6,8 @@ import java.util.Random;
 
 public class ChessBot {
 
+    public String[][] brett = Schachbrett.brettStatus;
+
     // Tabellen für jede Figur die angibt wo diese am besten stehen sollte. Also Positioning (Source: https://adamberent.com/piece-square-table/)
 
     private static final int[][] Bauern_Tabelle = {
@@ -85,7 +87,7 @@ public class ChessBot {
             {-20,-10,-10, -5, -5,-10,-10,-20}
     };
 
-    private static int getFigurWert(String figurCode, int row, int col) {
+    private static int getFigurWert(String figurCode, int row, int col,boolean endspiel) {
         if (figurCode == null) {
             return 0;
         }
@@ -123,7 +125,7 @@ public class ChessBot {
                 break;
             case 'K':
                 material = 200000;
-                position = König_Tabelle[TabellenRow][TabellenCol];
+                position = endspiel ? König_Tabelle_Endspiel[TabellenRow][TabellenCol] : König_Tabelle[TabellenRow][TabellenCol];
                 break;
 
             default:
@@ -136,10 +138,11 @@ public class ChessBot {
 
     public static int bewerteStellung(String[][] brett) {
         int gesamtWert = 0;
+        boolean endspiel = istEndspiel(brett);
 
         for (int row = 0; row < 8; row++) {
             for (int col = 0; col < 8; col++) {
-                gesamtWert += getFigurWert(brett[row][col],  row, col);
+                gesamtWert += getFigurWert(brett[row][col],  row, col, endspiel);
             }
         }
         return gesamtWert;
@@ -206,7 +209,7 @@ public class ChessBot {
         return legaleZüge;
     }
 
-    //berechnet den besten Zug für die jeweils angegebene Farbe mit anpassbarer Suchtiefe ( also wie viele Züge der Bot in die zukunft schauen können soll)
+    //berechnet den besten Zug für die jeweils angegebene Farbe mit anpassbarer Suchtiefe (also wie viele Züge der Bot in die zukunft schauen können soll)
     public static Zug berechnebestenZug(int tiefe, boolean Weiß) {
         List<Zug> legaleZuege = generierealleLegalenZüge(Weiß);
         if (legaleZuege.isEmpty()) {
@@ -358,5 +361,24 @@ public class ChessBot {
             }
             return minWert;
         }
+    }
+
+    // Hilfsmethode damit der König weiß wann Endspiel ist und wann nicht
+    private static boolean istEndspiel(String[][] brett) {
+        int nichtBauernMaterial = 0;
+        for (int row = 0; row < 8; row++) {
+            for (int col = 0; col < 8; col++) {
+                String fig = brett[row][col];
+                if (fig != null) {
+                    char typ = fig.charAt(1);
+                    if (typ != 'P' && typ != 'K') {
+                        if (typ == 'Q') nichtBauernMaterial += 900;
+                        else if (typ == 'R') nichtBauernMaterial += 500;
+                        else if (typ == 'B' || typ == 'N') nichtBauernMaterial += 300;
+                    }
+                }
+            }
+        }
+        return nichtBauernMaterial <= 2400;
     }
 }
