@@ -2,6 +2,7 @@ package schach;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 public class ChessBot {
 
@@ -84,7 +85,7 @@ public class ChessBot {
                                 if (Schachbrett.brettStatus[k][l].equals("bK")) {
                                     Schachbrett.BKönigRow = k;
                                     Schachbrett.BKönigCol = l;
-                                } else if (Schachbrett.brettStatus[k][l].equals("bW")) {
+                                } else if (Schachbrett.brettStatus[k][l].equals("wK")) {
                                     Schachbrett.WKönigRow = k;
                                     Schachbrett.WKönigCol = l;
                                 }
@@ -122,7 +123,7 @@ public class ChessBot {
             return null;
         }
 
-        Zug besterZug = null;
+        List<Zug> besteZuege =  new ArrayList<>();
         int besterWert = Weiß ? Integer.MIN_VALUE : Integer.MAX_VALUE;
 
         for (Zug zug : legaleZuege) {
@@ -155,16 +156,23 @@ public class ChessBot {
             if (Weiß) {
                 if (wert > besterWert) {
                     besterWert = wert;
-                    besterZug = zug;
+                    besteZuege.clear();
+                    besteZuege.add(zug);
                 }
             } else {
                 if (wert < besterWert) {
                     besterWert = wert;
-                    besterZug = zug;
+                    besteZuege.clear();
+                    besteZuege.add(zug);
                 }
             }
         }
-        return besterZug;
+        if (besteZuege.isEmpty()) {
+            return null;
+        }
+
+        int randomIndex = new Random().nextInt(besteZuege.size());
+        return besteZuege.get(randomIndex); //Nimmt bei mehreren gleichwertigen Zügen einen zufälligen statt z.b. in der eröffnung immer den selben zug zu spielen
     }
 
     // MiniMax algorithmus wie aus der Algorithmen Vorlesung der Züge Simuliert
@@ -206,7 +214,7 @@ public class ChessBot {
                 Schachbrett.WKönigRow = altWKRow;
                 Schachbrett.WKönigCol = altWKCol;
                 Schachbrett.BKönigRow = altBKRow;
-                Schachbrett.BKönigRow = altBKRow;
+                Schachbrett.BKönigCol = altBKCol;
 
                 maxWert = Math.max(maxWert, wert);
             }
