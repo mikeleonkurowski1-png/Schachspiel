@@ -6,42 +6,132 @@ import java.util.Random;
 
 public class ChessBot {
 
-    private static int getFigurWert(String figurCode) {
+    // Tabellen für jede Figur die angibt wo diese am besten stehen sollte. Also Positioning (Source: https://adamberent.com/piece-square-table/)
+
+    private static final int[][] Bauern_Tabelle = {
+            { 0,  0,  0,  0,  0,  0,  0,  0},
+            {50, 50, 50, 50, 50, 50, 50, 50},
+            {10, 10, 20, 30, 30, 20, 10, 10},
+            { 5,  5, 10, 25, 25, 10,  5,  5},
+            { 0,  0,  0, 20, 20,  0,  0,  0},
+            { 5, -5,-10,  0,  0,-10, -5,  5},
+            { 5, 10, 10,-20,-20, 10, 10,  5},
+            { 0,  0,  0,  0,  0,  0,  0,  0}
+    };
+
+    private static final int[][] Springer_Tabelle = {
+            {-50,-40,-30,-30,-30,-30,-40,-50},
+            {-40,-20,  0,  0,  0,  0,-20,-40},
+            {-30,  0, 10, 15, 15, 10,  0,-30},
+            {-30,  5, 15, 20, 20, 15,  5,-30},
+            {-30,  0, 15, 20, 20, 15,  0,-30},
+            {-30,  5, 10, 15, 15, 10,  5,-30},
+            {-40,-20,  0,  5,  5,  0,-20,-40},
+            {-50,-40,-30,-30,-30,-30,-40,-50}
+    };
+
+    private static final int[][] Läufer_Tabelle = {
+            {-20,-10,-10,-10,-10,-10,-10,-20},
+            {-10,  0,  0,  0,  0,  0,  0,-10},
+            {-10,  0,  5, 10, 10,  5,  0,-10},
+            {-10,  5,  5, 10, 10,  5,  5,-10},
+            {-10,  0, 10, 10, 10, 10,  0,-10},
+            {-10, 10, 10, 10, 10, 10, 10,-10},
+            {-10,  5,  0,  0,  0,  0,  5,-10},
+            {-20,-10,-40,-10,-10,-40,-10,-20},
+    };
+
+    private static final int[][] König_Tabelle = {
+            {-30, -40, -40, -50, -50, -40, -40, -30},
+            {-30, -40, -40, -50, -50, -40, -40, -30},
+            {-30, -40, -40, -50, -50, -40, -40, -30},
+            {-30, -40, -40, -50, -50, -40, -40, -30},
+            {-20, -30, -30, -40, -40, -30, -30, -20},
+            {-10, -20, -20, -20, -20, -20, -20, -10},
+            {20,  20,   0,   0,   0,   0,  20,  20},
+            {20,  30,  10,   0,   0,  10,  30,  20}
+    };
+
+    private static final int[][] König_Tabelle_Endspiel = {
+            {-50,-40,-30,-20,-20,-30,-40,-50},
+            {-30,-20,-10,  0,  0,-10,-20,-30},
+            {-30,-10, 20, 30, 30, 20,-10,-30},
+            {-30,-10, 30, 40, 40, 30,-10,-30},
+            {-30,-10, 30, 40, 40, 30,-10,-30},
+            {-30,-10, 20, 30, 30, 20,-10,-30},
+            {-30,-30,  0,  0,  0,  0,-30,-30},
+            {-50,-30,-30,-30,-30,-30,-30,-50}
+    };
+
+    private static final int[][] Turm_Tabelle = {
+            {  0,  0,  0,  0,  0,  0,  0,  0},
+            {  5, 10, 10, 10, 10, 10, 10,  5},
+            { -5,  0,  0,  0,  0,  0,  0, -5},
+            { -5,  0,  0,  0,  0,  0,  0, -5},
+            { -5,  0,  0,  0,  0,  0,  0, -5},
+            { -5,  0,  0,  0,  0,  0,  0, -5},
+            { -5,  0,  0,  0,  0,  0,  0, -5},
+            {  0,  0,  0,  5,  5,  0,  0,  0}
+    };
+
+    private static final int[][] Dame_Tabelle = {
+            {-20,-10,-10, -5, -5,-10,-10,-20},
+            {-10,  0,  0,  0,  0,  0,  0,-10},
+            {-10,  0,  5,  5,  5,  5,  0,-10},
+            { -5,  0,  5,  5,  5,  5,  0, -5},
+            {  0,  0,  5,  5,  5,  5,  0, -5},
+            {-10,  5,  5,  5,  5,  5,  0,-10},
+            {-10,  0,  5,  0,  0,  0,  0,-10},
+            {-20,-10,-10, -5, -5,-10,-10,-20}
+    };
+
+    private static int getFigurWert(String figurCode, int row, int col) {
         if (figurCode == null) {
             return 0;
         }
 
-        switch (figurCode) {
+        boolean istWeiß = figurCode.charAt(0) == 'w';
+        char typ = figurCode.charAt(1);
 
-            case "wP":
-                return 100;
-            case "wN":
-                return 300;
-            case "wB":
-                return 310; // Läufer minimal wertvoller als Springer
-            case "wR":
-                return 500;
-            case "wQ":
-                return 900;
-            case "wK":
-                return 200000; // Sehr hoher Wert damit niemals der König geopfert wird
+        int material = 0;
+        int position = 0;
 
-            case "bP":
-                return -100;
-            case "bN":
-                return -300;
-            case "bB":
-                return -310;
-            case "bR":
-                return -500;
-            case "bQ":
-                return -900;
-            case "bK":
-                return -200000;
+        int TabellenRow = istWeiß ? row : (7-row);
+        int TabellenCol = col;
+
+        switch (typ) {
+
+            case 'P':
+                material = 100;
+                position = Bauern_Tabelle[TabellenRow][TabellenCol];
+                break;
+            case 'N':
+                material = 300;
+                position = Springer_Tabelle[TabellenRow][TabellenCol];
+                break;
+            case 'B':
+                material = 310;
+                position = Läufer_Tabelle[TabellenRow][TabellenCol];
+                break;
+            case 'R':
+                material = 500;
+                position = Turm_Tabelle[TabellenRow][TabellenCol];
+                break;
+            case 'Q':
+                material = 900;
+                position = Dame_Tabelle[TabellenRow][TabellenCol];
+                break;
+            case 'K':
+                material = 200000;
+                position = König_Tabelle[TabellenRow][TabellenCol];
+                break;
 
             default:
                 return 0;
         }
+
+        int gesamt = material + position;
+        return istWeiß ? gesamt : -gesamt;
     }
 
     public static int bewerteStellung(String[][] brett) {
@@ -49,7 +139,7 @@ public class ChessBot {
 
         for (int row = 0; row < 8; row++) {
             for (int col = 0; col < 8; col++) {
-                gesamtWert += getFigurWert(brett[row][col]);
+                gesamtWert += getFigurWert(brett[row][col],  row, col);
             }
         }
         return gesamtWert;
@@ -155,18 +245,22 @@ public class ChessBot {
             Schachbrett.WKönigRow = altWKRow;
             Schachbrett.WKönigCol = altWKCol;
             Schachbrett.BKönigRow = altBKRow;
-            Schachbrett.BKönigRow = altBKRow;
+            Schachbrett.BKönigCol = altBKCol;
 
             if (Weiß) {
                 if (wert > besterWert) {
                     besterWert = wert;
                     besteZuege.clear();
                     besteZuege.add(zug);
+                } else if (wert == besterWert) {
+                    besteZuege.add(zug);
                 }
             } else {
                 if (wert < besterWert) {
                     besterWert = wert;
                     besteZuege.clear();
+                    besteZuege.add(zug);
+                }  else if (wert == besterWert) {
                     besteZuege.add(zug);
                 }
             }
