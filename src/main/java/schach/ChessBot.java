@@ -123,6 +123,8 @@ public class ChessBot {
             return null;
         }
 
+        java.util.Collections.shuffle(legaleZuege);
+
         List<Zug> besteZuege =  new ArrayList<>();
         int besterWert = Weiß ? Integer.MIN_VALUE : Integer.MAX_VALUE;
 
