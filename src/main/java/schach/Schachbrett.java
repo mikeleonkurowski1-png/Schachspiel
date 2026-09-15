@@ -70,6 +70,8 @@ public class Schachbrett extends Application {
     private Label schwarzzeit;
     private boolean flipan;
     private boolean promoviertgerade = false;
+    private Button vor;
+    private Button zurück;
 
     //Dropshadow (Underglow fürs Brett) um anzuzeigen, welcher Spieler am Zug ist
     DropShadow dropShadow = new DropShadow();
@@ -171,7 +173,7 @@ public class Schachbrett extends Application {
         oben.getChildren().add(willkommen);
 
 
-        Button vor = new Button();
+        vor = new Button();
         vor.setText("⟹");
         vor.setFont(new Font(30));
         vor.setStyle("-fx-background-color: dark-gray; -fx-text-fill: light-gray;");
@@ -221,7 +223,7 @@ public class Schachbrett extends Application {
             unten.setRight(vor);
         }
 
-        Button zurück = new Button();
+        zurück = new Button();
         zurück.setText("⟸");
         zurück.setFont(new Font(30));
         zurück.setStyle("-fx-background-color: dark-gray; -fx-text-fill: light-gray;");
@@ -898,6 +900,10 @@ public class Schachbrett extends Application {
         FigurenLogik.WRbewegt = false;
         FigurenLogik.BRbewegt = false;
 
+        redoCache.clear();
+        geschlagenUndoCache.clear();
+        geschlagenRedoCache.clear();
+
         WKönigCol = 4;
         WKönigRow = 7;
         BKönigRow = 0;
@@ -1167,6 +1173,8 @@ public class Schachbrett extends Application {
 
     public void starteBotDenkprozess(GridPane board) {
         board.setDisable(true);
+        zurück.setDisable(true);
+        vor.setDisable(true);
 
         Task<Zug> denkprozess = new  Task<Zug>() {
             @Override
@@ -1242,6 +1250,8 @@ public class Schachbrett extends Application {
 
             weißamZug = true;
             board.setDisable(false);
+            zurück.setDisable(false);
+            vor.setDisable(false);
 
             brettNeuZeichnen(board);
 

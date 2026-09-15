@@ -288,16 +288,16 @@ public class ChessBot {
         List<Zug> legaleZuge = generierealleLegalenZüge(Weiß);
 
         if (legaleZuge.isEmpty()) {
-            boolean temp = Schachbrett.weißamZug;
+            Schacherkennung erkennung = new Schacherkennung();
+            boolean anfangsweiß = Schachbrett.weißamZug;
             Schachbrett.weißamZug = !Weiß;
-            boolean imSchach = new Schacherkennung().StehtimSchach();
-            Schachbrett.weißamZug = temp;
+            boolean imSchach = erkennung.StehtimSchach();
+            Schachbrett.weißamZug = anfangsweiß;
 
             if (imSchach) {
-                return Weiß ? -(Matt_Wert + tiefe) : (Matt_Wert + tiefe) ;
-            } else {
-                return 0;
+                return Weiß ? -900000 - tiefe : 900000 + tiefe;
             }
+            return 0;
         }
 
         if (Weiß) {
