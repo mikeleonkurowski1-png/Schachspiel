@@ -72,6 +72,8 @@ public class Schachbrett extends Application {
     private boolean promoviertgerade = false;
     private Button vor;
     private Button zurück;
+    private Button reset2;
+    private Button close;
 
     //Dropshadow (Underglow fürs Brett) um anzuzeigen, welcher Spieler am Zug ist
     DropShadow dropShadow = new DropShadow();
@@ -290,16 +292,16 @@ public class Schachbrett extends Application {
         temp1.setFont(new Font(60));
         linksmitte.getChildren().add(temp1);
 
-        Button reset = new Button();
-        reset.setText("↺");
-        reset.setFont(new Font(45));
-        reset.setStyle("-fx-background-color: dark-gray; -fx-text-fill: light-gray;");
-        reset.setOnMouseClicked(event -> {
+        reset2 = new Button();
+        reset2.setText("↺");
+        reset2.setFont(new Font(45));
+        reset2.setStyle("-fx-background-color: dark-gray; -fx-text-fill: light-gray;");
+        reset2.setOnMouseClicked(event -> {
             BrettNeustart(primaryStage);
         });
-        linksmitte.getChildren().add(reset);
+        linksmitte.getChildren().add(reset2);
 
-        Button close = new Button();
+        close = new Button();
         close.setText("⌂");
         close.setFont(new Font(45));
         close.setStyle("-fx-background-color: dark-gray; -fx-text-fill: light-gray;");
@@ -670,12 +672,14 @@ public class Schachbrett extends Application {
                                     }
                                 }
 
-                                Text Turm = (Text) TurmStart.getChildren().get(0);
-                                TurmStart.getChildren().clear();
-                                TurmZiel.getChildren().add(Turm);
+                                if (TurmStart != null && TurmZiel != null && !TurmStart.getChildren().isEmpty()) {
+                                    Text Turm = (Text) TurmStart.getChildren().get(0);
+                                    TurmStart.getChildren().clear();
+                                    TurmZiel.getChildren().add(Turm);
 
-                                brettStatus[startRow][3] = brettStatus[startRow][0];
-                                brettStatus[startRow][0] = null;
+                                    brettStatus[startRow][3] = brettStatus[startRow][0];
+                                    brettStatus[startRow][0] = null;
+                                }
                             }
 
                             //Bauern-Promotion der weißen Bauern
@@ -849,8 +853,6 @@ public class Schachbrett extends Application {
         primaryStage.setTitle("Schachspiel");
         primaryStage.setScene(scene);
         primaryStage.setResizable(false);
-        primaryStage.setMinWidth(800);
-        primaryStage.setMinHeight(920);
         primaryStage.show();
 
         Scene gameScene = new Scene(root, 1000, 800);
@@ -1021,6 +1023,12 @@ public class Schachbrett extends Application {
 
 
             historie.getVorState(brettStatus);
+
+            SpielZustandnachZug(board);
+
+            if (!board.isDisable() && !Botaus) {
+                starteBotDenkprozess(board);
+            }
         });
 
         return btn;
@@ -1175,6 +1183,9 @@ public class Schachbrett extends Application {
         board.setDisable(true);
         zurück.setDisable(true);
         vor.setDisable(true);
+        reset.setDisable(true);
+        close.setDisable(true);
+
 
         Task<Zug> denkprozess = new  Task<Zug>() {
             @Override
@@ -1252,6 +1263,8 @@ public class Schachbrett extends Application {
             board.setDisable(false);
             zurück.setDisable(false);
             vor.setDisable(false);
+            reset.setDisable(false);
+            close.setDisable(false);
 
             brettNeuZeichnen(board);
 
