@@ -74,6 +74,7 @@ public class Schachbrett extends Application {
     private Button zurück;
     private Button reset2;
     private Button close;
+    private ListView<String> historieliste;
 
     //Dropshadow (Underglow fürs Brett) um anzuzeigen, welcher Spieler am Zug ist
     DropShadow dropShadow = new DropShadow();
@@ -139,7 +140,7 @@ public class Schachbrett extends Application {
         Historie.setStyle("-fx-text-fill: black;");
         Historie.setFont(new Font( 20));
 
-        ListView<String> historieliste = new ListView<>();
+        historieliste = new ListView<>();
         historieliste.setPrefHeight(615);
         historieliste.setMaxHeight(615);
         historieliste.setMaxWidth(180);
@@ -1183,7 +1184,7 @@ public class Schachbrett extends Application {
         board.setDisable(true);
         zurück.setDisable(true);
         vor.setDisable(true);
-        reset.setDisable(true);
+        reset2.setDisable(true);
         close.setDisable(true);
 
 
@@ -1257,13 +1258,30 @@ public class Schachbrett extends Application {
                         BKönigRow = botZug.endRow;
                         BKönigCol = botZug.endCol;
                     }
+
+                //Block zum Hinzufügen des Bot-Zugs zur Zug-Historie (gleicher Aufbau wie beim Spielerzug)
+                char vonSpalte = (char) ('a' + botZug.startCol);
+                int vonZeile = 8 - botZug.startRow;
+                char nachSpalte = (char) ('a' + botZug.endCol);
+                int nachZeile = 8 - botZug.endRow;
+
+                String geschlagenText = "";
+                if (geschlageneFigur != null) {
+                    geschlagenText = "  (x " + getUnicodeZeichen(geschlageneFigur) + ")";
+                }
+
+                String botZugText = String.format("%s %c%d ➔ %c%d%s",
+                        getUnicodeZeichen(botFigur), vonSpalte, vonZeile, nachSpalte, nachZeile, geschlagenText);
+
+                historieliste.getItems().add(botZugText);
+                historieliste.scrollTo(historieliste.getItems().size() - 1);
                 }
 
             weißamZug = true;
             board.setDisable(false);
             zurück.setDisable(false);
             vor.setDisable(false);
-            reset.setDisable(false);
+            reset2.setDisable(false);
             close.setDisable(false);
 
             brettNeuZeichnen(board);

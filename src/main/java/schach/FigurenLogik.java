@@ -8,6 +8,8 @@ public class FigurenLogik {
     public static boolean WRbewegt = false;
     public static boolean BRbewegt = false;
 
+    private static boolean RochadePrüfungLäuft = false;
+
     public boolean ZugErlaubnis(int sRow,int sCol, int zRow, int zCol) {
         String Figur = Schachbrett.brettStatus[sRow][sCol];
         String ZielFigur = Schachbrett.brettStatus[zRow][zCol];
