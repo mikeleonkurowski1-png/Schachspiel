@@ -502,6 +502,14 @@ public class Schachbrett extends Application {
 
                         boolean Schach = false;
 
+                        // Ein König wird nie geschlagen; eine Partie endet durch Schachmatt.
+                        if (brettStatus[zielRow][zielCol] != null && brettStatus[zielRow][zielCol].charAt(1) == 'K') {
+                            TileSpeicher.setStyle(originalTileFarbe);
+                            Figurenspeicher = null;
+                            TileSpeicher = null;
+                            return;
+                        }
+
                         if (logik.ZugErlaubnis(startRow, startCol, zielRow, zielCol)) { //Überprüft, ob der Zug legal ist
 
                             historie.getZurückState(brettStatus);
@@ -1200,7 +1208,15 @@ public class Schachbrett extends Application {
             if (botZug != null) {
 
                     //Trackt ob Figur geschlagen wird vom Bot und added sie zur Liste der geschlagenen Figuren
-                    String geschlageneFigur = brettStatus[botZug.endRow][botZug.endCol];
+                    String startFigur = brettStatus[botZug.startRow][botZug.startCol];
+                    boolean botEnPassant = ("bP".equals(startFigur))
+                            && Math.abs(botZug.endCol - botZug.startCol) == 1
+                            && brettStatus[botZug.endRow][botZug.endCol] == null
+                            && enPassantRow == botZug.startRow
+                            && enPassantCol == botZug.endCol;
+                    String geschlageneFigur = botEnPassant
+                            ? brettStatus[botZug.startRow][botZug.endCol]
+                            : brettStatus[botZug.endRow][botZug.endCol];
                     if (geschlageneFigur != null) {
                         String symbol = getUnicodeZeichen(geschlageneFigur);
                         Label figurLabel = new Label(symbol);
@@ -1221,6 +1237,9 @@ public class Schachbrett extends Application {
                     //Bot-Zug ausführen
                     brettStatus[botZug.endRow][botZug.endCol] = brettStatus[botZug.startRow][botZug.startCol];
                     brettStatus[botZug.startRow][botZug.startCol] = null;
+                    if (botEnPassant) {
+                        brettStatus[botZug.startRow][botZug.endCol] = null;
+                    }
 
                     String botFigur = brettStatus[botZug.endRow][botZug.endCol];
 

@@ -45,7 +45,7 @@
 
 ## Installation & Quick Start
 
-1. Download the latest `Schachspiel_v1.0.zip` from the **Releases** section on GitHub.
+1. Download the latest `Schachspiel_v2.0.zip` from the **Releases** section on GitHub.
 2. Extract the ZIP archive to a folder of your choice on your computer.
 3. Open the extracted folder and navigate to the `bin` subfolder.
 4. Launch the game by double-clicking the `Schachspiel.bat` file.

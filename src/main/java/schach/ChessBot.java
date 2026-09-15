@@ -88,6 +88,113 @@ public class ChessBot {
             {-20,-10,-10, -5, -5,-10,-10,-20}
     };
 
+
+    // Speichert alles, was beim Testen eines Zuges verändert wird. So kann der MiniMax-Algorithmus die Stellung danach wieder exakt zurücksetzen.
+    private static class ZugZustand {
+        String gezogeneFigur;
+        String alteZielfigur;
+        String enPassantFigur;
+        String turmFigur;
+        int alteWKRow, alteWKCol, alteBKRow, alteBKCol;
+        int alteEnPassantRow, alteEnPassantCol;
+        boolean alteWKbewegt, alteBKbewegt, alteWRbewegt, alteBRbewegt;
+        boolean enPassant;
+        boolean rochade;
+    }
+
+    private static ZugZustand fuehreZugAus(Zug zug) {
+        ZugZustand zustand = new ZugZustand();
+        zustand.gezogeneFigur = Schachbrett.brettStatus[zug.startRow][zug.startCol];
+        zustand.alteZielfigur = Schachbrett.brettStatus[zug.endRow][zug.endCol];
+        zustand.alteWKRow = Schachbrett.WKönigRow;
+        zustand.alteWKCol = Schachbrett.WKönigCol;
+        zustand.alteBKRow = Schachbrett.BKönigRow;
+        zustand.alteBKCol = Schachbrett.BKönigCol;
+        zustand.alteEnPassantRow = Schachbrett.enPassantRow;
+        zustand.alteEnPassantCol = Schachbrett.enPassantCol;
+        zustand.alteWKbewegt = FigurenLogik.WKbewegt;
+        zustand.alteBKbewegt = FigurenLogik.BKbewegt;
+        zustand.alteWRbewegt = FigurenLogik.WRbewegt;
+        zustand.alteBRbewegt = FigurenLogik.BRbewegt;
+
+        zustand.enPassant = ("wP".equals(zustand.gezogeneFigur) || "bP".equals(zustand.gezogeneFigur))
+                && Math.abs(zug.endCol - zug.startCol) == 1
+                && zustand.alteZielfigur == null
+                && Schachbrett.enPassantRow == zug.startRow
+                && Schachbrett.enPassantCol == zug.endCol;
+        if (zustand.enPassant) {
+            zustand.enPassantFigur = Schachbrett.brettStatus[zug.startRow][zug.endCol];
+            Schachbrett.brettStatus[zug.startRow][zug.endCol] = null;
+        }
+
+        Schachbrett.brettStatus[zug.endRow][zug.endCol] = zustand.gezogeneFigur;
+        Schachbrett.brettStatus[zug.startRow][zug.startCol] = null;
+
+        zustand.rochade = ("wK".equals(zustand.gezogeneFigur) || "bK".equals(zustand.gezogeneFigur))
+                && Math.abs(zug.endCol - zug.startCol) == 2;
+        if (zustand.rochade) {
+            int turmStartCol = zug.endCol > zug.startCol ? 7 : 0;
+            int turmZielCol = zug.endCol > zug.startCol ? 5 : 3;
+            zustand.turmFigur = Schachbrett.brettStatus[zug.startRow][turmStartCol];
+            Schachbrett.brettStatus[zug.startRow][turmZielCol] = zustand.turmFigur;
+            Schachbrett.brettStatus[zug.startRow][turmStartCol] = null;
+        }
+
+        // Der Bot promotet immer zur Dame. Das ist auch die übliche Wahl.
+        if ("wP".equals(zustand.gezogeneFigur) && zug.endRow == 0) {
+            Schachbrett.brettStatus[zug.endRow][zug.endCol] = "wQ";
+        } else if ("bP".equals(zustand.gezogeneFigur) && zug.endRow == 7) {
+            Schachbrett.brettStatus[zug.endRow][zug.endCol] = "bQ";
+        }
+
+        if ("wK".equals(zustand.gezogeneFigur)) {
+            Schachbrett.WKönigRow = zug.endRow;
+            Schachbrett.WKönigCol = zug.endCol;
+            FigurenLogik.WKbewegt = true;
+        } else if ("bK".equals(zustand.gezogeneFigur)) {
+            Schachbrett.BKönigRow = zug.endRow;
+            Schachbrett.BKönigCol = zug.endCol;
+            FigurenLogik.BKbewegt = true;
+        } else if ("wR".equals(zustand.gezogeneFigur)) {
+            FigurenLogik.WRbewegt = true;
+        } else if ("bR".equals(zustand.gezogeneFigur)) {
+            FigurenLogik.BRbewegt = true;
+        }
+
+        Schachbrett.enPassantRow = -1;
+        Schachbrett.enPassantCol = -1;
+        if (("wP".equals(zustand.gezogeneFigur) || "bP".equals(zustand.gezogeneFigur))
+                && Math.abs(zug.endRow - zug.startRow) == 2) {
+            Schachbrett.enPassantRow = zug.endRow;
+            Schachbrett.enPassantCol = zug.endCol;
+        }
+        return zustand;
+    }
+
+    private static void macheZugRueckgaengig(Zug zug, ZugZustand zustand) {
+        Schachbrett.brettStatus[zug.startRow][zug.startCol] = zustand.gezogeneFigur;
+        Schachbrett.brettStatus[zug.endRow][zug.endCol] = zustand.alteZielfigur;
+        if (zustand.enPassant) {
+            Schachbrett.brettStatus[zug.startRow][zug.endCol] = zustand.enPassantFigur;
+        }
+        if (zustand.rochade) {
+            int turmStartCol = zug.endCol > zug.startCol ? 7 : 0;
+            int turmZielCol = zug.endCol > zug.startCol ? 5 : 3;
+            Schachbrett.brettStatus[zug.startRow][turmStartCol] = zustand.turmFigur;
+            Schachbrett.brettStatus[zug.startRow][turmZielCol] = null;
+        }
+        Schachbrett.WKönigRow = zustand.alteWKRow;
+        Schachbrett.WKönigCol = zustand.alteWKCol;
+        Schachbrett.BKönigRow = zustand.alteBKRow;
+        Schachbrett.BKönigCol = zustand.alteBKCol;
+        Schachbrett.enPassantRow = zustand.alteEnPassantRow;
+        Schachbrett.enPassantCol = zustand.alteEnPassantCol;
+        FigurenLogik.WKbewegt = zustand.alteWKbewegt;
+        FigurenLogik.BKbewegt = zustand.alteBKbewegt;
+        FigurenLogik.WRbewegt = zustand.alteWRbewegt;
+        FigurenLogik.BRbewegt = zustand.alteBRbewegt;
+    }
+
     private static int getFigurWert(String figurCode, int row, int col,boolean endspiel) {
         if (figurCode == null) {
             return 0;
@@ -165,35 +272,22 @@ public class ChessBot {
                 if (figur != null && figur.charAt(0) == gesuchteFarbe) {
                     for (int k = 0; k < 8; k++) {
                         for (int l = 0; l < 8; l++) {
+                            String zielfigur = Schachbrett.brettStatus[k][l];
+                            // Ein König wird nicht geschlagen. Schachmatt entsteht dadurch,
+                            // dass keine legalen Züge mehr übrig sind.
+                            if (zielfigur != null && zielfigur.charAt(1) == 'K') {
+                                continue;
+                            }
                             if (logik.ZugErlaubnis(row, col, k, l)) {
 
-                                String alteZielFigur = Schachbrett.brettStatus[k][l];
-                                Schachbrett.brettStatus[k][l] = Schachbrett.brettStatus[row][col];
-                                Schachbrett.brettStatus[row][col] = null;
-
-                                int altWKönigRow = Schachbrett.WKönigRow;
-                                int altWKönigCol = Schachbrett.WKönigCol;
-                                int altBKönigRow = Schachbrett.BKönigRow;
-                                int altBKönigCol = Schachbrett.BKönigCol;
-
-                                if (Schachbrett.brettStatus[k][l].equals("bK")) {
-                                    Schachbrett.BKönigRow = k;
-                                    Schachbrett.BKönigCol = l;
-                                } else if (Schachbrett.brettStatus[k][l].equals("wK")) {
-                                    Schachbrett.WKönigRow = k;
-                                    Schachbrett.WKönigCol = l;
-                                }
+                                Zug zug = new Zug(row, col, k, l);
+                                ZugZustand zustand = fuehreZugAus(zug);
 
                                 Schachbrett.weißamZug = !Weiß;
                                 boolean nochimSchach = erkennung.StehtimSchach();
                                 Schachbrett.weißamZug = Weiß;
 
-                                Schachbrett.brettStatus[row][col] = Schachbrett.brettStatus[k][l];
-                                Schachbrett.brettStatus[k][l] = alteZielFigur;
-                                Schachbrett.WKönigRow = altWKönigRow;
-                                Schachbrett.WKönigCol = altWKönigCol;
-                                Schachbrett.BKönigCol = altBKönigCol;
-                                Schachbrett.BKönigRow = altBKönigRow;
+                                macheZugRueckgaengig(zug, zustand);
 
                                 if (!nochimSchach) {
                                     legaleZüge.add(new Zug(row, col, k, l));
@@ -226,30 +320,11 @@ public class ChessBot {
 
         for (Zug zug : legaleZuege) {
 
-            String alteZielFigur = Schachbrett.brettStatus[zug.endRow][zug.endCol];
-            Schachbrett.brettStatus[zug.endRow][zug.endCol] = Schachbrett.brettStatus[zug.startRow][zug.startCol];
-            Schachbrett.brettStatus[zug.startRow][zug.startCol] = null;
-
-            int altWKRow = Schachbrett.WKönigRow, altWKCol = Schachbrett.WKönigCol;
-            int altBKRow = Schachbrett.BKönigRow, altBKCol = Schachbrett.BKönigCol;
-
-            if ("wK".equals(Schachbrett.brettStatus[zug.endRow][zug.endCol])) {
-                Schachbrett.WKönigRow = zug.endRow;
-                Schachbrett.WKönigCol = zug.endCol;
-            }
-            if ("bK".equals(Schachbrett.brettStatus[zug.endRow][zug.endCol])) {
-                Schachbrett.BKönigRow = zug.endRow;
-                Schachbrett.BKönigCol = zug.endCol;
-            }
+            ZugZustand zustand = fuehreZugAus(zug);
 
             int wert = minimax(tiefe - 1,alpha, beta, !Weiß);
 
-            Schachbrett.brettStatus[zug.startRow][zug.startCol] = Schachbrett.brettStatus[zug.endRow][zug.endCol];
-            Schachbrett.brettStatus[zug.endRow][zug.endCol] = alteZielFigur;
-            Schachbrett.WKönigRow = altWKRow;
-            Schachbrett.WKönigCol = altWKCol;
-            Schachbrett.BKönigRow = altBKRow;
-            Schachbrett.BKönigCol = altBKCol;
+            macheZugRueckgaengig(zug, zustand);
 
             if (Weiß) {
                 if (wert > besterWert) {
@@ -304,30 +379,11 @@ public class ChessBot {
             int maxWert = Integer.MIN_VALUE;
             for (Zug zug : legaleZuge) {
 
-                String alteZielFigur = Schachbrett.brettStatus[zug.endRow][zug.endCol];
-                Schachbrett.brettStatus[zug.endRow][zug.endCol] = Schachbrett.brettStatus[zug.startRow][zug.startCol];
-                Schachbrett.brettStatus[zug.startRow][zug.startCol] = null;
-
-                int altWKRow = Schachbrett.WKönigRow, altWKCol = Schachbrett.WKönigCol;
-                int altBKRow = Schachbrett.BKönigRow, altBKCol = Schachbrett.BKönigCol;
-
-                if ("wK".equals(Schachbrett.brettStatus[zug.endRow][zug.endCol])) {
-                    Schachbrett.WKönigRow = zug.endRow;
-                    Schachbrett.WKönigCol = zug.endCol;
-                }
-                if ("bK".equals(Schachbrett.brettStatus[zug.endRow][zug.endCol])) {
-                    Schachbrett.BKönigRow = zug.endRow;
-                    Schachbrett.BKönigCol = zug.endCol;
-                }
+                ZugZustand zustand = fuehreZugAus(zug);
 
                 int wert = minimax(tiefe - 1, alpha, beta, false);
 
-                Schachbrett.brettStatus[zug.startRow][zug.startCol] = Schachbrett.brettStatus[zug.endRow][zug.endCol];
-                Schachbrett.brettStatus[zug.endRow][zug.endCol] = alteZielFigur;
-                Schachbrett.WKönigRow = altWKRow;
-                Schachbrett.WKönigCol = altWKCol;
-                Schachbrett.BKönigRow = altBKRow;
-                Schachbrett.BKönigCol = altBKCol;
+                macheZugRueckgaengig(zug, zustand);
 
                 maxWert = Math.max(maxWert, wert);
                 alpha = Math.max(alpha, maxWert);
@@ -340,30 +396,11 @@ public class ChessBot {
             int minWert = Integer.MAX_VALUE;
             for (Zug zug : legaleZuge) {
 
-                String alteZielFigur = Schachbrett.brettStatus[zug.endRow][zug.endCol];
-                Schachbrett.brettStatus[zug.endRow][zug.endCol] = Schachbrett.brettStatus[zug.startRow][zug.startCol];
-                Schachbrett.brettStatus[zug.startRow][zug.startCol] = null;
-
-                int altWKRow = Schachbrett.WKönigRow, altWKCol = Schachbrett.WKönigCol;
-                int altBKRow = Schachbrett.BKönigRow, altBKCol = Schachbrett.BKönigCol;
-
-                if ("wK".equals(Schachbrett.brettStatus[zug.endRow][zug.endCol])) {
-                    Schachbrett.WKönigRow = zug.endRow;
-                    Schachbrett.WKönigCol = zug.endCol;
-                }
-                if ("bK".equals(Schachbrett.brettStatus[zug.endRow][zug.endCol])) {
-                    Schachbrett.BKönigRow = zug.endRow;
-                    Schachbrett.BKönigCol = zug.endCol;
-                }
+                ZugZustand zustand = fuehreZugAus(zug);
 
                 int wert = minimax(tiefe - 1, alpha, beta, true);
 
-                Schachbrett.brettStatus[zug.startRow][zug.startCol] = Schachbrett.brettStatus[zug.endRow][zug.endCol];
-                Schachbrett.brettStatus[zug.endRow][zug.endCol] = alteZielFigur;
-                Schachbrett.WKönigRow = altWKRow;
-                Schachbrett.WKönigCol = altWKCol;
-                Schachbrett.BKönigRow = altBKRow;
-                Schachbrett.BKönigCol = altBKCol;
+                macheZugRueckgaengig(zug, zustand);
 
                 minWert = Math.min(minWert, wert);
                 beta = Math.min(beta, minWert);

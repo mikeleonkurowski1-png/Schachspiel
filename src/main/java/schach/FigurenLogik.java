@@ -53,7 +53,7 @@ public class FigurenLogik {
                         return true;
 
                         //Zug-Validierung zum Rochieren
-                    } else if (zRow == sRow && zCol == sCol + 2 && ((Figur.equals("wK") && !WKbewegt && !WRbewegt) || (Figur.equals("bK") && !BKbewegt && !BRbewegt)) ) {
+                    } else if (zRow == sRow && zCol == sCol + 2 && ((Figur.equals("wK") && !WKbewegt && !WRbewegt && "wR".equals(Schachbrett.brettStatus[sRow][7])) || (Figur.equals("bK") && !BKbewegt && !BRbewegt && "bR".equals(Schachbrett.brettStatus[sRow][7]))) ) {
 
                         if (Schachbrett.brettStatus[zRow][sCol + 1] == null && Schachbrett.brettStatus[zRow][sCol + 2] == null) {
                             Schacherkennung Logik = new Schacherkennung();
@@ -85,7 +85,7 @@ public class FigurenLogik {
                             return true;
                         }
                         return false;
-                    } else if (zRow == sRow && zCol == sCol - 2 && ((Figur.equals("wK") && !WKbewegt && !WRbewegt) || (Figur.equals("bK") && !BKbewegt && !BRbewegt)) ) {
+                    } else if (zRow == sRow && zCol == sCol - 2 && ((Figur.equals("wK") && !WKbewegt && !WRbewegt && "wR".equals(Schachbrett.brettStatus[sRow][0])) || (Figur.equals("bK") && !BKbewegt && !BRbewegt && "bR".equals(Schachbrett.brettStatus[sRow][0]))) ) {
 
                         if (sCol >= 3 && Schachbrett.brettStatus[zRow][sCol - 1] == null && Schachbrett.brettStatus[zRow][sCol - 2] == null && Schachbrett.brettStatus[zRow][sCol - 3] == null) {
                             Schacherkennung Logik = new Schacherkennung();
