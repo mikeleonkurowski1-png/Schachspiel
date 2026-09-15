@@ -7,6 +7,7 @@ import java.util.Random;
 public class ChessBot {
 
     public String[][] brett = Schachbrett.brettStatus;
+    private static final int Matt_Wert = 1_000_000;
 
     // Tabellen für jede Figur die angibt wo diese am besten stehen sollte. Also Positioning (Source: https://adamberent.com/piece-square-table/)
 
@@ -124,7 +125,7 @@ public class ChessBot {
                 position = Dame_Tabelle[TabellenRow][TabellenCol];
                 break;
             case 'K':
-                material = 200000;
+                material = 40000;
                 position = endspiel ? König_Tabelle_Endspiel[TabellenRow][TabellenCol] : König_Tabelle[TabellenRow][TabellenCol];
                 break;
 
@@ -258,6 +259,7 @@ public class ChessBot {
                 } else if (wert == besterWert) {
                     besteZuege.add(zug);
                 }
+                alpha = Math.max(alpha, besterWert);
             } else {
                 if (wert < besterWert) {
                     besterWert = wert;
@@ -266,6 +268,7 @@ public class ChessBot {
                 }  else if (wert == besterWert) {
                     besteZuege.add(zug);
                 }
+                beta = Math.min(beta, besterWert);
             }
         }
         if (besteZuege.isEmpty()) {
@@ -285,7 +288,16 @@ public class ChessBot {
         List<Zug> legaleZuge = generierealleLegalenZüge(Weiß);
 
         if (legaleZuge.isEmpty()) {
-            return bewerteStellung(Schachbrett.brettStatus);
+            boolean temp = Schachbrett.weißamZug;
+            Schachbrett.weißamZug = !Weiß;
+            boolean imSchach = new Schacherkennung().StehtimSchach();
+            Schachbrett.weißamZug = temp;
+
+            if (imSchach) {
+                return Weiß ? -(Matt_Wert + tiefe) : (Matt_Wert + tiefe) ;
+            } else {
+                return 0;
+            }
         }
 
         if (Weiß) {
@@ -328,36 +340,36 @@ public class ChessBot {
             int minWert = Integer.MAX_VALUE;
             for (Zug zug : legaleZuge) {
 
-            String alteZielFigur = Schachbrett.brettStatus[zug.endRow][zug.endCol];
-            Schachbrett.brettStatus[zug.endRow][zug.endCol] = Schachbrett.brettStatus[zug.startRow][zug.startCol];
-            Schachbrett.brettStatus[zug.startRow][zug.startCol] = null;
+                String alteZielFigur = Schachbrett.brettStatus[zug.endRow][zug.endCol];
+                Schachbrett.brettStatus[zug.endRow][zug.endCol] = Schachbrett.brettStatus[zug.startRow][zug.startCol];
+                Schachbrett.brettStatus[zug.startRow][zug.startCol] = null;
 
-            int altWKRow = Schachbrett.WKönigRow, altWKCol = Schachbrett.WKönigCol;
-            int altBKRow = Schachbrett.BKönigRow, altBKCol = Schachbrett.BKönigCol;
+                int altWKRow = Schachbrett.WKönigRow, altWKCol = Schachbrett.WKönigCol;
+                int altBKRow = Schachbrett.BKönigRow, altBKCol = Schachbrett.BKönigCol;
 
-            if ("wK".equals(Schachbrett.brettStatus[zug.endRow][zug.endCol])) {
-                Schachbrett.WKönigRow = zug.endRow;
-                Schachbrett.WKönigCol = zug.endCol;
-            }
-            if ("bK".equals(Schachbrett.brettStatus[zug.endRow][zug.endCol])) {
-                Schachbrett.BKönigRow = zug.endRow;
-                Schachbrett.BKönigCol = zug.endCol;
-            }
+                if ("wK".equals(Schachbrett.brettStatus[zug.endRow][zug.endCol])) {
+                    Schachbrett.WKönigRow = zug.endRow;
+                    Schachbrett.WKönigCol = zug.endCol;
+                }
+                if ("bK".equals(Schachbrett.brettStatus[zug.endRow][zug.endCol])) {
+                    Schachbrett.BKönigRow = zug.endRow;
+                    Schachbrett.BKönigCol = zug.endCol;
+                }
 
-            int wert = minimax(tiefe - 1, alpha, beta, true);
+                int wert = minimax(tiefe - 1, alpha, beta, true);
 
-            Schachbrett.brettStatus[zug.startRow][zug.startCol] = Schachbrett.brettStatus[zug.endRow][zug.endCol];
-            Schachbrett.brettStatus[zug.endRow][zug.endCol] = alteZielFigur;
-            Schachbrett.WKönigRow = altWKRow;
-            Schachbrett.WKönigCol = altWKCol;
-            Schachbrett.BKönigRow = altBKRow;
-            Schachbrett.BKönigCol = altBKCol;
+                Schachbrett.brettStatus[zug.startRow][zug.startCol] = Schachbrett.brettStatus[zug.endRow][zug.endCol];
+                Schachbrett.brettStatus[zug.endRow][zug.endCol] = alteZielFigur;
+                Schachbrett.WKönigRow = altWKRow;
+                Schachbrett.WKönigCol = altWKCol;
+                Schachbrett.BKönigRow = altBKRow;
+                Schachbrett.BKönigCol = altBKCol;
 
-            minWert = Math.min(minWert, wert);
-            beta = Math.min(beta, minWert);
-            if (beta <= alpha) {
-                break;
-            }
+                minWert = Math.min(minWert, wert);
+                beta = Math.min(beta, minWert);
+                if (beta <= alpha) {
+                    break;
+                }
             }
             return minWert;
         }

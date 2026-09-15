@@ -69,6 +69,7 @@ public class Schachbrett extends Application {
     private Label weißzeit;
     private Label schwarzzeit;
     private boolean flipan;
+    private boolean promoviertgerade = false;
 
     //Dropshadow (Underglow fürs Brett) um anzuzeigen, welcher Spieler am Zug ist
     DropShadow dropShadow = new DropShadow();
@@ -304,7 +305,9 @@ public class Schachbrett extends Application {
             brettStatus = new String[8][8];
             weißamZug = true;
 
-            timeline.stop();
+            if (timeline != null) {
+                timeline.stop();
+            }
 
             WeißZeit = 600;
             SchwarzZeit = 600;
@@ -636,9 +639,11 @@ public class Schachbrett extends Application {
                                     }
                                 }
 
+                                if (TurmStart != null && TurmZiel != null && !TurmStart.getChildren().isEmpty()) {
                                 Text Turm = (Text) TurmStart.getChildren().get(0);
                                 TurmStart.getChildren().clear();
                                 TurmZiel.getChildren().add(Turm);
+                                }
 
                                 brettStatus[startRow][5] = brettStatus[startRow][7];
                                 brettStatus[startRow][7] = null;
@@ -675,6 +680,7 @@ public class Schachbrett extends Application {
                             if (gezogeneFigur.equals("wP") && zielRow == 0) {
 
                                 Board.setDisable(true);
+                                promoviertgerade = true;
 
                                 Label promotion = new Label("Zu welcher Figur soll dein Bauer promoten?");
                                 promotion.setFont(new Font(Schriftgröße));
@@ -695,6 +701,8 @@ public class Schachbrett extends Application {
                             if (gezogeneFigur.equals("bP") && zielRow == 7) {
 
                                 Board.setDisable(true);
+                                promoviertgerade = true;
+
                                 Label promotion = new  Label("Zu welcher Figur soll dein Bauer promoten?");
                                 promotion.setFont(new Font(Schriftgröße));
                                 oben.getChildren().add(promotion);
@@ -807,10 +815,13 @@ public class Schachbrett extends Application {
                             weißamZug = !weißamZug; //Spielerwechsel
 
                             brettNeuZeichnen(Board);
-                            SpielZustandnachZug(Board);
 
-                            if (!Board.isDisabled() && !Botaus){
-                                starteBotDenkprozess(Board);
+                            if (!promoviertgerade) {
+                                SpielZustandnachZug(Board);
+
+                                if (!Board.isDisabled() && !Botaus) {
+                                    starteBotDenkprozess(Board);
+                                }
                             }
 
                         } else {
@@ -986,22 +997,23 @@ public class Schachbrett extends Application {
     private Button erstellePromotionsButton(String figurCode, String symbol, int zielRow, int zielCol, GridPane board, Pane oben, BorderPane unten) {
         Button btn = new Button(symbol);
 
-        // Dein exaktes Styling:
+
         btn.setStyle("-fx-background-color: dark-gray; -fx-text-fill: light-gray;");
         btn.setPrefSize(75, 75);
         btn.setFont(new Font(30));
 
         btn.setOnAction(e -> {
-            // 1. Logik-Array aktualisieren
+
             brettStatus[zielRow][zielCol] = figurCode;
 
-            // 2. UI zurücksetzen & Brett neu zeichnen (ersetzt das fehleranfällige StackPane-Casting)
+
             brettNeuZeichnen(board);
             oben.getChildren().clear();
             unten.setCenter(null);
             board.setDisable(false);
+            promoviertgerade = false;
 
-            // 3. Historie für Redo sichern
+
             historie.getVorState(brettStatus);
         });
 
@@ -1185,6 +1197,38 @@ public class Schachbrett extends Application {
                 brettStatus[botZug.endRow][botZug.endCol] = brettStatus[botZug.startRow][botZug.startCol];
                 brettStatus[botZug.startRow][botZug.startCol] = null;
 
+                String botFigur = brettStatus[botZug.endRow][botZug.endCol];
+
+
+                if (botFigur.equals("bK") && Math.abs(botZug.endCol - botZug.startCol) == 2) {
+                    if (botZug.endCol > botZug.startCol) {
+                        brettStatus[botZug.startRow][5] = brettStatus[botZug.startRow][7];
+                        brettStatus[botZug.startRow][7] = null;
+                    } else {
+                        brettStatus[botZug.startRow][3] = brettStatus[botZug.startRow][0];
+                        brettStatus[botZug.startRow][0] = null;
+                    }
+                }
+
+                if (botFigur.equals("bP") && botZug.endRow == 7) {
+                    brettStatus[botZug.endRow][botZug.endCol] = "bQ";
+                }
+
+                if (botFigur.equals("bK")) {
+                    FigurenLogik.BKbewegt = true;
+                }
+                if (botFigur.equals("bR")) {
+                    if (botZug.startRow == 0 && botZug.startCol == 0) FigurenLogik.BRbewegt = true;
+                    if (botZug.startRow == 0 && botZug.startCol == 7) FigurenLogik.BRbewegt = true;
+                }
+
+                enPassantRow = -1;
+                enPassantCol = -1;
+                if (botFigur.equals("bP") && Math.abs(botZug.endRow - botZug.startRow) == 2) {
+                    enPassantRow = botZug.endRow;
+                    enPassantCol = botZug.endCol;
+                }
+
                 if ("bK".equals(brettStatus[botZug.endRow][botZug.endCol])) {
                     BKönigRow = botZug.endRow;
                     BKönigCol = botZug.endCol;
@@ -1225,6 +1269,10 @@ public class Schachbrett extends Application {
 
 
         if (erkennung3.hatlegaleZügen() == false) {
+
+            if (timeline != null) {
+                timeline.stop();
+            }
 
             if (Schach) {
 
