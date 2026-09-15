@@ -1168,72 +1168,77 @@ public class Schachbrett extends Application {
     public void starteBotDenkprozess(GridPane board) {
         board.setDisable(true);
 
-        PauseTransition pause = new PauseTransition(Duration.seconds(3));
-        pause.setOnFinished(e -> {
-            // 1. Bot-Zug berechnen & brettStatus anpassen
-            Zug botZug = ChessBot.berechnebestenZug(5, false);
+        Task<Zug> denkprozess = new  Task<Zug>() {
+            @Override
+            protected Zug call() throws Exception {
+                return ChessBot.berechnebestenZug(5, false);
+            }
+        };
+
+        denkprozess.setOnSucceeded(e -> {
+            Zug botZug =  denkprozess.getValue();
             if (botZug != null) {
 
-                //Trackt ob Figur geschlagen wird vom Bot und added sie zur Liste der geschlagenen Figuren
-                String geschlageneFigur = brettStatus[botZug.endRow][botZug.endCol];
-                if (geschlageneFigur != null) {
-                    String symbol = getUnicodeZeichen(geschlageneFigur);
-                    Label figurLabel = new Label(symbol);
+                    //Trackt ob Figur geschlagen wird vom Bot und added sie zur Liste der geschlagenen Figuren
+                    String geschlageneFigur = brettStatus[botZug.endRow][botZug.endCol];
+                    if (geschlageneFigur != null) {
+                        String symbol = getUnicodeZeichen(geschlageneFigur);
+                        Label figurLabel = new Label(symbol);
 
-                    if (geschlageneFigur.startsWith("w")) {
-                        figurLabel.setStyle("-fx-font-size: 18px;");
-                        weißgeschlagenListe.getChildren().add(figurLabel);
-                    } else if (geschlageneFigur.startsWith("b")) {
-                        figurLabel.setStyle("-fx-font-size: 18px; -fx-text-fill: black;");
-                        schwarzgeschlagenListe.getChildren().add(figurLabel);
-                    }
-                    geschlagenUndoCache.add(geschlageneFigur);
-                    geschlagenRedoCache.clear();
-                } else {
-                    geschlagenUndoCache.add(null);
-                }
-
-                //Bot-Zug ausführen
-                brettStatus[botZug.endRow][botZug.endCol] = brettStatus[botZug.startRow][botZug.startCol];
-                brettStatus[botZug.startRow][botZug.startCol] = null;
-
-                String botFigur = brettStatus[botZug.endRow][botZug.endCol];
-
-
-                if (botFigur.equals("bK") && Math.abs(botZug.endCol - botZug.startCol) == 2) {
-                    if (botZug.endCol > botZug.startCol) {
-                        brettStatus[botZug.startRow][5] = brettStatus[botZug.startRow][7];
-                        brettStatus[botZug.startRow][7] = null;
+                        if (geschlageneFigur.startsWith("w")) {
+                            figurLabel.setStyle("-fx-font-size: 18px;");
+                            weißgeschlagenListe.getChildren().add(figurLabel);
+                        } else if (geschlageneFigur.startsWith("b")) {
+                            figurLabel.setStyle("-fx-font-size: 18px; -fx-text-fill: black;");
+                            schwarzgeschlagenListe.getChildren().add(figurLabel);
+                        }
+                        geschlagenUndoCache.add(geschlageneFigur);
+                        geschlagenRedoCache.clear();
                     } else {
-                        brettStatus[botZug.startRow][3] = brettStatus[botZug.startRow][0];
-                        brettStatus[botZug.startRow][0] = null;
+                        geschlagenUndoCache.add(null);
+                    }
+
+                    //Bot-Zug ausführen
+                    brettStatus[botZug.endRow][botZug.endCol] = brettStatus[botZug.startRow][botZug.startCol];
+                    brettStatus[botZug.startRow][botZug.startCol] = null;
+
+                    String botFigur = brettStatus[botZug.endRow][botZug.endCol];
+
+
+                    if (botFigur.equals("bK") && Math.abs(botZug.endCol - botZug.startCol) == 2) {
+                        if (botZug.endCol > botZug.startCol) {
+                            brettStatus[botZug.startRow][5] = brettStatus[botZug.startRow][7];
+                            brettStatus[botZug.startRow][7] = null;
+                        } else {
+                            brettStatus[botZug.startRow][3] = brettStatus[botZug.startRow][0];
+                            brettStatus[botZug.startRow][0] = null;
+                        }
+                    }
+
+                    if (botFigur.equals("bP") && botZug.endRow == 7) {
+                        brettStatus[botZug.endRow][botZug.endCol] = "bQ";
+                    }
+
+                    if (botFigur.equals("bK")) {
+                        FigurenLogik.BKbewegt = true;
+                    }
+                    if (botFigur.equals("bR")) {
+                        if (botZug.startRow == 0 && botZug.startCol == 0) FigurenLogik.BRbewegt = true;
+                        if (botZug.startRow == 0 && botZug.startCol == 7) FigurenLogik.BRbewegt = true;
+                    }
+
+                    enPassantRow = -1;
+                    enPassantCol = -1;
+                    if (botFigur.equals("bP") && Math.abs(botZug.endRow - botZug.startRow) == 2) {
+                        enPassantRow = botZug.endRow;
+                        enPassantCol = botZug.endCol;
+                    }
+
+                    if ("bK".equals(brettStatus[botZug.endRow][botZug.endCol])) {
+                        BKönigRow = botZug.endRow;
+                        BKönigCol = botZug.endCol;
                     }
                 }
-
-                if (botFigur.equals("bP") && botZug.endRow == 7) {
-                    brettStatus[botZug.endRow][botZug.endCol] = "bQ";
-                }
-
-                if (botFigur.equals("bK")) {
-                    FigurenLogik.BKbewegt = true;
-                }
-                if (botFigur.equals("bR")) {
-                    if (botZug.startRow == 0 && botZug.startCol == 0) FigurenLogik.BRbewegt = true;
-                    if (botZug.startRow == 0 && botZug.startCol == 7) FigurenLogik.BRbewegt = true;
-                }
-
-                enPassantRow = -1;
-                enPassantCol = -1;
-                if (botFigur.equals("bP") && Math.abs(botZug.endRow - botZug.startRow) == 2) {
-                    enPassantRow = botZug.endRow;
-                    enPassantCol = botZug.endCol;
-                }
-
-                if ("bK".equals(brettStatus[botZug.endRow][botZug.endCol])) {
-                    BKönigRow = botZug.endRow;
-                    BKönigCol = botZug.endCol;
-                }
-            }
 
             weißamZug = true;
             board.setDisable(false);
@@ -1243,7 +1248,7 @@ public class Schachbrett extends Application {
             SpielZustandnachZug(board);
         });
 
-        pause.play();
+        new Thread(denkprozess).start();
     }
 
     public void SpielZustandnachZug(GridPane board) {
