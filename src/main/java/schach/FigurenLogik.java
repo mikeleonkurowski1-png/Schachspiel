@@ -58,10 +58,43 @@ public class FigurenLogik {
                         if (Schachbrett.brettStatus[zRow][sCol + 1] == null && Schachbrett.brettStatus[zRow][sCol + 2] == null) {
                             Schacherkennung Logik = new Schacherkennung();
 
+                            int alteWKönigRow = Schachbrett.WKönigRow;
+                            int alteWKönigCol = Schachbrett.WKönigCol;
+                            int alteBKönigRow = Schachbrett.BKönigRow;
+                            int alteBKönigCol = Schachbrett.BKönigCol;
+
+                            boolean alterZugStart = Schachbrett.weißamZug;
+                            Schachbrett.weißamZug = Figur.equals("wK") ? false : true;
+                            boolean startImSchach = Logik.StehtimSchach();
+                            Schachbrett.weißamZug = alterZugStart;
+
+                            if (startImSchach) {
+                                return false;
+                            }
+
                             String King = Schachbrett.brettStatus[zRow][sCol];
                             Schachbrett.brettStatus[zRow][sCol + 1] = Schachbrett.brettStatus[sRow][sCol];
                             Schachbrett.brettStatus[zRow][sCol] = null;
+
+                            boolean alterZugZwischen = Schachbrett.weißamZug;
+
+                            if (Figur.equals("wK")) {
+                                Schachbrett.WKönigRow = sRow;
+                                Schachbrett.WKönigCol = sCol + 1;
+                                Schachbrett.weißamZug = false;
+                            } else {
+                                Schachbrett.BKönigRow = sRow;
+                                Schachbrett.BKönigCol = sCol + 1;
+                                Schachbrett.weißamZug = true;
+                            }
+
                             boolean Schach = Logik.StehtimSchach();
+
+                            Schachbrett.WKönigRow = alteWKönigRow;
+                            Schachbrett.WKönigCol = alteWKönigCol;
+                            Schachbrett.BKönigRow = alteBKönigRow;
+                            Schachbrett.BKönigCol = alteBKönigCol;
+                            Schachbrett.weißamZug = alterZugZwischen;
 
                             if (Schach) {
                                 Schachbrett.brettStatus[zRow][sCol] = King;
@@ -71,7 +104,25 @@ public class FigurenLogik {
                             Schachbrett.brettStatus[sRow][sCol + 2] = King;
                             Schachbrett.brettStatus[sRow][sCol + 1] = null;
 
+                            alterZugZwischen = Schachbrett.weißamZug;
+
+                            if (Figur.equals("wK")) {
+                                Schachbrett.WKönigRow = sRow;
+                                Schachbrett.WKönigCol = sCol + 2;
+                                Schachbrett.weißamZug = false;
+                            } else {
+                                Schachbrett.BKönigRow = sRow;
+                                Schachbrett.BKönigCol = sCol + 2;
+                                Schachbrett.weißamZug = true;
+                            }
+
                             Schach = Logik.StehtimSchach();
+
+                            Schachbrett.WKönigRow = alteWKönigRow;
+                            Schachbrett.WKönigCol = alteWKönigCol;
+                            Schachbrett.BKönigRow = alteBKönigRow;
+                            Schachbrett.BKönigCol = alteBKönigCol;
+                            Schachbrett.weißamZug = alterZugZwischen;
 
                             if (Schach) {
                                 Schachbrett.brettStatus[sRow][sCol] = King;
@@ -90,10 +141,43 @@ public class FigurenLogik {
                         if (sCol >= 3 && Schachbrett.brettStatus[zRow][sCol - 1] == null && Schachbrett.brettStatus[zRow][sCol - 2] == null && Schachbrett.brettStatus[zRow][sCol - 3] == null) {
                             Schacherkennung Logik = new Schacherkennung();
 
+                            int alteWKönigRow = Schachbrett.WKönigRow;
+                            int alteWKönigCol = Schachbrett.WKönigCol;
+                            int alteBKönigRow = Schachbrett.BKönigRow;
+                            int alteBKönigCol = Schachbrett.BKönigCol;
+
+                            boolean alterZugStart = Schachbrett.weißamZug;
+                            Schachbrett.weißamZug = Figur.equals("wK") ? false : true;
+                            boolean startImSchach = Logik.StehtimSchach();
+                            Schachbrett.weißamZug = alterZugStart;
+
+                            if (startImSchach) {
+                                return false;
+                            }
+
                             String King = Schachbrett.brettStatus[zRow][sCol];
                             Schachbrett.brettStatus[zRow][sCol - 1] = Schachbrett.brettStatus[sRow][sCol];
                             Schachbrett.brettStatus[zRow][sCol] = null;
+
+                            boolean alterZugZwischen = Schachbrett.weißamZug;
+
+                            if (Figur.equals("wK")) {
+                                Schachbrett.WKönigRow = sRow;
+                                Schachbrett.WKönigCol = sCol - 1;
+                                Schachbrett.weißamZug = false;
+                            } else {
+                                Schachbrett.BKönigRow = sRow;
+                                Schachbrett.BKönigCol = sCol - 1;
+                                Schachbrett.weißamZug = true;
+                            }
+
                             boolean Schach = Logik.StehtimSchach();
+
+                            Schachbrett.WKönigRow = alteWKönigRow;
+                            Schachbrett.WKönigCol = alteWKönigCol;
+                            Schachbrett.BKönigRow = alteBKönigRow;
+                            Schachbrett.BKönigCol = alteBKönigCol;
+                            Schachbrett.weißamZug = alterZugZwischen;
 
                             if (Schach) {
                                 Schachbrett.brettStatus[zRow][sCol] = King;
@@ -103,7 +187,25 @@ public class FigurenLogik {
                             Schachbrett.brettStatus[sRow][sCol - 2] = King;
                             Schachbrett.brettStatus[sRow][sCol - 1] = null;
 
+                            alterZugZwischen = Schachbrett.weißamZug;
+
+                            if (Figur.equals("wK")) {
+                                Schachbrett.WKönigRow = sRow;
+                                Schachbrett.WKönigCol = sCol - 2;
+                                Schachbrett.weißamZug = false;
+                            } else {
+                                Schachbrett.BKönigRow = sRow;
+                                Schachbrett.BKönigCol = sCol - 2;
+                                Schachbrett.weißamZug = true;
+                            }
+
                             Schach = Logik.StehtimSchach();
+
+                            Schachbrett.WKönigRow = alteWKönigRow;
+                            Schachbrett.WKönigCol = alteWKönigCol;
+                            Schachbrett.BKönigRow = alteBKönigRow;
+                            Schachbrett.BKönigCol = alteBKönigCol;
+                            Schachbrett.weißamZug = alterZugZwischen;
 
                             if (Schach) {
                                 Schachbrett.brettStatus[zRow][sCol] = King;
