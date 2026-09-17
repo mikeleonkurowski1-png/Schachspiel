@@ -1,7 +1,7 @@
 # Chess Game
 
 - A local 2-player chess application featuring a Graphical User Interface (GUI), complete move validation, and check/checkmate detection.
-- Designed with future extensibility in mind (e.g., PGN file loading, custom chess bot, or remote multiplayer).
+- Designed with future extensibility in mind (e.g., PGN file loading or remote multiplayer).
 
 ## Features
 
